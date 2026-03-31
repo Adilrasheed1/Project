@@ -16,4 +16,9 @@ res.json({
 
 
 })
+router.post("/login", userMiddleware, (req, res) => {
+  res.json({
+    msg: "Login successful"
+  });
+});
 module.exports=router;
