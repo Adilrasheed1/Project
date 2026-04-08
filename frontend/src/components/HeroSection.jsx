@@ -1,4 +1,6 @@
+
 import { ButtonComp } from "./ButtonComp";
+
 
 export function HeroSection(){
     return <div className="grid lg:grid-cols-2 gap-12 items-center dark:bg-gray-900 pb-4">

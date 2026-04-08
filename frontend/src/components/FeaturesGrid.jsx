@@ -31,7 +31,7 @@ export  const  FeaturesGrid=()=>{
     <div className="grid lg:grid-cols-3
     sm:grid-cols-2">
          {Details.map(detail=><div>
-            <FeatureCard  className="col-span-1 " title={detail.title}
+            <FeatureCard  className="col-span-1 text-white mt-10  bg-slate-900 ml-5 mr-2 h-60 flex flex-col pl-5 pt-20 rounded-4xl border-1 border-gray-700"  title={detail.title}
                 description={detail.description}>
                 
             </FeatureCard>         </div>)}
