@@ -1,15 +1,17 @@
 
 import { LoginCard } from "../components/LoginCard";
+import { useNavigate } from "react-router-dom";
 
  import { useState } from "react"
 export function LoginPage(){
+  const navigate=useNavigate()
    const [email,setEmail]=useState("")
     const [password,setPassword]=useState("")
     return <div>
      
             
      
-      <LoginCard  onclick={ ()=>{
+      <LoginCard  onclick={  ()=>{
          fetch("http://localhost:3000/user/login", {
           method: "POST",
           headers: {
@@ -22,7 +24,7 @@ export function LoginPage(){
        const json=await res.json();
      
   if (res.ok) {
-    alert("Login successful");
+   navigate("/StudentDashboard")
   } else {
     alert(json.msg || "Login failed");
   }
