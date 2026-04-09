@@ -11,7 +11,7 @@ export function LoginPage(){
      
             
      
-      <LoginCard  onclick={ ()=>{
+      <LoginCard  onclick={  ()=>{
          fetch("http://localhost:3000/user/login", {
           method: "POST",
           headers: {
