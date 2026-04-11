@@ -23,5 +23,13 @@ res.json({
 
 
 })
+router.get("/DoubtSection", async (req, res) => {
+  try {
+    const doubts = await Doubts.find();
+    res.json(doubts);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
 
 module.exports=router;
