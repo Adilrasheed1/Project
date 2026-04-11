@@ -1,53 +1,22 @@
 
-import { FeatureCard } from "../components/FeatureCard";
+import { CentralContent } from "../components/CentralContent";
 import { ProfileSection } from "../components/ProfileSection";
-import { SearchBar } from "../components/SearchBar";
 import { SideMenu } from "../components/SideMenu";
-<<<<<<< HEAD
-import { useEffect } from "react";
 
 
-export function StudentDashboard({section}){
-
-    return <div className="grid grid-cols-5 bg-[#fcedf2] h-screen   ">
-  <SideMenu className="col-span-1 w-40 mt-8  ml-4 "/>
-  <div className=" col-span-3 mt-5  ml-8 mr-8  ">
-    <div><SearchBar/></div>
-  
-    <div section="home">
-=======
-
+import { useState } from "react";
 
 export function StudentDashboard(){
+   const [section, setSection] = useState("home");
 
-    return <div className="grid grid-cols-5 ">
-  <SideMenu className="col-span-1 w-40 mt-2"/>
-  <div className=" col-span-3 mt-5  ml-8 mr-8  ">
-    <div><SearchBar/></div>
->>>>>>> 90c22c10369290dd69b7be6935de4c50e516b84a
-    <div className="bg-pink-400 h-50 mt-20  rounded-lg pl-5 pt-10  bg-[url('https://thumbs.dreamstime.com/z/symbols-doubt-representing-something-to-ponder-problem-solve-326315803.jpg')] bg-cover bg-center  bg-blend-overlay ">
-    <h3 className="text-4xl font-semibold text-gray-800">Welcome Back , Adil!</h3> 
-    <p className="pl-4 pt-2 text-lg text-gray-500 ">Where every doubt finds an answer</p></div>
-    <span className="pt-10 pl-4 text-lg font-bold text-gray-600:"><h3>Recent doubts</h3></span>
-    <div className="flex justify-between">
-<<<<<<< HEAD
-   <FeatureCard title="doubt1" description="how to check a number is even in python"  className="mt-5  bg-gray-200 ml-5 mr-2 h-40  w-50 flex flex-col pl-5 pt-5 rounded-lg border-1 border-gray-300 text-gray-700"/>
-   <FeatureCard title="doubt2" description="ho to merge two arrays" className="mt-5  bg-gray-200 ml-5 mr-2 h-40  w-50 flex flex-col pl-5 pt-5 rounded-lg border-1 border-gray-300 text-gray-700"/>
-   <FeatureCard title="doubt3" description="ho to add two arrays" className="mt-5  bg-gray-200 ml-5 mr-2 h-40  w-50 flex flex-col pl-5 pt-5 rounded-lg border-1 border-gray-300 text-gray-700"/>
+
+    return <div className="grid grid-cols-5 bg-[#fcedf2] h-screen   ">
+  <SideMenu  onClickHome={()=> setSection("home")} onClickDoubts={() => setSection("doubts")} className="col-span-1 w-40 mt-8  ml-8 "/>
+  
+<CentralContent section={section}/>
    
-    </div>
-    <a href="#" className="pl-150 pt-10 hover:text-blue-500">See all</a>
-    </div>
-=======
-   <FeatureCard title="doubt1" description="how to check a number is even in python"  className="mt-5  bg-gray-200 ml-5 mr-2 h-40  w-50 flex flex-col pl-5 pt-5 rounded-lg border-1 border-gray-100 text-gray-700"/>
-   <FeatureCard title="doubt2" description="ho to merge two arrays" className="mt-5  bg-gray-200 ml-5 mr-2 h-40  w-50 flex flex-col pl-5 pt-5 rounded-lg border-1 border-gray-100 text-gray-700"/>
-   <FeatureCard title="doubt3" description="ho to add two arrays" className="mt-5  bg-gray-200 ml-5 mr-2 h-40  w-50 flex flex-col pl-5 pt-5 rounded-lg border-1 border-gray-100 text-gray-700"/>
-   
-    </div>
-    <a href="#" className="pl-150 pt-10 hover:text-blue-500">See all</a>
->>>>>>> 90c22c10369290dd69b7be6935de4c50e516b84a
+       
     
-    </div>
 
   <ProfileSection/>
     </div>
