@@ -12,10 +12,10 @@ export function CentralContent({section}){
     fetch("http://localhost:3000/doubts/DoubtSection")
       .then(res => res.json())
       .then(data => {
-        console.log(data); // debug
         setDoubts(data);
       });
   }, []);
+  const recentDoubts = doubts.slice(0, 4);
 
 
     return  <div className=" col-span-3 mt-5  ml-8 mr-8  ">
@@ -26,22 +26,14 @@ export function CentralContent({section}){
     <h3 className="text-4xl font-semibold text-gray-800">Welcome Back , Adil!</h3> 
     <p className="pl-4 pt-2 text-lg text-gray-500 ">Where every doubt finds an answer</p></div>
     <span className="pt-10 pl-4 text-lg font-bold text-gray-600:"><h3>Recent doubts</h3></span>
-    <div className="flex justify-between">
-   <FeatureCard title="doubt1" description="how to check a number is even in python"   className="mt-5  bg-gray-200 ml-5 mr-2 h-40  w-50 flex flex-col pl-5 pt-5 rounded-lg border-1 border-gray-300 text-gray-700">   {recentDoubts.map((doubt) => (
-        <div
-          key={doubt._id}
-          className="w-64 h-40 bg-gray-200 rounded-xl p-4"
-        >
-          <h3 className="font-semibold">{doubt.title}</h3>
-          <p className="text-sm text-gray-600">
-            {doubt.description}
-          </p>
-        </div>
-      ))}</FeatureCard>
-   <FeatureCard title="doubt2" description="ho to merge two arrays" className="mt-5  bg-gray-200 ml-5 mr-2 h-40  w-50 flex flex-col pl-5 pt-5 rounded-lg border-1 border-gray-300 text-gray-700"/>
-   <FeatureCard title="doubt3" description="ho to add two arrays" className="mt-5  bg-gray-200 ml-5 mr-2 h-40  w-50 flex flex-col pl-5 pt-5 rounded-lg border-1 border-gray-300 text-gray-700"/>
-   
+     
+    <div className="flex  justify-between"  >
+        {recentDoubts.map((doubt) => (
+   <FeatureCard  key={doubt._id} title={doubt.title} description={doubt.description}  className="mt-5  bg-gray-200 ml-5 mr-2 h-40  w-50 flex flex-col pl-5 pt-5 rounded-lg border-1 border-gray-300 text-gray-700"/>
+  
+     ))}
     </div>
+   
     <a href="#" className="pl-150 pt-10 hover:text-blue-500">See all</a>
     </div>
     }
