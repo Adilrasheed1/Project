@@ -15,7 +15,7 @@ export function CentralContent({section}){
         setDoubts(data);
       });
   }, []);
-  const recentDoubts = doubts.slice(0, 4);
+  const recentDoubts = doubts.slice(-4);
 
 
     return  <div className=" col-span-3 mt-5  ml-8 mr-8  ">
