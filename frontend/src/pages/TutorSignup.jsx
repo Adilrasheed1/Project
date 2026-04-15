@@ -1,12 +1,12 @@
 import { LoginCard } from "../components/LoginCard";
 import { useState } from "react"
-export const SignupPage=()=>{
+export const TutorSignup=()=>{
    const [email,setEmail]=useState("")
       const [password,setPassword]=useState("")
     return <div>
         
-        <LoginCard msg="Sign up to continue learning" onclick={ ()=>{
-         fetch("http://localhost:3000/user/signup", {
+        <LoginCard msg="Sign up to start teaching Journey" onclick={ ()=>{
+         fetch("http://localhost:3000/tutor/signup", {
           method: "POST",
           headers: {
            "Content-Type": "application/json"
@@ -39,6 +39,6 @@ export const SignupPage=()=>{
             }}
             onchangepassword={function(e){
                 setPassword(e.target.value)
-            }} button="Create Student Account"/>
+            }} button="Create Tutor Account"/>
     </div>
 }
