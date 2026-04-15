@@ -18,13 +18,20 @@ const tutorSchema=new mongoose.Schema({
    username:String,
    password:String 
 })
+const courseSchema=new mongoose.Schema({
+    title:String,
+    description:String,
+  
+})
 const Admin=mongoose.model('Admin',adminSchema);
 const User=mongoose.model('User',userSchema);
 const Doubts=mongoose.model('Doubts',doubtsSchema);
 const Tutors=mongoose.model('Tutors',tutorSchema);
+const Courses=mongoose.model('Courses',courseSchema)
 module.exports={
 Admin,
 User,
 Doubts,
-Tutors
+Tutors,
+Courses
 }

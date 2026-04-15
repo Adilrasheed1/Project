@@ -3,7 +3,7 @@ import { LoginCard } from "../components/LoginCard";
 import { useNavigate } from "react-router-dom";
 
  import { useState } from "react"
-export function LoginPage(){
+export function TutorLogin(){
   const navigate=useNavigate()
    const [email,setEmail]=useState("")
     const [password,setPassword]=useState("")
@@ -11,8 +11,8 @@ export function LoginPage(){
      
             
      
-      <LoginCard  msg="Sign in to continue learning" onclick={  ()=>{
-         fetch("http://localhost:3000/user/login", {
+      <LoginCard  msg="Sign in to continue Teaching" onclick={  ()=>{
+         fetch("http://localhost:3000/tutor/login", {
           method: "POST",
           headers: {
         username: email,
@@ -24,7 +24,7 @@ export function LoginPage(){
        const json=await res.json();
      
   if (res.ok) {
-   navigate("/StudentDashboard")
+   navigate("/TutorDashboard")
   } else {
     alert(json.msg || "Login failed");
   }

@@ -1,9 +1,14 @@
 const express=require("express");
 
-
+const router=express.Router();
 const { Tutors} = require("../db");
 const tutorMiddleware = require("../middlewares/tutor");
-const router=express.Router();
+router.post("/login",  tutorMiddleware,(req, res) => {
+   
+  res.json({
+    msg: "Login successful"
+  });
+});
 router.post("/signup",(req,res)=>{
 const username=req.body.username;
 const password=req.body.password;
@@ -17,10 +22,6 @@ res.json({
 
 
 })
-router.post("/login", tutorMiddleware, (req, res) => {
-  res.json({
-    msg: "Login successful"
-  });
-});
+
 
 module.exports=router;

@@ -11,5 +11,5 @@ export const ButtonComp=(props)=>{
                 
                 flex justify-center rounded
         sm:w-45
-    `}><button onClick={props.click} >{props.title}</button></div></div>
+    `}><button onClick={props.click}   >{props.title}</button></div></div>
 }
