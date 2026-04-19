@@ -29,6 +29,11 @@ export function Courses(){
       {recentCourses.map((course)=>(
       <CoursesCard key={course._id} title={course.title} description={course.description}  className="bg-[url('./assets/dsaLogo.png')] bg-cover"/>
      ))}
+     <div className=" w-30 ml-130 flex justify-between">
+        <span className="hover:text-sky-500"><a>previous</a></span>
+        <span className="text-sky-500"><a>1</a></span>
+        <span className="hover:text-sky-500" ><a>next</a></span>
+     </div>
         
     
     </>
