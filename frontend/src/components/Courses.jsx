@@ -1,10 +1,14 @@
 import { CoursesCard } from "./CoursesCard";
+import { CreatenewCourse } from "./CreatenewCourse";
 import { FeatureCard } from "./FeatureCard";
 import { useState } from "react";
 import { useEffect } from "react";
 
+
 export function Courses(){
      const [courses, setCourses] = useState([]);
+   
+
      const [active,setActive]=useState('Mycourses')
       
           useEffect(() => {
@@ -26,6 +30,8 @@ export function Courses(){
     ? "text-sky-500 underline"
     : "text-gray-400"}><a>Add New Course</a></span>
       </div>
+      {active==='Mycourses' && (
+        <>
       {recentCourses.map((course)=>(
       <CoursesCard key={course._id} title={course.title} description={course.description}  className="bg-[url('./assets/dsaLogo.png')] bg-cover"/>
      ))}
@@ -34,7 +40,9 @@ export function Courses(){
         <span className="text-sky-500"><a>1</a></span>
         <span className="hover:text-sky-500" ><a>next</a></span>
      </div>
-        
-    
+    </>)} 
+    {active==='newCourse' &&
+    <CreatenewCourse/>
+    }
     </>
 }
