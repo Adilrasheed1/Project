@@ -15,8 +15,8 @@ export function SideMenu(props){
                 
                 
                  />
-            <SideCompo title={props.title3}/>
-            <SideCompo title={props.title4}/>
+            <SideCompo title={props.title3} className={`${props.classCourses}`} onClick={props.onClickCourses}/>
+            <SideCompo title={props.title4} className={`${props.classTests}`}/>
             <SideCompo title={props.title5}/>
         </div>
     </div>

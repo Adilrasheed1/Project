@@ -6,6 +6,11 @@ export function DoubtForm(){
     const[title,setTitle]=useState("");
     const[description,setDescription]=useState("");
     const[image,setImage]=useState("")
+    const socket = new WebSocket("ws://localhost:8000");
+
+socket.onopen = () => {
+  socket.send(JSON.stringify({ type: "student" }));
+};
     return <div className="h-108 bg-[#d1dbd0] w-150  mx-5 my-5 rounded-lg border-1 border-gray-200 pt-5 pl-5 ">
         <InputCompo label="Doubt" Type="text"  className="w-80 h-10 px-3 text-sm text-gray-700  border-1 border-gray-200  rounded-lg  mb-5 " Placeholder="write the name of doubt" value={title} onchangemail={function(e){
             
@@ -33,16 +38,20 @@ export function DoubtForm(){
        .then(async function(res) {
        const json=await res.json();
      
-  if (res.ok) {
-   alert("doubt uploaded")
-  } else {
-    alert(json.msg || "doubt failed");
-  }
-      })
-      .catch(err => {
-  console.log(err);
-  alert("Server error");
-});
+  if (!res.ok) {
+      alert(json.msg || "doubt failed");
+      return;
+    }
+  })
+     socket.send(JSON.stringify({
+      type: "request_tutor",
+      title,
+      description,
+      image
+    }));
+    
+
+    alert("Finding tutor...");
     }} title="Connect To Tutor" className={"bg-gray-200 text-gray-700 border-1 border-gray-200 mt-5 ml-3 hover:bg-blue-500 hover:text-white"} />
     </div>
 }
