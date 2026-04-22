@@ -21,9 +21,13 @@ export function LoginPage(){
       
     })
        .then(async function(res) {
-       const json=await res.json();
+       const data=await res.json()
+   
+       
      
   if (res.ok) {
+   
+      localStorage.setItem("username", data.username);
    navigate("/StudentDashboard")
   } else {
     alert(json.msg || "Login failed");

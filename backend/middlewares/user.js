@@ -8,10 +8,14 @@ function userMiddleware(req,res,next){
     })
     .then(function(value){
         if(value){
+            res.json({
+                username:username
+            })
             next();
         }else{
             res.status(403).json({
-                msg:"user does not exist"
+                msg:"user does not exist",
+               
             })
             
         }
