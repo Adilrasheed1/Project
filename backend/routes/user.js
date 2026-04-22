@@ -11,14 +11,16 @@ User.create({
     password
 })
 res.json({
-    message: 'User created successfully'
+    message: 'User created successfully',
+    username:username
 })
 
 
 })
 router.post("/login", userMiddleware, (req, res) => {
   res.json({
-    msg: "Login successful"
+    msg: "Login successful",
+     
   });
 });
 module.exports=router;

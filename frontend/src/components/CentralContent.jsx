@@ -1,4 +1,5 @@
 
+import { promise } from "zod";
 import { FeatureCard } from "../components/FeatureCard";
 import { DoubtSection } from "../pages/DoubtSection";
 import { SearchBar } from "./SearchBar";
@@ -7,12 +8,17 @@ import { useEffect } from "react";
 
 export function CentralContent({section}){
       const [doubts, setDoubts] = useState([]);
+      const [user,setUsername]=useState([]);
 
-  useEffect(() => {
+    useEffect(() => {
+        const username = localStorage.getItem("username");
+        const user = username?.split(" ")[0];
+    setUsername(user);
     fetch("http://localhost:3000/doubts/DoubtSection")
       .then(res => res.json())
       .then(data => {
         setDoubts(data);
+
       });
   }, []);
   const recentDoubts = doubts.slice(-4);
@@ -23,7 +29,7 @@ export function CentralContent({section}){
     {section==='home' &&
      <div >
     <div className="bg-pink-400 h-50 mt-20  rounded-lg pl-5 pt-10  bg-[url('https://thumbs.dreamstime.com/z/symbols-doubt-representing-something-to-ponder-problem-solve-326315803.jpg')] bg-cover bg-center  bg-blend-overlay ">
-    <h3 className="text-4xl font-semibold text-gray-800">Welcome Back , Adil!</h3> 
+    <h3 className="text-4xl font-semibold text-gray-800">Welcome Back , {user}!</h3> 
     <p className="pl-4 pt-2 text-lg text-gray-500 ">Where every doubt finds an answer</p></div>
     <span className="pt-10 pl-4 text-lg font-bold text-gray-600:"><h3>Recent doubts</h3></span>
      
