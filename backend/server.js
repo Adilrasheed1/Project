@@ -29,7 +29,7 @@ wss.on("connection", (ws) => {
     // 🔥 WebRTC signaling
     if (msg.type === "offer") tutor?.send(JSON.stringify(msg));
     if (msg.type === "answer") student?.send(JSON.stringify(msg));
-    if (msg.type === "candidate") {
+    if (msg.type === "iceCandidate") {
       if (ws === student) tutor?.send(JSON.stringify(msg));
       else student?.send(JSON.stringify(msg));
     }

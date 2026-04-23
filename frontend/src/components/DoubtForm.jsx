@@ -1,16 +1,93 @@
 import { InputCompo } from "./InputCompo";
 import { ButtonComp } from "./ButtonComp";
 import { useState } from "react";
-
+import { useEffect } from "react";
 export function DoubtForm(){
+  const [socket, setSocket] = useState(null);
+  const [pc, setPc] = useState(null);
     const[title,setTitle]=useState("");
     const[description,setDescription]=useState("");
     const[image,setImage]=useState("")
-    const socket = new WebSocket("ws://localhost:8000");
+      useEffect(() => {
+    const ws = new WebSocket("ws://localhost:8000");
 
-socket.onopen = () => {
-  socket.send(JSON.stringify({ type: "student" }));
-};
+    ws.onopen = () => {
+      console.log("connected as student");
+      ws.send(JSON.stringify({ type: "student" }));
+    };
+
+    ws.onmessage = async (event) => {
+      const msg = JSON.parse(event.data);
+
+      // 🔥 tutor accepted
+      if (msg.type === "accepted") {
+        startWebRTC(ws);
+      }
+
+      // 🔥 answer from tutor
+      if (msg.type === "answer") {
+        await pc?.setRemoteDescription(msg.sdp);
+      }
+
+      // 🔥 ICE
+      if (msg.type === "iceCandidate") {
+        await pc?.addIceCandidate(msg.candidate);
+      }
+    };
+
+    setSocket(ws);
+  }, []);
+async function startWebRTC(socket) {
+  const pc = new RTCPeerConnection({
+    iceServers: [{ urls: "stun:stun.l.google.com:19302" }]
+  });
+
+  setPc(pc);
+
+  const stream = await navigator.mediaDevices.getUserMedia({
+    video: true,
+    audio: false
+  });
+
+  // send video
+  stream.getTracks().forEach(track => {
+    pc.addTrack(track, stream);
+  });
+
+  // show local video
+  const video = document.createElement("video");
+  video.autoplay = true;
+  video.muted = true;
+  video.srcObject = stream;
+  document.body.appendChild(video);
+
+  // receive tutor video
+  pc.ontrack = (event) => {
+    const remoteVideo = document.createElement("video");
+    remoteVideo.autoplay = true;
+    remoteVideo.srcObject = event.streams[0];
+    document.body.appendChild(remoteVideo);
+  };
+
+  // create offer
+  const offer = await pc.createOffer();
+  await pc.setLocalDescription(offer);
+
+  socket.send(JSON.stringify({
+    type: "offer",
+    sdp: offer
+  }));
+
+  // ICE
+  pc.onicecandidate = (e) => {
+    if (e.candidate) {
+      socket.send(JSON.stringify({
+        type: "iceCandidate",
+        candidate: e.candidate
+      }));
+    }
+  };
+}
     return <div className="h-108 bg-[#d1dbd0] w-150  mx-5 my-5 rounded-lg border-1 border-gray-200 pt-5 pl-5 ">
         <InputCompo label="Doubt" Type="text"  className="w-80 h-10 px-3 text-sm text-gray-700  border-1 border-gray-200  rounded-lg  mb-5 " Placeholder="write the name of doubt" value={title} onchangemail={function(e){
             
@@ -49,6 +126,7 @@ socket.onopen = () => {
       description,
       image
     }));
+
     
 
     alert("Finding tutor...");
