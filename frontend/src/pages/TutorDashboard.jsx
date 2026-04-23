@@ -10,15 +10,16 @@ export function TutorDashboard(){
     const [section, setSection] = useState("home");
 
   const [request, setRequest] = useState(null);
+   const socket=new WebSocket('ws://localhost:8000')
   useEffect(()=>{
     console.log("connecting to wss")
-   const socket=new WebSocket('ws://localhost:8000')
+  
    socket.onopen=()=>{
       socket.send(JSON.stringify({type:'tutor'}))
    }
    console.log("connected")
 
-   socket.onmessage = (event) => {
+   socket.onmessage =async (event) => {
    console.log("MESSAGE RECEIVED:", event.data); 
   const msg = JSON.parse(event.data);
   console.log(msg)
@@ -26,12 +27,52 @@ export function TutorDashboard(){
   if (msg.type === "incoming_request") {
     setRequest(msg); // show popup
   }
+   if (msg.type === "offer") {
+  const pc = new RTCPeerConnection({
+    iceServers: [{ urls: "stun:stun.l.google.com:19302" }]
+  });
+
+  const stream = await navigator.mediaDevices.getUserMedia({
+    video: true,
+    audio: false
+  });
+
+  stream.getTracks().forEach(track => pc.addTrack(track, stream));
+
+  pc.ontrack = (event) => {
+    video.srcObject = event.streams[0];
+  };
+
+  await pc.setRemoteDescription(msg.sdp);
+
+  const answer = await pc.createAnswer();
+  await pc.setLocalDescription(answer);
+
+  socket.send(JSON.stringify({
+    type: "answer",
+    sdp: answer
+  }));
+
+  pc.onicecandidate = (e) => {
+    if (e.candidate) {
+      socket.send(JSON.stringify({
+        type: "iceCandidate",
+        candidate: e.candidate
+      }));
+    }
+  };
+}
+
 };
    },[])
-   function accept() {
+    function  accept() {
   console.log("Accepted request:", request);
-  setRequest(null); // close popup
+   socket?.send(JSON.stringify({ type: "accept" }));
+  setRequest(null); 
+ 
 }
+   
+
        return <div className="grid grid-cols-5 bg-[#fcedf2] h-screen   ">
      <SideMenu title1='Home' title2="Sessions" title3="Courses" title4="MyStudents" title5="Tests"  classHome={section==='home' ? "bg-sky-500 text-slate-800" : "bg-gray-200 text-gray-950" } onClickHome={()=> setSection("home")} onClickDoubts={() => setSection("doubts")} className="col-span-1 w-40 mt-8  ml-8 " classDoubts={section==='doubts' ? "bg-sky-500 text-slate-800" : "bg-gray-200 text-gray-950" } onClickCourses={() => setSection("courses")} className="col-span-1 w-40 mt-8  ml-8 " classCourses={section==='courses' ? "bg-sky-500 text-slate-800" : "bg-gray-200 text-gray-950" }/>
      
