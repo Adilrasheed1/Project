@@ -6,25 +6,28 @@ import { SideMenu } from "../components/SideMenu";
 import { useEffect, useState } from "react";
 import { TutorCentralContent } from "../components/TutorCentralContent";
 export function TutorDashboard(){
+   const [socket, setSocket] = useState(null);
   
     const [section, setSection] = useState("home");
 
   const [request, setRequest] = useState(null);
-   const socket=new WebSocket('ws://localhost:8000')
+  
   useEffect(()=>{
+     const ws=new WebSocket('ws://localhost:8000')
     console.log("connecting to wss")
   
-   socket.onopen=()=>{
-      socket.send(JSON.stringify({type:'tutor'}))
+   ws.onopen=()=>{
+      ws.send(JSON.stringify({type:'tutor'}))
    }
    console.log("connected")
 
-   socket.onmessage =async (event) => {
+   ws.onmessage =async (event) => {
    console.log("MESSAGE RECEIVED:", event.data); 
   const msg = JSON.parse(event.data);
   console.log(msg)
 
   if (msg.type === "incoming_request") {
+    alert("incoming request")
     setRequest(msg); // show popup
   }
    if (msg.type === "offer") {
@@ -48,14 +51,14 @@ export function TutorDashboard(){
   const answer = await pc.createAnswer();
   await pc.setLocalDescription(answer);
 
-  socket.send(JSON.stringify({
+  ws.send(JSON.stringify({
     type: "answer",
     sdp: answer
   }));
 
   pc.onicecandidate = (e) => {
     if (e.candidate) {
-      socket.send(JSON.stringify({
+      ws.send(JSON.stringify({
         type: "iceCandidate",
         candidate: e.candidate
       }));
@@ -64,6 +67,7 @@ export function TutorDashboard(){
 }
 
 };
+setSocket(ws)
    },[])
     function  accept() {
   console.log("Accepted request:", request);
