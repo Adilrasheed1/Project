@@ -2,7 +2,12 @@ import { InputCompo } from "./InputCompo";
 import { ButtonComp } from "./ButtonComp";
 import { useState } from "react";
 import { useEffect } from "react";
+import { VideoComponent } from "./VideoComponent";
+import { useRef } from "react";
 export function DoubtForm(){
+    const [inCall, setInCall] = useState(false);
+    const videoRef = useRef(null);
+   
   const [socket, setSocket] = useState(null);
   const [pc, setPc] = useState(null);
     const[title,setTitle]=useState("");
@@ -21,6 +26,7 @@ export function DoubtForm(){
 
       // 🔥 tutor accepted
       if (msg.type === "accepted") {
+        
         startWebRTC(ws);
       }
 
@@ -43,24 +49,24 @@ async function startWebRTC(socket) {
   });
 
   setPc(pc);
+  setInCall(true);
 
   const stream = await navigator.mediaDevices.getUserMedia({
     video: true,
     audio: false
   });
+  if (videoRef.current) {
+      videoRef.current.srcObject = stream;
+    }
+    
+    console.log(inCall)
 
   // send video
   stream.getTracks().forEach(track => {
     pc.addTrack(track, stream);
   });
-
-  // show local video
-  const video = document.createElement("video");
-  video.autoplay = true;
-  video.muted = true;
-  video.srcObject = stream;
-  document.body.appendChild(video);
-
+  
+   
   // receive tutor video
   pc.ontrack = (event) => {
     const remoteVideo = document.createElement("video");
@@ -89,6 +95,9 @@ async function startWebRTC(socket) {
   };
 }
     return <div className="h-108 bg-[#d1dbd0] w-150  mx-5 my-5 rounded-lg border-1 border-gray-200 pt-5 pl-5 ">
+        {!inCall &&( 
+         
+        <>
         <InputCompo label="Doubt" Type="text"  className="w-80 h-10 px-3 text-sm text-gray-700  border-1 border-gray-200  rounded-lg  mb-5 " Placeholder="write the name of doubt" value={title} onchangemail={function(e){
             
                 setTitle(e.target.value)
@@ -100,7 +109,7 @@ async function startWebRTC(socket) {
         <InputCompo label="Attachments" Type="file" className="w-80 h-20 px-3 text-sm text-gray-700  border-1 border-gray-200  rounded-lg " Placeholder="choose image"value={image} onchangemail={function(e){
                 setImage(e.target.value)
             }}/>
-        <ButtonComp click={ ()=>{
+        <ButtonComp   click={ ()=>{
          fetch("http://localhost:3000/doubts/DoubtSection", {
           method: "POST",
            headers: {
@@ -127,9 +136,20 @@ async function startWebRTC(socket) {
       image
     }));
 
-    
+   
 
     alert("Finding tutor...");
     }} title="Connect To Tutor" className={"bg-gray-200 text-gray-700 border-1 border-gray-200 mt-5 ml-3 hover:bg-blue-500 hover:text-white"} />
+    </>)}
+    {inCall && (
+         <video
+        ref={videoRef}
+        autoPlay
+        muted
+        playsInline
+        className="w-64 h-40 bg-black"
+      />
+    )}
     </div>
+
 }
