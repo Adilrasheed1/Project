@@ -7,9 +7,11 @@ import { useRef } from "react";
 export function DoubtForm(){
     const [inCall, setInCall] = useState(false);
     const videoRef = useRef(null);
+    const pcRef = useRef(null);
+    const remoteVideoRef = useRef(null);
    
   const [socket, setSocket] = useState(null);
-  const [pc, setPc] = useState(null);
+
     const[title,setTitle]=useState("");
     const[description,setDescription]=useState("");
     const[image,setImage]=useState("")
@@ -26,18 +28,20 @@ export function DoubtForm(){
 
       // 🔥 tutor accepted
       if (msg.type === "accepted") {
-        
+        console.log("request Accepted")
         startWebRTC(ws);
       }
 
       // 🔥 answer from tutor
       if (msg.type === "answer") {
-        await pc?.setRemoteDescription(msg.sdp);
+        await pcRef.current?.setRemoteDescription(msg.sdp);
+        console.log("answer:",msg.sdp)
       }
 
       // 🔥 ICE
       if (msg.type === "iceCandidate") {
-        await pc?.addIceCandidate(msg.candidate);
+        await  pcRef.current?.addIceCandidate(msg.candidate);
+        console.log("ice:",msg.candidate)
       }
     };
 
@@ -47,9 +51,12 @@ async function startWebRTC(socket) {
   const pc = new RTCPeerConnection({
     iceServers: [{ urls: "stun:stun.l.google.com:19302" }]
   });
+  pcRef.current = pc; 
+  
 
-  setPc(pc);
+  
   setInCall(true);
+  console.log(inCall)
 
   const stream = await navigator.mediaDevices.getUserMedia({
     video: true,
@@ -59,21 +66,21 @@ async function startWebRTC(socket) {
       videoRef.current.srcObject = stream;
     }
     
-    console.log(inCall)
+    
 
   // send video
   stream.getTracks().forEach(track => {
     pc.addTrack(track, stream);
   });
   
-   
+   console.log("start receiving")
   // receive tutor video
-  pc.ontrack = (event) => {
-    const remoteVideo = document.createElement("video");
-    remoteVideo.autoplay = true;
-    remoteVideo.srcObject = event.streams[0];
-    document.body.appendChild(remoteVideo);
-  };
+pc.ontrack = (event) => {
+console.log("TRACK RECEIVED 🔥", event.streams);
+  if (remoteVideoRef.current) {
+    remoteVideoRef.current.srcObject = event.streams[0];
+  }
+};
 
   // create offer
   const offer = await pc.createOffer();
@@ -83,6 +90,7 @@ async function startWebRTC(socket) {
     type: "offer",
     sdp: offer
   }));
+  
 
   // ICE
   pc.onicecandidate = (e) => {
@@ -142,6 +150,7 @@ async function startWebRTC(socket) {
     }} title="Connect To Tutor" className={"bg-gray-200 text-gray-700 border-1 border-gray-200 mt-5 ml-3 hover:bg-blue-500 hover:text-white"} />
     </>)}
     {inCall && (
+        <div>
          <video
         ref={videoRef}
         autoPlay
@@ -149,6 +158,12 @@ async function startWebRTC(socket) {
         playsInline
         className="w-64 h-40 bg-black"
       />
+     <video
+  ref={remoteVideoRef}
+  autoPlay
+  playsInline
+  className="w-64 h-40 object-cover"
+/> </div>
     )}
     </div>
 
