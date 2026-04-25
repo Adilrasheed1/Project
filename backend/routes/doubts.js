@@ -31,5 +31,20 @@ router.get("/DoubtSection", async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
+router.delete("/delete-many", async (req, res) => {
+  try {
+    const result = await Doubts.deleteMany({
+      title: req.body.title   // condition
+    });
+ res.json({
+      message: "Deleted successfully",
+      deletedCount: result.deletedCount
+    });
+
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 
 module.exports=router;

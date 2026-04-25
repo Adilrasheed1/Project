@@ -3,9 +3,11 @@ import { ProfileSection } from "../components/ProfileSection";
 import { SideMenu } from "../components/SideMenu";
 
 
-import { useEffect, useState } from "react";
+
+import { useEffect, useRef, useState } from "react";
 import { TutorCentralContent } from "../components/TutorCentralContent";
 export function TutorDashboard(){
+  const remoteVideoRef=useRef(null)
    const [socket, setSocket] = useState(null);
   
     const [section, setSection] = useState("home");
@@ -34,7 +36,7 @@ export function TutorDashboard(){
   const pc = new RTCPeerConnection({
     iceServers: [{ urls: "stun:stun.l.google.com:19302" }]
   });
-
+await pc.setRemoteDescription(msg.sdp);
   const stream = await navigator.mediaDevices.getUserMedia({
     video: true,
     audio: false
@@ -42,11 +44,15 @@ export function TutorDashboard(){
 
   stream.getTracks().forEach(track => pc.addTrack(track, stream));
 
-  pc.ontrack = (event) => {
-    video.srcObject = event.streams[0];
-  };
+ pc.ontrack = (event) => {
+  console.log("REMOTE STREAM RECEIVED");
 
-  await pc.setRemoteDescription(msg.sdp);
+  if (remoteVideoRef.current) {
+    remoteVideoRef.current.srcObject = event.streams[0];
+  }
+};
+
+  
 
   const answer = await pc.createAnswer();
   await pc.setLocalDescription(answer);
