@@ -1,17 +1,41 @@
 import { SideCompo } from "./SideCompo";
-import { useNavigate } from "react-router-dom";
-
 import { useState } from "react";
+import { Home, HelpCircle, FileText, BarChart } from "lucide-react";
 export function SideMenu(props){
- const [section, setSection] = useState("home");
-    const navigate=useNavigate();
-    return <div className={`${props.className}`}>
-        <div className="h-138  w-60 bg-gray-300 flex flex-col pl-5 pt-20 text-lg font-semibold rounded-lg border-1 border-orange-800">
-           <SideCompo title="Home" className='bg-orange-800 disabled:bg-gray-200' onClick={props.onClickHome}  />
-            <SideCompo title="DoubtSection" className=' active:bg-orange-800' onClick={props.onClickDoubts} />
-            <SideCompo title="Courses"/>
-            <SideCompo title="Progress"/>
-            <SideCompo title="Tests"/>
-        </div>
+  return (
+    <div className={`${props.className} h-full flex items-center justify-center`}>
+      
+      <div className="bg-[#eeeff1] h-[90%] w-full ml-5 rounded-xl shadow-2xl flex flex-col items-center justify-evenly p-4">
+
+        <SideCompo 
+          title="Home"
+          icon={Home}
+          onClick={props.onClickHome}
+          isActive={props.section === "home"}
+        />
+
+        <SideCompo 
+          title="Doubts"
+          icon={HelpCircle}
+          onClick={props.onClickDoubts}
+          isActive={props.section === "doubts"}
+        />
+
+        <SideCompo 
+          title="Tests"
+          icon={FileText}
+          onClick={props.onClickTest}
+          isActive={props.section === "Test"}
+        />
+
+        <SideCompo 
+          title="Progress"
+          icon={BarChart}
+          onClick={() => {}}
+          isActive={props.section === "Progress"}
+        />
+
+      </div>
     </div>
+  );
 }
