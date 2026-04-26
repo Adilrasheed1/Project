@@ -2,7 +2,8 @@ import { useState } from "react";
 import Question from "./question";
 import Result from "./result";
 
-function Exam({ examName, onBack }) {
+function Exam({ exam, onBack }) {
+ 
 
   const questions = [
     {
@@ -43,7 +44,7 @@ function Exam({ examName, onBack }) {
       />
     );
   }
-
+console.log(exam?.type);
   return (
     <div className="h-screen w-full flex flex-col items-center justify-center p-6 relative">
 
@@ -55,7 +56,7 @@ function Exam({ examName, onBack }) {
         Leave Exam
       </button>
 
-      <h1 className="text-3xl font-bold mb-4">{examName}</h1>
+      <h1 className="text-3xl font-bold mb-4">{exam?.name}</h1>
 
       <p className="mb-2">
         Question {currentQuestion + 1} / {questions.length}
@@ -65,13 +66,38 @@ function Exam({ examName, onBack }) {
         question={questions[currentQuestion].question}
         options={questions[currentQuestion].options}
         selectedAnswer={answers[currentQuestion]}
-        onSelect={(option) =>
-          setAnswers((prev) => ({
-            ...prev,
-            [currentQuestion]: option,
-          }))
-        }
+
+       onSelect={(option) => {
+        setAnswers((prev) => ({
+          ...prev,
+          [currentQuestion]: option,
+        }));
+
+        // check if all answered AFTER this selection
+        const updatedAnswers = {
+          ...answers,
+          [currentQuestion]: option,
+        };
+
+        const hasUnanswered = questions.some(
+          (_, i) => updatedAnswers[i] === undefined
+        );
+
+       if (!hasUnanswered) {
+          setShowWarning(false);
+           setwarningDisplayed(false); 
+                            }
+      }}
+
       />
+
+
+          {showWarning && (
+  <p className="text-red-500 font-semibold mb-2">
+    ⚠ You have unanswered questions
+  </p>
+)}
+
 
       <div className="mt-4 flex gap-4">
 
@@ -85,18 +111,33 @@ function Exam({ examName, onBack }) {
 
         {currentQuestion === questions.length - 1 ? (
           <button
-            onClick={() => {
-              let score = 0;
-              for (let i = 0; i < questions.length; i++) {
-                if (answers[i] === questions[i].answer) {
-                  score += 10;
-                }
-              }
-              setScore(score);
-            }}
-            className="px-4 py-2 bg-[#9fd200] rounded"
+           onClick={() => {
+  const hasUnanswered = questions.some((_, i) => answers[i] === undefined);
+
+  // first click → show warning
+  if (hasUnanswered && !warningDisplayed) {
+    setShowWarning(true);
+    setwarningDisplayed(true);
+    return;
+  }
+
+  // second click OR no unanswered → submit
+  setShowWarning(false);
+
+  let score = 0;
+  for (let i = 0; i < questions.length; i++) {
+    if (answers[i] === questions[i].answer) {
+      score += 10;
+    }
+  }
+
+  setScore(score);
+}}              
+            className={`px-4 py-2 rounded ${
+    warningDisplayed ? "bg-red-500 text-white" : "bg-[#9fd200]"
+  }`}
           >
-            Submit
+            {warningDisplayed ? "Submit Anyway" : "Submit"}
           </button>
         ) : (
           <button
