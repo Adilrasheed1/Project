@@ -1,23 +1,46 @@
-import { SideCompo } from "./SideCompo";
-import { useNavigate } from "react-router-dom";
+import SideCompo from "./SideCompo";
+import { Home, HelpCircle, FileText, BarChart } from "lucide-react";
 
-import { useState } from "react";
-export function SideMenu(props){
- const [section, setSection] = useState("home");
-    const navigate=useNavigate();
-    return <div className={`${props.className}`}>
-        <div className="h-138  w-60 bg-gray-300 flex flex-col pl-5 pt-20 text-lg font-semibold rounded-lg border-1 border-gray-400">
-        <SideCompo title={props.title1} className={`${props.classHome}`} onClick=
-            {props.onClickHome}
-      />
-            <SideCompo title={props.title2}  className={`${props.classDoubts}`}onClick={props.onClickDoubts}
-                
-                
-                
-                 />
-            <SideCompo title={props.title3} className={`${props.classCourses}`} onClick={props.onClickCourses}/>
-            <SideCompo title={props.title4} className={`${props.classTests}`}/>
-            <SideCompo title={props.title5}/>
-        </div>
+export function SideMenu(props) {
+  return (
+    <div className={`${props.className} h-full flex items-center justify-center`}>
+      
+      <div className="bg-[#eeeff1] h-[90%] w-full ml-5 rounded-xl shadow-2xl flex flex-col items-center justify-evenly p-4">
+
+        {/* HOME */}
+        <SideCompo 
+          title="Home"
+          icon={Home}
+          onClick={props.onClickHome}
+          isActive={props.section === "home"}
+        />
+
+        {/* DOUBTS */}
+        <SideCompo 
+          title="Doubts"
+          icon={HelpCircle}
+          onClick={props.onClickDoubts}
+          isActive={props.section === "doubts"}
+        />
+
+        {/* TESTS */}
+        <SideCompo 
+          title="Tests"
+          icon={FileText}
+          onClick={props.onClickTest}
+          isActive={props.section === "Test"}
+        />
+
+        {/* PROGRESS */}
+        <SideCompo 
+          title="Progress"
+          icon={BarChart}
+          onClick={props.onClickProgress}
+          isActive={props.section === "Progress"}
+        />
+
+      </div>
+
     </div>
+  );
 }
