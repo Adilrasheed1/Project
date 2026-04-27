@@ -2,8 +2,9 @@ function SideCompo({ title, icon: Icon, onClick, isActive }) {
   return (
     <div
       onClick={onClick}
-      className="w-full flex flex-col items-center justify-center py-2 cursor-pointer transition duration-200 hover:scale-105 active:scale-95"
+      className="w-full flex flex-col items-center justify-center py-2 cursor-pointer transition-all duration-200 hover:scale-105 active:scale-95"
     >
+      
       {/* ICON */}
       <div
         className={`h-12 w-12 flex items-center justify-center rounded-full shadow-md transition-all duration-200
@@ -25,6 +26,7 @@ function SideCompo({ title, icon: Icon, onClick, isActive }) {
       >
         {title}
       </span>
+
     </div>
   );
 }

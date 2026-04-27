@@ -8,48 +8,63 @@ export function ProfileSection({ className }) {
     fetch("http://localhost:3000/courses/")
       .then(res => res.json())
       .then(data => setCourses(data))
-      .catch(() => setCourses([]));
+      .catch(err => {
+        console.error("Failed to fetch courses", err);
+        setCourses([]); // fallback safety
+      });
   }, []);
 
   const recentCourses = courses.slice(-3);
 
   return (
-    <div className={`${className} h-full flex mr-5 items-center justify-center`}>
+    <div className={`${className} h-full flex items-center justify-center mr-5`}>
 
       <div className="bg-[#eeeff1] h-[90%] w-full rounded-xl shadow-2xl p-4 flex flex-col gap-4 overflow-hidden">
 
-        <span className="font-semibold text-gray-700">My Courses</span>
+        {/* PROFILE (keep theirs) */}
+        <div className="flex justify-center items-center h-40 bg-gray-200 rounded-lg border border-gray-300">
+          <div className="h-20 w-20 rounded-full border-2 border-blue-500 bg-gray-400"></div>
+        </div>
 
-        {/* If backend available */}
-        {recentCourses.length > 0 ? (
-          recentCourses.map((course) => (
-            <FeatureCard
-              key={course._id}
-              title={course.title}
-              description={course.description}
-              className="bg-blue-600 text-gray-200 h-24 ml-3 mr-3 mt-3 pt-5 pl-5 rounded-lg"
-            />
-          ))
-        ) : (
-          <>
-            {/* fallback (your original look) */}
-            <FeatureCard
-              title="course1"
-              description="complete DSA Playlist"
-              className="bg-orange-600 text-gray-300 h-24 ml-3 mr-3 mt-3 pt-5 pl-5 rounded-lg"
-            />
-            <FeatureCard
-              title="course2"
-              description="complete java Playlist"
-              className="bg-slate-900 text-gray-300 h-24 ml-3 mr-3 mt-3 pt-5 pl-5 rounded-lg"
-            />
-            <FeatureCard
-              title="course3"
-              description="complete Machine Learning Playlist"
-              className="bg-blue-600 text-gray-300 h-24 ml-3 mr-3 mt-3 pt-5 pl-5 rounded-lg"
-            />
-          </>
-        )}
+        {/* COURSES */}
+        <div className="flex flex-col gap-2 overflow-y-auto no-scrollbar">
+
+          <span className="text-lg font-semibold text-gray-700">
+            My Courses
+          </span>
+
+          {/* If backend works */}
+          {recentCourses.length > 0 ? (
+            recentCourses.map((course) => (
+              <FeatureCard
+                key={course._id}
+                title={course.title}
+                description={course.description}
+                className="bg-blue-600 text-gray-200 h-24 ml-3 mr-3 mt-3 pt-5 pl-5 rounded-lg"
+              />
+            ))
+          ) : (
+            <>
+              {/* fallback (your original UI) */}
+              <FeatureCard
+                title="course1"
+                description="complete DSA Playlist"
+                className="bg-orange-600 text-gray-300 h-24 ml-3 mr-3 mt-3 pt-5 pl-5 rounded-lg"
+              />
+              <FeatureCard
+                title="course2"
+                description="complete java Playlist"
+                className="bg-slate-900 text-gray-300 h-24 ml-3 mr-3 mt-3 pt-5 pl-5 rounded-lg"
+              />
+              <FeatureCard
+                title="course3"
+                description="complete Machine Learning Playlist"
+                className="bg-blue-600 text-gray-300 h-24 ml-3 mr-3 mt-3 pt-5 pl-5 rounded-lg"
+              />
+            </>
+          )}
+
+        </div>
 
       </div>
 

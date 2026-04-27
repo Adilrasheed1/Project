@@ -8,7 +8,7 @@ import Exam from "../pages/exam";
 export function StudentDashboard() {
 
   // ================================
-  // ADIL'S 
+  // ADIL'S (DO NOT TOUCH)
   // ================================
   const socket = new WebSocket('ws://localhost:8000');
   let pc;
@@ -56,13 +56,13 @@ export function StudentDashboard() {
   };
 
   // ================================
-  // UI STATE (SAFE ZONE)
+  // YOUR STATE
   // ================================
   const [section, setSection] = useState("home");
   const [selectedExam, setSelectedExam] = useState(null);
 
   // ================================
-  // EXAM FLOW
+  // YOUR EXAM FLOW
   // ================================
   if (selectedExam) {
     return (
@@ -76,7 +76,7 @@ export function StudentDashboard() {
   }
 
   // ================================
-  // UI LAYOUT
+  // YOUR UI
   // ================================
   return (
     <div className="h-screen w-full bg-white flex overflow-hidden">
@@ -100,12 +100,12 @@ export function StudentDashboard() {
         className="flex-1 overflow-y-auto no-scrollbar overflow-x-hidden px-3 sm:px-6 md:px-8"
       />
 
-      {/* RIGHT PANEL */}
+      {/* RIGHT */}
       <div className="hidden lg:flex w-[260px] justify-center items-center">
         <ProfileSection />
       </div>
 
-      {/* MOBILE NAV */}
+      {/* MOBILE NAV (YOUR VERSION KEPT) */}
       <div className="fixed bottom-2 w-full flex justify-center md:hidden">
         <div className="bg-[#eeeff1] rounded-2xl w-[92%] py-3 px-2 flex justify-evenly shadow-xl">
 

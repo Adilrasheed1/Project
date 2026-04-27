@@ -5,13 +5,14 @@ import { useState, useEffect } from "react";
 import TestDashboard from "../components/TestDashboard";
 
 export function CentralContent({ section, className, setSelectedExam }) {
+
   const [doubts, setDoubts] = useState([]);
   const [user, setUsername] = useState("");
 
   useEffect(() => {
     const username = localStorage.getItem("username");
     const user = username?.split(" ")[0];
-    setUsername(user || "");
+    setUsername(user || ""); // ✅ safe
 
     fetch("http://localhost:3000/doubts/DoubtSection")
       .then(res => res.json())
@@ -19,7 +20,7 @@ export function CentralContent({ section, className, setSelectedExam }) {
       .catch(() => setDoubts([]));
   }, []);
 
-  const recentDoubts = doubts.slice(0, 4);
+  const recentDoubts = doubts.slice(0, 4); // keep consistent
 
   return (
     <div className={`h-full overflow-y-auto overflow-x-hidden no-scrollbar ${className}`}>
@@ -28,9 +29,15 @@ export function CentralContent({ section, className, setSelectedExam }) {
         {/* HOME */}
         {section === "home" && (
           <>
+            {/* KEEP YOUR HERO STYLE */}
             <h1 className="text-7xl font-extrabold font-serif mt-2 sm:mt-20 ml-10">
               COURSES THAT TEACH. MENTORS THAT GUIDE.
             </h1>
+
+            {/* Optional: small welcome line */}
+            <p className="ml-10 mt-2 text-gray-500">
+              Welcome back, {user}
+            </p>
 
             <SearchBar />
 
@@ -39,18 +46,20 @@ export function CentralContent({ section, className, setSelectedExam }) {
                 Recent doubts
               </h3>
 
-              <div className="flex justify-between">
+              {/* TAKE THEIR FLEX IMPROVEMENT */}
+              <div className="flex gap-4 flex-wrap">
                 {recentDoubts.map((doubt) => (
                   <FeatureCard
                     key={doubt._id}
                     title={doubt.title}
                     description={doubt.description}
-                    className="mt-5 bg-gray-200 ml-5 mr-2 h-40 w-50 flex flex-col pl-5 pt-5 rounded-lg border border-gray-300 text-gray-700"
+                    className="mt-5 bg-gray-200 h-40 w-52 p-4 rounded-lg border border-gray-300 text-gray-700"
                   />
                 ))}
               </div>
 
-              <a href="#" className="pl-[150px] pt-10 hover:text-blue-500">
+              {/* TAKE THEIR CLEAN LINK POSITION */}
+              <a href="#" className="block mt-4 hover:text-blue-500">
                 See all
               </a>
             </div>
