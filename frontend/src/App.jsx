@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import  Exam  from './pages/exam';
 
 
 
@@ -29,6 +30,7 @@ function App() {
       <Route path="/SignupPage" element={<SignupPage/>}/>
       <Route path="/DoubtSection" element={<DoubtSection/>}/>
       <Route path="/StudentDashboard" element={<StudentDashboard/>}/>
+     
       <Route path="/tutorSignup" element={<TutorSignup/>}/>
       <Route path="/tutorLogin" element={<TutorLogin/>}/>
       <Route path="/TutorDashboard" element ={<TutorDashboard/>}/>
