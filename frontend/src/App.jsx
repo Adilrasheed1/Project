@@ -10,6 +10,9 @@ import { LoginPage } from './pages/LoginPage';
 import { SignupPage } from './pages/SignupPage';
 import { DoubtSection } from './pages/DoubtSection';
 import { StudentDashboard } from './pages/StudentDashboard';
+import { TutorSignup } from './pages/TutorSignup';
+import { TutorLogin } from './pages/TutorLogin';
+import { TutorDashboard } from './pages/TutorDashboard';
 
 
 function App() {
@@ -28,6 +31,9 @@ function App() {
       <Route path="/DoubtSection" element={<DoubtSection/>}/>
       <Route path="/StudentDashboard" element={<StudentDashboard/>}/>
      
+      <Route path="/tutorSignup" element={<TutorSignup/>}/>
+      <Route path="/tutorLogin" element={<TutorLogin/>}/>
+      <Route path="/TutorDashboard" element ={<TutorDashboard/>}/>
     </Routes>
     </BrowserRouter>
     </>

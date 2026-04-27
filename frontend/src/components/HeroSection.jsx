@@ -1,8 +1,10 @@
 
 import { ButtonComp } from "./ButtonComp";
+import { useNavigate } from "react-router-dom";
 
 
 export function HeroSection(){
+  const navigate=useNavigate()
     return <div className="grid lg:grid-cols-2 gap-12 items-center dark:bg-gray-900 pb-4">
       <div className="col-span-1 pt-10 pl-4">
          <h1 className="text-4xl text-gray-400 sm:text-5xl lg:text-6xl font-bold leading-tight">
@@ -20,14 +22,18 @@ export function HeroSection(){
               sm:flex-row justify-between
               
               ">
-              <ButtonComp  className="w-200  bg-gray-100    sm:w-45" title="Post a Doubt"/>
+              <ButtonComp  className="w-200  bg-gray-100    sm:w-45" title="Post a Doubt" click={()=>{
+                 navigate("/LoginPage")
+              }}/>
                 <div className="text-base
                 font-bold 
                 text-gray-400 
                 
                 bg-gray-800 w-100 h-10
                 flex justify-center rounded
-                sm:w-45 "><button>Become a Tutor</button></div>
+                sm:w-45 "><button onClick={()=>{
+                  navigate('/tutorSignup')
+                }}>Become a Tutor</button></div>
               </div>
              
               <div className="flex items-center   text-gray-400  gap-8 pt-4">

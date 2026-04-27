@@ -13,3 +13,5 @@ export const ButtonComp=(props)=>{
         sm:w-45
     `}><button onClick={props.click} >{props.title}</button></div></div>
 }
+    `}><button onClick={props.click}   >{props.title}</button></div></div>
+}

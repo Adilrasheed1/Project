@@ -11,7 +11,7 @@ export function LoginPage(){
      
             
      
-      <LoginCard  onclick={  ()=>{
+      <LoginCard  msg="Sign in to continue learning" onclick={  ()=>{
          fetch("http://localhost:3000/user/login", {
           method: "POST",
           headers: {
@@ -21,9 +21,13 @@ export function LoginPage(){
       
     })
        .then(async function(res) {
-       const json=await res.json();
+       const data=await res.json()
+   
+       
      
   if (res.ok) {
+   
+      localStorage.setItem("username", data.username);
    navigate("/StudentDashboard")
   } else {
     alert(json.msg || "Login failed");

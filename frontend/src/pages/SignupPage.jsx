@@ -1,11 +1,13 @@
 import { LoginCard } from "../components/LoginCard";
 import { useState } from "react"
+import { useNavigate } from "react-router-dom";
 export const SignupPage=()=>{
+  const navigate=useNavigate();
    const [email,setEmail]=useState("")
       const [password,setPassword]=useState("")
     return <div>
         
-        <LoginCard  onclick={ ()=>{
+        <LoginCard msg="Sign up to continue learning" onclick={ ()=>{
          fetch("http://localhost:3000/user/signup", {
           method: "POST",
           headers: {
@@ -17,12 +19,15 @@ export const SignupPage=()=>{
       })
     })
        .then(async function(res) {
-       const json=await res.json();
+       const data=await res.json();
      
   if (res.ok) {
+    console.log(data.username)
+    localStorage.setItem("username", data.username);
+   navigate("/StudentDashboard")
     alert("signup successful");
   } else {
-    alert(json.msg || "signup failed");
+    alert(data.msg || "signup failed");
   }
       })
       .catch(err => {
