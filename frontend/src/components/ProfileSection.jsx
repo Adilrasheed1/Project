@@ -21,7 +21,7 @@ export function ProfileSection({ className }) {
 
       <div className="bg-[#eeeff1] h-[90%] w-full rounded-xl shadow-2xl p-4 flex flex-col gap-4 overflow-hidden">
 
-        {/* PROFILE (keep theirs) */}
+        {/* PROFILE PICTURE */}
         <div className="flex justify-center items-center h-40 bg-gray-200 rounded-lg border border-gray-300">
           <div className="h-20 w-20 rounded-full border-2 border-blue-500 bg-gray-400"></div>
         </div>

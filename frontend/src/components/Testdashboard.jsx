@@ -84,7 +84,7 @@ function TestDashboard({ setSelectedExam }) {
       </div>
 
       <div className="bg-[#eeeff1] rounded-3xl p-4 md:p-6 mt-4 mb-6">
-        <div className="grid grid-cols-[repeat(auto-fit,minmax(180px,1fr))] gap-6 justify-items-center">
+        <div className="grid grid-cols-[repeat(auto-fit,minmax(360px,1fr))] gap-6 justify-items-center">
 
           <ExamCard
             title="MOCK TEST 5"

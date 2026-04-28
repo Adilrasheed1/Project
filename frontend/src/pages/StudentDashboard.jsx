@@ -8,7 +8,7 @@ import Exam from "../pages/exam";
 export function StudentDashboard() {
 
   // ================================
-  // ADIL'S (DO NOT TOUCH)
+  // ADIL'S 
   // ================================
   const socket = new WebSocket('ws://localhost:8000');
   let pc;
@@ -56,13 +56,13 @@ export function StudentDashboard() {
   };
 
   // ================================
-  // YOUR STATE
+  // FOR STATE CHANGE
   // ================================
   const [section, setSection] = useState("home");
   const [selectedExam, setSelectedExam] = useState(null);
 
   // ================================
-  // YOUR EXAM FLOW
+  //  EXAM FLOW
   // ================================
   if (selectedExam) {
     return (
@@ -76,7 +76,7 @@ export function StudentDashboard() {
   }
 
   // ================================
-  // YOUR UI
+  // STUDENT DASHBOARD UI
   // ================================
   return (
     <div className="h-screen w-full bg-white flex overflow-hidden">
@@ -105,7 +105,7 @@ export function StudentDashboard() {
         <ProfileSection />
       </div>
 
-      {/* MOBILE NAV (YOUR VERSION KEPT) */}
+      {/* MOBILE NAV */}
       <div className="fixed bottom-2 w-full flex justify-center md:hidden">
         <div className="bg-[#eeeff1] rounded-2xl w-[92%] py-3 px-2 flex justify-evenly shadow-xl">
 

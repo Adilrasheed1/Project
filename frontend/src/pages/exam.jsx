@@ -47,7 +47,7 @@ function Exam({ exam, onBack }) {
   return (
     <div className="min-h-screen w-full flex justify-center items-center bg-white">
 
-      <div className="relative w-full max-w-2xl bg-[#eeeff1] rounded-3xl shadow-lg p-8 md:p-12 flex flex-col gap-6">
+      <div className="relative w-full max-w-2xl bg-[#eeeff1] rounded-3xl shadow-lg p-8 mx-3 md:p-12 flex flex-col gap-6">
 
         <button
           onClick={onBack}

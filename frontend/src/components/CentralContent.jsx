@@ -46,7 +46,7 @@ export function CentralContent({ section, className, setSelectedExam }) {
                 Recent doubts
               </h3>
 
-              {/* TAKE THEIR FLEX IMPROVEMENT */}
+              
               <div className="flex gap-4 flex-wrap">
                 {recentDoubts.map((doubt) => (
                   <FeatureCard
@@ -58,7 +58,7 @@ export function CentralContent({ section, className, setSelectedExam }) {
                 ))}
               </div>
 
-              {/* TAKE THEIR CLEAN LINK POSITION */}
+              
               <a href="#" className="block mt-4 hover:text-blue-500">
                 See all
               </a>

@@ -35,7 +35,7 @@ function Result({ score, questions, answers, resetExam, onBack }) {
         </button>
 
         {/* RESULT CARD */}
-        <div className="bg-[#eeeff1] rounded-3xl shadow-lg p-6 md:p-10">
+        <div className="bg-[#eeeff1] rounded-3xl shadow-lg p-6  md:p-10">
 
           <h2 className="text-4xl font-extrabold mb-6 text-center">
             Your Result
