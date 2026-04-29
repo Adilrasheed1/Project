@@ -22,7 +22,11 @@ export function SideMenu(props) {
           onClick={props.onClickDoubts}
           isActive={props.section === "doubts"}
         />
-
+{/*courses*/}
+  <SideCompo
+    title={props.title3}
+     className={`${props.classCourses}`}
+      onClick={props.onClickCourses}/>
         {/* TESTS */}
         <SideCompo 
           title="Tests"
