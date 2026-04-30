@@ -9,10 +9,11 @@ import { TutorCentralContent } from "../components/TutorCentralContent";
 export function TutorDashboard(){
   const remoteVideoRef=useRef(null)
    const [socket, setSocket] = useState(null);
-  
+    const pcRef = useRef(null);
     const [section, setSection] = useState("home");
-
-  const [request, setRequest] = useState(null);
+const [request , setRequest]=useState(null)
+  const [incomingCall, setIncomingCall] = useState(false);
+  const [inCall,setInCall]=useState(false);
   
   useEffect(()=>{
      const ws=new WebSocket('ws://localhost:8000')
@@ -29,32 +30,41 @@ export function TutorDashboard(){
   console.log(msg)
 
   if (msg.type === "incoming_request") {
-    alert("incoming request")
-    setRequest(msg); // show popup
+     setIncomingCall(true)
+
   }
+  if (msg.type === "iceCandidate") {
+  if (pcRef.current) {
+    await pcRef.current.addIceCandidate(msg.candidate);
+  }
+}
    if (msg.type === "offer") {
   const pc = new RTCPeerConnection({
     iceServers: [{ urls: "stun:stun.l.google.com:19302" }]
   });
-await pc.setRemoteDescription(msg.sdp);
+  pcRef.current=pc;
+
   const stream = await navigator.mediaDevices.getUserMedia({
     video: true,
-    audio: false
+    audio: true
   });
 
   stream.getTracks().forEach(track => pc.addTrack(track, stream));
 
- pc.ontrack = (event) => {
+ 
+
+  
+
+   pc.ontrack = (event) => {
   console.log("REMOTE STREAM RECEIVED");
 
   if (remoteVideoRef.current) {
     remoteVideoRef.current.srcObject = event.streams[0];
   }
 };
-
   
-
-  const answer = await pc.createAnswer();
+await pc.setRemoteDescription(msg.sdp);
+const answer = await pc.createAnswer();
   await pc.setLocalDescription(answer);
 
   ws.send(JSON.stringify({
@@ -79,6 +89,7 @@ setSocket(ws)
   console.log("Accepted request:", request);
    socket?.send(JSON.stringify({ type: "accept" }));
   setRequest(null); 
+  setInCall(true)
  
 }
    
@@ -92,11 +103,38 @@ setSocket(ws)
        
    
      <ProfileSection/>
-     {request && (
-  <div>
-    <h3>{request.title}</h3>
-    <button onClick={accept}>Accept</button>
+   {incomingCall && (
+  <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-center">
+    <div className="bg-white p-6 rounded-xl shadow-lg text-center">
+      <h2 className="text-lg font-semibold mb-4">Incoming Call</h2>
+      
+      <button
+        onClick={() => accept()}
+        className="bg-green-500 text-white px-4 py-2 rounded mr-2"
+      >
+        Accept
+      </button>
+
+      <button
+        onClick={() => setIncomingCall(false)}
+        className="bg-red-500 text-white px-4 py-2 rounded"
+      >
+        Reject
+      </button>
+    </div>
   </div>
 )}
+{inCall && (
+  <div className="fixed inset-0 flex justify-center items-center bg-black z-50">
+    <video
+      ref={remoteVideoRef}
+      autoPlay
+      muted={false}
+      playsInline
+      className="w-[600px] h-[400px] bg-black rounded-xl shadow-lg"
+    />
+  </div>
+)}
+   
        </div>
 }
