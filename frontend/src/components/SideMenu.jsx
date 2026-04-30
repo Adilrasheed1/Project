@@ -1,5 +1,5 @@
 import SideCompo from "./SideCompo";
-import { Home, HelpCircle, FileText, BarChart } from "lucide-react";
+import { Home, HelpCircle, FileText, BarChart , NotebookTabs } from "lucide-react";
 
 export function SideMenu(props) {
   return (
@@ -25,8 +25,10 @@ export function SideMenu(props) {
 {/*courses*/}
   <SideCompo
     title={props.title3}
+    icon={NotebookTabs}
      className={`${props.classCourses}`}
       onClick={props.onClickCourses}/>
+      
         {/* TESTS */}
         <SideCompo 
           title="Tests"
