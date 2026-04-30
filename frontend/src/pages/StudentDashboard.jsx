@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState ,useRef, useEffect} from "react";
 import { CentralContent } from "../components/CentralContent";
 import { ProfileSection } from "../components/ProfileSection";
 import { SideMenu } from "../components/SideMenu";
@@ -6,23 +6,21 @@ import { Home, HelpCircle, FileText, BarChart } from "lucide-react";
 import Exam from "../pages/exam";
 
 export function StudentDashboard() {
-
+const pcRef = useRef(null);
+const [socket,setSocket]=useState();
   // ================================
   // ADIL'S 
   // ================================
-  const socket = new WebSocket('ws://localhost:8000');
-  let pc;
+ 
 
-  async function startCall() {
-    pc = new RTCPeerConnection({
+
+  async function startCall(ws) {
+   const pc = new RTCPeerConnection({
       iceServers: [{ urls: "stun:stun.l.google.com:19302" }]
     });
-
-    socket.onopen = () => {
-      socket.send(JSON.stringify({ type: 'student' }));
-    };
-
-    const stream = await navigator.mediaDevices.getUserMedia({
+      pcRef.current = pc;
+      
+ const stream = await navigator.mediaDevices.getUserMedia({
       video: true,
       audio: false
     });
@@ -32,28 +30,37 @@ export function StudentDashboard() {
     const offer = await pc.createOffer();
     await pc.setLocalDescription(offer);
 
-    socket.send(JSON.stringify({
+    ws.send(JSON.stringify({
       type: "offer",
       sdp: offer
     }));
 
     pc.onicecandidate = (e) => {
       if (e.candidate) {
-        socket.send(JSON.stringify({
-          type: "candidate",
+        ws.send(JSON.stringify({
+          type: "iceCandidate",
           candidate: e.candidate
         }));
       }
     };
   }
 
-  socket.onmessage = async (event) => {
+      useEffect(()=>{
+    const ws = new WebSocket('ws://localhost:8000');
+    ws.onopen = () => {
+      ws.send(JSON.stringify({ type: 'student' }));
+    };
+
+   
+  ws.onmessage = async (event) => {
     const msg = JSON.parse(event.data);
 
-    if (msg.type === "accepted") startCall();
-    if (msg.type === "answer") await pc.setRemoteDescription(msg.sdp);
-    if (msg.type === "candidate") await pc.addIceCandidate(msg.candidate);
-  };
+    if (msg.type === "accepted") startCall(ws);
+    if (msg.type === "answer") await pcRef.current.setRemoteDescription(msg.sdp);
+    if (msg.type === "iceCandidate") await pcRef.current.addIceCandidate(msg.candidate);
+  }
+   setSocket(ws);
+  },[])
 
   // ================================
   // FOR STATE CHANGE
