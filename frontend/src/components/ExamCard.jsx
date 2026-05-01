@@ -33,7 +33,7 @@ function ExamCard({ title, color, subject = "MATH", onClick }) {
         </p>
       </div>
 
-      {/* BOTTOM BAR (smaller for balance) */}
+      {/* BOTTOM BAR */}
       <div
         style={{ backgroundColor: color }}
         className="h-6"

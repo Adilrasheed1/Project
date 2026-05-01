@@ -20,7 +20,7 @@ export function CentralContent({ section, className, setSelectedExam }) {
       .catch(() => setDoubts([]));
   }, []);
 
-  const recentDoubts = doubts.slice(0, 4); // keep consistent
+  const recentDoubts = doubts.slice(0, 4); 
 
   return (
     <div className={`h-full overflow-y-auto overflow-x-hidden no-scrollbar ${className}`}>
@@ -29,12 +29,12 @@ export function CentralContent({ section, className, setSelectedExam }) {
         {/* HOME */}
         {section === "home" && (
           <>
-            {/* KEEP YOUR HERO STYLE */}
+           
             <h1 className="text-7xl font-extrabold font-serif mt-2 sm:mt-20 ml-10">
               COURSES THAT TEACH. MENTORS THAT GUIDE.
             </h1>
 
-            {/* Optional: small welcome line */}
+            {/* welcome line */}
             <p className="ml-10 mt-2 text-gray-500">
               Welcome back, {user}
             </p>

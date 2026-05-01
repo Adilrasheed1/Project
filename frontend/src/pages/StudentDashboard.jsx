@@ -114,7 +114,7 @@ const [socket,setSocket]=useState();
 
       {/* MOBILE NAV */}
       <div className="fixed bottom-2 w-full flex justify-center md:hidden">
-        <div className="bg-[#eeeff1] rounded-2xl w-[92%] py-3 px-2 flex justify-evenly shadow-xl">
+        <div className="bg-[#eeeff1] rounded-2xl w-[92%] py-3 px-2 flex justify-evenly  drop-shadow-2xl drop-shadow-gray-700">
 
           <button onClick={() => setSection("home")} className="flex flex-col items-center gap-1">
             <div className={`h-12 w-12 flex items-center justify-center rounded-full shadow-md ${

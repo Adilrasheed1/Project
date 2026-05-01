@@ -1,5 +1,5 @@
 import ExamCard from "./ExamCard";
-import { IndianRupee, Cctv } from "lucide-react";
+import { IndianRupee, Cctv, AlignVerticalDistributeStartIcon } from "lucide-react";
 
 function TestDashboard({ setSelectedExam }) {
   return (
@@ -30,6 +30,8 @@ function TestDashboard({ setSelectedExam }) {
                 id: 1,
                 name: "MOCK TEST 1",
                 type: "normal",
+                duration: "0.25"
+                
               })
             }
           />
@@ -42,6 +44,8 @@ function TestDashboard({ setSelectedExam }) {
                 id: 2,
                 name: "MOCK TEST 2",
                 type: "normal",
+                duration: "0.25"
+
               })
             }
           />
@@ -54,6 +58,7 @@ function TestDashboard({ setSelectedExam }) {
                 id: 3,
                 name: "MOCK TEST 3",
                 type: "normal",
+                duration: "0.25"
               })
             }
           />
@@ -66,6 +71,7 @@ function TestDashboard({ setSelectedExam }) {
                 id: 4,
                 name: "MOCK TEST 4",
                 type: "normal",
+                duration: "0.25"
               })
             }
           />
@@ -94,6 +100,7 @@ function TestDashboard({ setSelectedExam }) {
                 id: 5,
                 name: "MOCK TEST 5",
                 type: "proctored",
+                duration: "0.25"
               })
             }
           />
@@ -106,6 +113,7 @@ function TestDashboard({ setSelectedExam }) {
                 id: 6,
                 name: "MOCK TEST 6",
                 type: "proctored",
+                duration: "0.25"
               })
             }
           />
@@ -118,6 +126,7 @@ function TestDashboard({ setSelectedExam }) {
                 id: 7,
                 name: "MOCK TEST 7",
                 type: "proctored",
+                duration: "0.25"
               })
             }
           />
@@ -130,6 +139,7 @@ function TestDashboard({ setSelectedExam }) {
                 id: 8,
                 name: "MOCK TEST 8",
                 type: "proctored",
+                duration: "0.25"
               })
             }
           />
