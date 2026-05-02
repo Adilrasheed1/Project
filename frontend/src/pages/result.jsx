@@ -7,7 +7,7 @@ function Result({ score, questions, answers, resetExam, onBack }) {
   let unanswered = 0;
 
   questions.forEach((q, i) => {
-    if (answers[i] === undefined) unanswered++;
+   if (answers[i] === null) unanswered++;
     else if (answers[i] === q.answer) correct++;
     else wrong++;
   });
