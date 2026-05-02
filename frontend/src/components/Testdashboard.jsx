@@ -9,7 +9,7 @@ function TestDashboard({ setSelectedExam }) {
         PRACTICE MAKES YOU PERFECT
       </h2>
 
-      {/* FREE MOCK TESTS */}
+      {/* ── FREE MOCK TESTS ── */}
       <div className="max-w-60 h-10 m-4 flex rounded-3xl bg-[#9fd200] text-white items-center font-serif">
         <IndianRupee
           size={28}
@@ -25,55 +25,59 @@ function TestDashboard({ setSelectedExam }) {
           <ExamCard
             title="MOCK TEST 1"
             color="#F64515"
-            onClick={() =>
-              setSelectedExam({
-                id: 1,
-                name: "MOCK TEST 1",
-                type: "normal",
-              })
-            }
+            subject="Mathematics"
+            onClick={() => setSelectedExam({
+              id: 1,
+              name: "MOCK TEST 1",
+              type: "normal",
+              duration: 0.25,
+              subject: "Mathematics"
+            })}
           />
 
           <ExamCard
             title="MOCK TEST 2"
             color="#165ee7"
-            onClick={() =>
-              setSelectedExam({
-                id: 2,
-                name: "MOCK TEST 2",
-                type: "normal",
-              })
-            }
+            subject="Full Stack"
+            onClick={() => setSelectedExam({
+              id: 2,
+              name: "MOCK TEST 2",
+              type: "normal",
+              duration: 0.25,
+              subject: "Full Stack"
+            })}
           />
 
           <ExamCard
             title="MOCK TEST 3"
             color="#9fd200"
-            onClick={() =>
-              setSelectedExam({
-                id: 3,
-                name: "MOCK TEST 3",
-                type: "normal",
-              })
-            }
+            subject="Science"
+            onClick={() => setSelectedExam({
+              id: 3,
+              name: "MOCK TEST 3",
+              type: "normal",
+              duration: 0.25,
+              subject: "Science"
+            })}
           />
 
           <ExamCard
             title="MOCK TEST 4"
             color="black"
-            onClick={() =>
-              setSelectedExam({
-                id: 4,
-                name: "MOCK TEST 4",
-                type: "normal",
-              })
-            }
+            subject="AI / ML"
+            onClick={() => setSelectedExam({
+              id: 4,
+              name: "MOCK TEST 4",
+              type: "normal",
+              duration: 0.25,
+              subject: "AI / ML"
+            })}
           />
 
         </div>
       </div>
 
-      {/* PROCTORED TESTS */}
+      {/* ── PROCTORED TESTS ── */}
       <div className="max-w-60 h-10 m-4 flex rounded-3xl bg-[#165EE7] text-white items-center font-serif">
         <Cctv
           size={28}
@@ -89,49 +93,53 @@ function TestDashboard({ setSelectedExam }) {
           <ExamCard
             title="MOCK TEST 5"
             color="#F64515"
-            onClick={() =>
-              setSelectedExam({
-                id: 5,
-                name: "MOCK TEST 5",
-                type: "proctored",
-              })
-            }
+            subject="Data Science"
+            onClick={() => setSelectedExam({
+              id: 5,
+              name: "MOCK TEST 5",
+              type: "proctored",
+              duration: 0.25,
+              subject: "Data Science"
+            })}
           />
 
           <ExamCard
             title="MOCK TEST 6"
             color="#165ee7"
-            onClick={() =>
-              setSelectedExam({
-                id: 6,
-                name: "MOCK TEST 6",
-                type: "proctored",
-              })
-            }
+            subject="Business"
+            onClick={() => setSelectedExam({
+              id: 6,
+              name: "MOCK TEST 6",
+              type: "proctored",
+              duration: 0.25,
+              subject: "Business"
+            })}
           />
 
           <ExamCard
             title="MOCK TEST 7"
             color="#9fd200"
-            onClick={() =>
-              setSelectedExam({
-                id: 7,
-                name: "MOCK TEST 7",
-                type: "proctored",
-              })
-            }
+            subject="Design"
+            onClick={() => setSelectedExam({
+              id: 7,
+              name: "MOCK TEST 7",
+              type: "proctored",
+              duration: 0.25,
+              subject: "Design"
+            })}
           />
 
           <ExamCard
             title="MOCK TEST 8"
             color="black"
-            onClick={() =>
-              setSelectedExam({
-                id: 8,
-                name: "MOCK TEST 8",
-                type: "proctored",
-              })
-            }
+            subject="English"
+            onClick={() => setSelectedExam({
+              id: 8,
+              name: "MOCK TEST 8",
+              type: "proctored",
+              duration: 0.25,
+              subject: "English"
+            })}
           />
 
         </div>
