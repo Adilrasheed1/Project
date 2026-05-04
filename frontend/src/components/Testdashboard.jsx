@@ -31,7 +31,12 @@ function TestDashboard({ setSelectedExam }) {
               name: "MOCK TEST 1",
               type: "normal",
               duration: 0.25,
-              subject: "Mathematics"
+              subject: "Mathematics",
+              questions: [
+                { question: "What is 2+2?", options: ["1","2","3","4"], answer: "4" },
+                { question: "What is 5-3?", options: ["1","2","3","4"], answer: "2" },
+                { question: "What is 3x3?", options: ["6","9","12","3"], answer: "9" },
+              ]
             })}
           />
 
@@ -44,7 +49,12 @@ function TestDashboard({ setSelectedExam }) {
               name: "MOCK TEST 2",
               type: "normal",
               duration: 0.25,
-              subject: "Full Stack"
+              subject: "Full Stack",
+               questions: [
+                { question: "What is 2+2?", options: ["1","2","3","4"], answer: "4" },
+                { question: "What is 5-3?", options: ["1","2","3","4"], answer: "2" },
+                { question: "What is 3x3?", options: ["6","9","12","3"], answer: "9" },
+              ]
             })}
           />
 
@@ -57,7 +67,12 @@ function TestDashboard({ setSelectedExam }) {
               name: "MOCK TEST 3",
               type: "normal",
               duration: 0.25,
-              subject: "Science"
+              subject: "Science",
+               questions: [
+                { question: "What is 2+2?", options: ["1","2","3","4"], answer: "4" },
+                { question: "What is 5-3?", options: ["1","2","3","4"], answer: "2" },
+                { question: "What is 3x3?", options: ["6","9","12","3"], answer: "9" },
+              ]
             })}
           />
 
@@ -70,7 +85,12 @@ function TestDashboard({ setSelectedExam }) {
               name: "MOCK TEST 4",
               type: "normal",
               duration: 0.25,
-              subject: "AI / ML"
+              subject: "AI / ML",
+               questions: [
+                { question: "What is 2+2?", options: ["1","2","3","4"], answer: "4" },
+                { question: "What is 5-3?", options: ["1","2","3","4"], answer: "2" },
+                { question: "What is 3x3?", options: ["6","9","12","3"], answer: "9" },
+              ]
             })}
           />
 
@@ -99,7 +119,12 @@ function TestDashboard({ setSelectedExam }) {
               name: "MOCK TEST 5",
               type: "proctored",
               duration: 0.25,
-              subject: "Data Science"
+              subject: "Data Science",
+               questions: [
+                { question: "What is 2+2?", options: ["1","2","3","4"], answer: "4" },
+                { question: "What is 5-3?", options: ["1","2","3","4"], answer: "2" },
+                { question: "What is 3x3?", options: ["6","9","12","3"], answer: "9" },
+              ]
             })}
           />
 
@@ -112,7 +137,12 @@ function TestDashboard({ setSelectedExam }) {
               name: "MOCK TEST 6",
               type: "proctored",
               duration: 0.25,
-              subject: "Business"
+              subject: "Business",
+               questions: [
+                { question: "What is 2+2?", options: ["1","2","3","4"], answer: "4" },
+                { question: "What is 5-3?", options: ["1","2","3","4"], answer: "2" },
+                { question: "What is 3x3?", options: ["6","9","12","3"], answer: "9" },
+              ]
             })}
           />
 
@@ -125,7 +155,12 @@ function TestDashboard({ setSelectedExam }) {
               name: "MOCK TEST 7",
               type: "proctored",
               duration: 0.25,
-              subject: "Design"
+              subject: "Design",
+               questions: [
+                { question: "What is 2+2?", options: ["1","2","3","4"], answer: "4" },
+                { question: "What is 5-3?", options: ["1","2","3","4"], answer: "2" },
+                { question: "What is 3x3?", options: ["6","9","12","3"], answer: "9" },
+              ]
             })}
           />
 
@@ -138,7 +173,12 @@ function TestDashboard({ setSelectedExam }) {
               name: "MOCK TEST 8",
               type: "proctored",
               duration: 0.25,
-              subject: "English"
+              subject: "English",
+               questions: [
+                { question: "What is 2+2?", options: ["1","2","3","4"], answer: "4" },
+                { question: "What is 5-3?", options: ["1","2","3","4"], answer: "2" },
+                { question: "What is 3x3?", options: ["6","9","12","3"], answer: "9" },
+              ]
             })}
           />
 
