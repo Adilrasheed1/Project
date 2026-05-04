@@ -6,6 +6,7 @@ import { SearchBar } from "./SearchBar";
 import { useState } from "react";
 import { useEffect } from "react";
 import { Courses } from "./Courses";
+import { TutorTestCompo } from "./TutorTestCompo";
 
 export function TutorCentralContent({section}){
       const [doubts, setDoubts] = useState([]);
@@ -50,6 +51,9 @@ export function TutorCentralContent({section}){
     {section==='courses' &&
     
     <Courses/>
+    }
+    {section==='Test' &&
+    <TutorTestCompo/>
     }
      
     </div> 
