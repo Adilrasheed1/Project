@@ -94,7 +94,7 @@ const [socket,setSocket]=useState();
           section={section}
           onClickHome={() => setSection("home")}
           onClickDoubts={() => setSection("doubts")}
-          onClickCourses={() => setSection("Courses")}
+          onClickCourses={() => setSection("courses")}
           onClickTest={() => setSection("Test")}
           onClickProgress={() => setSection("Progress")}
         />

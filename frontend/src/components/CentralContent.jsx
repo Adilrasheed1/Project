@@ -1,13 +1,19 @@
 import { FeatureCard } from "../components/FeatureCard";
 import { DoubtSection } from "../pages/DoubtSection";
 import { SearchBar } from "./SearchBar";
-import { useState, useEffect } from "react";
+import { useState, useEffect, use } from "react";
 import TestDashboard from "../components/TestDashboard";
+import { Courses } from "./Courses";
+import { CoursesCard } from "./CoursesCard";
+import { StudentSideCourses } from "./StudentSideCourses";
 
 export function CentralContent({ section, className, setSelectedExam }) {
 
   const [doubts, setDoubts] = useState([]);
   const [user, setUsername] = useState("");
+    const [courses,setCourses]=useState([])
+    const [filter,setFilter]=useState("")
+  
 
   useEffect(() => {
     const username = localStorage.getItem("username");
@@ -19,12 +25,23 @@ export function CentralContent({ section, className, setSelectedExam }) {
       .then(data => setDoubts(data))
       .catch(() => setDoubts([]));
   }, []);
+  useEffect(()=>{
+    fetch("http://localhost:3000/courses/bulk?filter=" +filter )
+    .then(res=>res.json())
+    .then(data=>{
+      setCourses(data.course)
+    })
+  },[filter])
+  
 
   const recentDoubts = doubts.slice(0, 4); 
 
   return (
     <div className={`h-full overflow-y-auto overflow-x-hidden no-scrollbar ${className}`}>
       <div className="max-w-6xl mb-30 mx-auto w-full">
+            <SearchBar onChange={(e) => {
+                setFilter(e.target.value)
+            }} />
 
         {/* HOME */}
         {section === "home" && (
@@ -39,7 +56,7 @@ export function CentralContent({ section, className, setSelectedExam }) {
               Welcome back, {user}
             </p>
 
-            <SearchBar />
+        
 
             <div className="ml-10">
               <h3 className="pt-10 text-lg font-bold text-gray-600">
@@ -73,6 +90,16 @@ export function CentralContent({ section, className, setSelectedExam }) {
         {section === "Test" && (
           <TestDashboard setSelectedExam={setSelectedExam} />
         )}
+{section ==="courses" && (
+  
+  <div className=" h-50 flex gap-4 flex-wrap">
+    
+   
+ {courses.map(course=> <StudentSideCourses course={course}/>)}
+ </div>
+)}
+    
+        
 
       </div>
     </div>

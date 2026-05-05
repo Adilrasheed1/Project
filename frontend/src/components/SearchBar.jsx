@@ -1,9 +1,10 @@
-export function SearchBar() {
+export function SearchBar(props) {
   return (
     <div className="flex items-center mt-10 max-w-md sm:max-w-3xl shadow-lg mx-auto rounded-full bg-[#eeeff1]">
 
       {/* INPUT */}
       <input
+      onChange={props.onChange}
         type="text"
         placeholder="Search for Doubts, Courses..."
         className="flex-1 bg-transparent outline-none text-gray-700 text-sm font-semibold py-5 px-4 sm:py-6 sm:px-5"
