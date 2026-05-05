@@ -31,5 +31,28 @@ router.get("/", async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
+router.get("/bulk",async(req,res)=>{
+    const filter=req.query.filter || ""
+    const courses=await Courses.find({
+        $or:[{
+            title:{
+              "$regex":filter
+            }
+        },
+        {
+            description:{
+                "$regex":filter
+            }
+        }]
+    
+    })
+    res.json({
+       course:courses.map(course=>({
+        title:course.title,
+        description : course.description,
+         _id:course._id
+       }) 
+    )})
+})
 
 module.exports=router;

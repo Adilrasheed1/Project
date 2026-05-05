@@ -27,7 +27,8 @@ export function SideMenu(props) {
     title={props.title3}
     icon={NotebookTabs}
      className={`${props.classCourses}`}
-      onClick={props.onClickCourses}/>
+      onClick={props.onClickCourses}
+      isActive={props.section === "courses"}/>
       
         {/* TESTS */}
         <SideCompo 
