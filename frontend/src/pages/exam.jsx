@@ -7,10 +7,7 @@ function Exam({ exam, onBack }) {
 
   // ─── QUESTIONS DATA ───────────────────────────────
   // Hardcoded for now, will come from exam prop later
-  const questions = [
-    { question: "What is 2+2?", options: ["1", "2", "3", "4"], answer: "4" },
-    { question: "What is 2-2?", options: ["0", "2", "3", "4"], answer: "0" },
-  ];
+  const questions = exam.questions;
 
   // ─── STATE ────────────────────────────────────────
   // One slot per question, null = not answered yet
@@ -20,6 +17,7 @@ function Exam({ exam, onBack }) {
   const [warningDisplayed, setWarningDisplayed] = useState(false);
   const [score, setScore] = useState(null);
   const [timeLeft, setTimeLeft] = useState(0);
+  const [showInstructions, setShowInstructions] = useState(true);
 
   // ─── REF ──────────────────────────────────────────
   //  holds the latest answers
@@ -43,26 +41,28 @@ function Exam({ exam, onBack }) {
 
   // ─── TIMER ────────────────────────────────────────
   // Starts when exam loads, auto-submits when time runs out
-  useEffect(() => {
-    if (!exam?.duration) return;
+useEffect(() => {
+  if (!exam?.duration) return;
+  if (showInstructions) return; // ← don't start until instructions dismissed
 
-    setTimeLeft(exam.duration * 60);
+  setTimeLeft(exam.duration * 60);
 
-    const timer = setInterval(() => {
-      setTimeLeft((prev) => {
-        if (prev <= 1) {
-          clearInterval(timer);
-          handleSubmit();
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
+  const timer = setInterval(() => {
+    setTimeLeft((prev) => {
+      if (prev <= 1) {
+        clearInterval(timer);
+        handleSubmit();
+        return 0;
+      }
+      return prev - 1;
+    });
+  }, 1000);
+     
+  return () => clearInterval(timer);  // Cleanup: stop timer if component unmounts
+}, [exam, showInstructions]); 
 
-    // Cleanup: stop timer if component unmounts
-    return () => clearInterval(timer);
-  }, [exam]);
-
+    
+   
   // ─── RESET ────────────────────────────────────────
   const resetExam = () => {
     setCurrentQuestion(0);
@@ -85,6 +85,82 @@ function Exam({ exam, onBack }) {
       setWarningDisplayed(false);
     }
   };
+
+  // ─── PRE EXAM SCREEN ────────────────────────────
+if (showInstructions) {
+  return (
+    <div className="min-h-screen w-full flex justify-center items-center bg-white">
+      <div className="w-full max-w-2xl bg-[#eeeff1] rounded-3xl shadow-lg p-8 mx-3 flex flex-col gap-6">
+
+        {/* EXAM TITLE */}
+        <h1 className="text-3xl font-bold text-center">{exam?.name}</h1>
+
+        {/* EXAM DETAILS */}
+        <div className="bg-white rounded-2xl p-5 flex flex-col gap-3 shadow-sm">
+          <h2 className="text-lg font-bold">Exam Details</h2>
+          <p>📋 Total Questions: <span className="font-semibold">{questions.length}</span></p>
+          <p>🏆 Marks per Question: <span className="font-semibold">10</span></p>
+          <p>⏱ Duration: <span className="font-semibold">{exam?.duration} minutes</span></p>
+          <p>📊 Total Marks: <span className="font-semibold">{questions.length * 10}</span></p>
+        </div>
+
+        {/* COLOR LEGEND */}
+        <div className="bg-white rounded-2xl p-5 flex flex-col gap-3 shadow-sm">
+          <h2 className="text-lg font-bold">Question Navigator Guide</h2>
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-full bg-[#9fd200]"/>
+            <p>Answered</p>
+          </div>
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-full bg-orange-400"/>
+            <p>Marked for Review</p>
+          </div>
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-full bg-gray-200"/>
+            <p>Unanswered</p>
+          </div>
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-full bg-[#165ee7]"/>
+            <p>Current Question</p>
+          </div>
+        </div>
+
+        {/* GENERAL RULES */}
+        <div className="bg-white rounded-2xl p-5 flex flex-col gap-3 shadow-sm">
+          <h2 className="text-lg font-bold">Rules</h2>
+          <p>✅ You can navigate between questions freely</p>
+          <p>✅ You can mark questions for review and return later</p>
+          <p>⚠️ If time runs out your exam will be submitted automatically</p>
+          <p>⚠️ Leaving the exam will not save your progress</p>
+        </div>
+
+        {/* PROCTORING RULES — only for proctored exams */}
+        {exam?.type === "proctored" && (
+          <div className="bg-white rounded-2xl p-5 flex flex-col gap-3 shadow-sm border-2 border-red-400">
+            <h2 className="text-lg font-bold text-red-500">⚠️ Proctoring Rules</h2>
+            <p>🔴 Tab switch detected → <span className="font-semibold">-2.5% integrity score</span></p>
+            <p>🔴 Camera turned off → <span className="font-semibold">-5% integrity score</span></p>
+            <p>🔴 Multiple people detected → <span className="font-semibold">-5% integrity score</span></p>
+            <p>🔴 Blurred camera → <span className="font-semibold">warning first, then -2.5%</span></p>
+            <p>📷 Please ensure your camera is on and your face is clearly visible</p>
+            <p>👤 Make sure you are alone in the frame</p>
+          </div>
+        )}
+
+        {/* START BUTTON */}
+        <button
+          onClick={() => setShowInstructions(false)}
+          className="w-full py-3 bg-[#165ee7] text-white text-lg font-bold rounded-2xl"
+        >
+          {exam?.type === "proctored" ? "I Agree — Start Exam" : "Start Exam"}
+        </button>
+
+      </div>
+    </div>
+  );
+}
+
+
 
   // ─── RESULT SCREEN ────────────────────────────────
   if (score !== null) {
