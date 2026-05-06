@@ -30,7 +30,7 @@ function TestDashboard({ setSelectedExam }) {
               id: 1,
               name: "MOCK TEST 1",
               type: "normal",
-              duration: 0.25,
+              duration: 1,
               subject: "Mathematics",
               questions: [
                 { question: "What is 2+2?", options: ["1","2","3","4"], answer: "4" },
