@@ -24,7 +24,7 @@ export function SideMenu(props) {
         />
 {/*courses*/}
   <SideCompo
-    title={props.title3}
+    title= "Courses"
     icon={NotebookTabs}
      className={`${props.classCourses}`}
       onClick={props.onClickCourses}
