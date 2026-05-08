@@ -6,6 +6,8 @@ import { SideMenu } from "../components/SideMenu";
 
 import { useEffect, useRef, useState } from "react";
 import { TutorCentralContent } from "../components/TutorCentralContent";
+import { ButtonComp } from "../components/ButtonComp";
+import { ShareScreen } from "../components/ShareScreen";
 export function TutorDashboard(){
   const remoteVideoRef=useRef(null)
    const [socket, setSocket] = useState(null);
@@ -125,14 +127,21 @@ setSocket(ws)
   </div>
 )}
 {inCall && (
-  <div className="fixed inset-0 flex justify-center items-center bg-black z-50">
+  <div className="fixed inset-0 flex flex-col justify-center items-center  bg-white z-50">
+    <div className="bg-gray-200 h-120 w-180 flex flex-col items-center justify-center rounded-sm">
     <video
       ref={remoteVideoRef}
       autoPlay
       muted={false}
       playsInline
       className="w-[600px] h-[400px] bg-black rounded-xl shadow-lg"
+    
     />
+    <div className=" w-180 flex flex-row mt-2 justify-evenly">
+      <ButtonComp title="share Screen" className="bg-gray-300 sm:w-10  " click={ShareScreen}/>
+    <ButtonComp title="End Call" className="bg-red-400 text-white " />
+    </div>
+    </div>
   </div>
 )}
    
