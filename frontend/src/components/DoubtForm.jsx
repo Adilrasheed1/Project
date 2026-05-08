@@ -102,7 +102,7 @@ console.log("TRACK RECEIVED 🔥", event.streams);
     }
   };
 }
-    return <div className="h-120 bg-[#d1dbd0] w-150  mx-5 my-5 rounded-lg border-1 border-gray-200 pt-5 pl-5 ">
+    return <div className="h-120 bg-gray-100 w-150  mx-5 my-5 rounded-lg border-1 border-gray-200 pt-5 pl-5 ">
         {!inCall &&( 
          
         <>
