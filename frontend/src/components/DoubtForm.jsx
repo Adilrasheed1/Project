@@ -102,7 +102,7 @@ console.log("TRACK RECEIVED 🔥", event.streams);
     }
   };
 }
-    return <div className="h-108 bg-[#d1dbd0] w-150  mx-5 my-5 rounded-lg border-1 border-gray-200 pt-5 pl-5 ">
+    return <div className="h-120 bg-gray-100 w-150  mx-5 my-5 rounded-lg border-1 border-gray-200 pt-5 pl-5 ">
         {!inCall &&( 
          
         <>
@@ -114,6 +114,16 @@ console.log("TRACK RECEIVED 🔥", event.streams);
         <InputCompo label="Detailed Description" Type="text" className="w-80 h-20 px-3 text-sm text-gray-700  border-1 border-gray-200  rounded-lg " Placeholder="Explain your doubt in detail....." value={description} onchangemail={function(e){
                 setDescription(e.target.value)
             }} />
+           
+            <h3 className="mt-5">select subject:</h3>
+          
+              <select className="w-80 h-10 px-3 text-sm text-gray-700  border-1 border-gray-200  rounded-lg  mb-5 " >
+        <option value="">--Choose--</option>
+        <option value="Dsa">DSA</option>
+        <option value="FullStack">Fullstack</option>
+        <option value="Other">other</option>
+      </select>
+     
         <InputCompo label="Attachments" Type="file" className="w-80 h-20 px-3 text-sm text-gray-700  border-1 border-gray-200  rounded-lg " Placeholder="choose image"value={image} onchangemail={function(e){
                 setImage(e.target.value)
             }}/>

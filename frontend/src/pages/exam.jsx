@@ -2,6 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import Question from "./question";
 import Result from "./result";
 import { OctagonX } from "lucide-react";
+import ExamCameraFeed from "../components/ExamCameraFeed";
 
 function Exam({ exam, onBack }) {
 
@@ -10,27 +11,50 @@ function Exam({ exam, onBack }) {
 
   // ─── STATE ────────────────────────────────────────
   const [answers, setAnswers] = useState(Array(questions.length).fill(null));
+  const [markedForReview, setMarkedForReview] = useState(Array(questions.length).fill(false));
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [showWarning, setShowWarning] = useState(false);
   const [warningDisplayed, setWarningDisplayed] = useState(false);
   const [score, setScore] = useState(null);
   const [timeLeft, setTimeLeft] = useState(0);
   const [showInstructions, setShowInstructions] = useState(true);
+  const [integrityScore, setIntegrityScore] = useState(100);
+  const [violations, setViolations] = useState([]);
 
-  // ─── REF ──────────────────────────────────────────
+  // ─── REFS ─────────────────────────────────────────
   const answersRef = useRef(answers);
+  const integrityRef = useRef(100);
 
   useEffect(() => {
     answersRef.current = answers;
   }, [answers]);
 
+  useEffect(() => {
+    integrityRef.current = integrityScore;
+  }, [integrityScore]);
+
+  // ─── INTEGRITY DEDUCTION ──────────────────────────
+  const deductIntegrity = (reason, amount) => {
+    const time = new Date().toLocaleTimeString();
+    setViolations((prev) => [
+      ...prev,
+      { type: reason, time, deduction: amount }
+    ]);
+    setIntegrityScore((prev) => Math.max(0, prev - amount));
+  };
+
   // ─── SUBMIT ───────────────────────────────────────
   const handleSubmit = () => {
-    let finalScore = 0;
+    let examScore = 0;
     questions.forEach((q, i) => {
-      if (answersRef.current[i] === q.answer) finalScore += 10;
+      if (answersRef.current[i] === q.answer) examScore += 10;
     });
-    setScore(finalScore);
+
+    const finalScore = exam?.type === "proctored"
+      ? Math.round((examScore + integrityRef.current) / 2)
+      : examScore;
+
+    setScore({ examScore, finalScore });
   };
 
   // ─── TIMER ────────────────────────────────────────
@@ -54,13 +78,34 @@ function Exam({ exam, onBack }) {
     return () => clearInterval(timer);
   }, [exam, showInstructions]);
 
+ // ─── TAB SWITCH DETECTION ─────────────────────────
+useEffect(() => {
+  if (exam?.type !== "proctored") return;
+  if (showInstructions) return;
+
+  const handleVisibility = () => {
+    if (document.visibilityState === "hidden") {
+      deductIntegrity("Tab Switch", 2.5);
+    }
+  };
+
+  document.addEventListener("visibilitychange", handleVisibility);
+
+  return () => {
+    document.removeEventListener("visibilitychange", handleVisibility);
+  };
+}, [exam, showInstructions]);
+
   // ─── RESET ────────────────────────────────────────
   const resetExam = () => {
     setCurrentQuestion(0);
     setAnswers(Array(questions.length).fill(null));
+    setMarkedForReview(Array(questions.length).fill(false));
     setShowWarning(false);
     setWarningDisplayed(false);
     setScore(null);
+    setIntegrityScore(100);
+    setViolations([]);
   };
 
   // ─── ANSWER SELECTION ─────────────────────────────
@@ -76,8 +121,14 @@ function Exam({ exam, onBack }) {
     }
   };
 
+  // ─── MARK FOR REVIEW ──────────────────────────────
+  const handleMark = () => {
+    const updated = [...markedForReview];
+    updated[currentQuestion] = !updated[currentQuestion];
+    setMarkedForReview(updated);
+  };
+
   // ─── TIMER DISPLAY FORMAT ─────────────────────────
-  // Declared here so ALL screens below can use it
   const minutes = Math.floor(timeLeft / 60);
   const seconds = timeLeft % 60;
 
@@ -87,7 +138,6 @@ function Exam({ exam, onBack }) {
       <div className="min-h-screen w-full flex justify-center items-center bg-white">
         <div className="w-full max-w-2xl bg-[#eeeff1] rounded-3xl shadow-lg p-8 mx-3 flex flex-col gap-6">
 
-          {/* EXAM TITLE */}
           <h1 className="text-3xl font-bold text-center">{exam?.name}</h1>
 
           {/* EXAM DETAILS */}
@@ -159,7 +209,11 @@ function Exam({ exam, onBack }) {
   if (score !== null) {
     return (
       <Result
-        score={score}
+        score={score.finalScore}
+        examScore={score.examScore}
+        integrityScore={integrityRef.current}
+        examType={exam?.type}
+        violations={violations}
         questions={questions}
         answers={answers}
         resetExam={resetExam}
@@ -176,11 +230,11 @@ function Exam({ exam, onBack }) {
         {/* ── TOP BAR ── */}
         <div className="bg-[#eeeff1] rounded-2xl p-4 flex items-center justify-between">
 
-          {/* LEFT — Exam title */}
           <h1 className="text-xl font-bold">{exam?.name}</h1>
 
-          {/* CENTER — Timer + Integrity */}
           <div className="flex items-center gap-4">
+
+            {/* TIMER */}
             <p className={`font-semibold ${timeLeft <= 60 ? "text-red-500" : "text-gray-700"}`}>
               ⏱ {minutes}:{seconds.toString().padStart(2, "0")}
             </p>
@@ -188,13 +242,17 @@ function Exam({ exam, onBack }) {
             {/* INTEGRITY INDICATOR — proctored only */}
             {exam?.type === "proctored" && (
               <div className="flex items-center gap-2">
-                <div className="w-3 h-3 rounded-full bg-green-500"/>
-                <p className="text-sm font-semibold">Integrity: 100%</p>
+                <div className={`w-3 h-3 rounded-full transition
+                  ${integrityScore < 80 ? "bg-red-500" : "bg-green-500"}
+                `}/>
+                <p className="text-sm font-semibold">
+                  Integrity: {integrityScore}%
+                </p>
               </div>
             )}
+
           </div>
 
-          {/* RIGHT — Leave button */}
           <button
             onClick={onBack}
             className="px-4 py-2 bg-red-500 text-white rounded-xl text-sm font-semibold"
@@ -207,15 +265,13 @@ function Exam({ exam, onBack }) {
         {/* ── MAIN CONTENT ── */}
         <div className="flex gap-4 items-start">
 
-          {/* ── LEFT COLUMN — Question ── */}
+          {/* ── LEFT COLUMN ── */}
           <div className="flex-1 bg-[#eeeff1] rounded-2xl p-6 flex flex-col gap-6">
 
-            {/* QUESTION COUNTER */}
             <p className="text-gray-600 font-semibold">
               Question {currentQuestion + 1} / {questions.length}
             </p>
 
-            {/* QUESTION + OPTIONS */}
             <Question
               question={questions[currentQuestion].question}
               options={questions[currentQuestion].options}
@@ -223,7 +279,6 @@ function Exam({ exam, onBack }) {
               onSelect={handleSelect}
             />
 
-            {/* UNANSWERED WARNING */}
             {showWarning && (
               <div className="flex items-center gap-2 text-red-500 font-semibold">
                 <OctagonX size={18} />
@@ -233,12 +288,25 @@ function Exam({ exam, onBack }) {
 
             {/* NAV BUTTONS */}
             <div className="flex gap-4 justify-center">
+
               <button
                 onClick={() => setCurrentQuestion((prev) => prev - 1)}
                 disabled={currentQuestion === 0}
                 className="px-4 py-2 bg-[#9fd200] text-white rounded-xl disabled:opacity-50"
               >
                 Prev
+              </button>
+
+              {/* MARK FOR REVIEW */}
+              <button
+                onClick={handleMark}
+                className={`px-4 py-2 rounded-xl font-semibold transition
+                  ${markedForReview[currentQuestion]
+                    ? "bg-orange-400 text-white"
+                    : "bg-white border border-orange-400 text-orange-400"}
+                `}
+              >
+                {markedForReview[currentQuestion] ? "✓ Marked" : "Mark"}
               </button>
 
               {currentQuestion === questions.length - 1 ? (
@@ -264,11 +332,12 @@ function Exam({ exam, onBack }) {
                   Next
                 </button>
               )}
+
             </div>
 
           </div>
 
-          {/* ── RIGHT COLUMN — Navigator + Camera ── */}
+          {/* ── RIGHT COLUMN ── */}
           <div className="w-72 flex flex-col gap-4">
 
             {/* NAVIGATOR PANEL */}
@@ -276,11 +345,11 @@ function Exam({ exam, onBack }) {
 
               <p className="font-bold text-sm">Question Navigator</p>
 
-              {/* QUESTION BUTTONS */}
               <div className="flex flex-wrap gap-2 max-h-64 overflow-y-auto">
                 {questions.map((_, index) => {
                   const isCurrent = index === currentQuestion;
                   const isAnswered = answers[index] !== null;
+                  const isMarked = markedForReview[index];
 
                   return (
                     <button
@@ -288,6 +357,7 @@ function Exam({ exam, onBack }) {
                       onClick={() => setCurrentQuestion(index)}
                       className={`w-9 h-9 rounded-full text-sm font-semibold transition
                         ${isCurrent ? "bg-[#165ee7] text-white"
+                          : isMarked ? "bg-orange-400 text-white"
                           : isAnswered ? "bg-[#9fd200] text-white"
                           : "bg-gray-200"}
                       `}
@@ -320,15 +390,15 @@ function Exam({ exam, onBack }) {
 
             </div>
 
-            {/* CAMERA FEED — proctored only */}
-            {exam?.type === "proctored" && (
-              <div className="bg-[#eeeff1] rounded-2xl p-4 flex flex-col gap-2">
-                <p className="font-bold text-sm">📷 Camera</p>
-                <div className="w-full h-40 bg-gray-800 rounded-xl flex items-center justify-center">
-                  <p className="text-white text-xs">Camera feed here</p>
+           {/* CAMERA — proctored only */}
+              {exam?.type === "proctored" && (
+                <div className="bg-[#eeeff1] rounded-2xl p-4 flex flex-col gap-2">
+                  <p className="font-bold text-sm">📷 Camera</p>
+
+                  <ExamCameraFeed />
+
                 </div>
-              </div>
-            )}
+              )}
 
           </div>
 
