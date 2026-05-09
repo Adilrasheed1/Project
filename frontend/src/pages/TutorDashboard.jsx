@@ -139,7 +139,7 @@ setSocket(ws)
     />
     <div className=" w-180 flex flex-row mt-2 justify-evenly">
       <ButtonComp title="share Screen" className="bg-gray-300 sm:w-10  " click={ShareScreen}/>
-    <ButtonComp title="End Call" className="bg-red-400 text-white " />
+    <ButtonComp  click={() => setInCall(false)} title="End Call" className="bg-red-400 text-white " />
     </div>
     </div>
   </div>
