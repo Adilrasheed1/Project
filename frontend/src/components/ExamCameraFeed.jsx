@@ -1,26 +1,31 @@
 import { useEffect, useRef, useState } from "react";
 import * as faceapi from "face-api.js";
 
-function ExamCameraFeed({ onViolation }) {
+// shared flag — model only needs to load once
+let modelLoadedGlobal = false;
+
+function ExamCameraFeed({ onViolation, isActive = true }) {
 
   const videoRef = useRef(null);
   const streamRef = useRef(null);
   const intervalRef = useRef(null);
 
-  // ─── GRACE PERIOD COUNTERS ────────────────────────
-  // Only deduct after 2 consecutive failed checks
   const noFaceCount = useRef(0);
   const multiFaceCount = useRef(0);
 
-  const [modelLoaded, setModelLoaded] = useState(false);
+  const [modelLoaded, setModelLoaded] = useState(modelLoadedGlobal);
   const [error, setError] = useState(null);
 
   // ─── LOAD MODEL + START CAMERA ────────────────────
   useEffect(() => {
+    if (!isActive) return; // only active instance runs
 
     const init = async () => {
       try {
-        await faceapi.nets.tinyFaceDetector.loadFromUri("/models");
+        if (!modelLoadedGlobal) {
+          await faceapi.nets.tinyFaceDetector.loadFromUri("/models");
+          modelLoadedGlobal = true;
+        }
         setModelLoaded(true);
 
         streamRef.current = await navigator.mediaDevices.getUserMedia({
@@ -56,11 +61,12 @@ function ExamCameraFeed({ onViolation }) {
       }
     };
 
-  }, []);
+  }, [isActive]);
 
   // ─── DETECTION LOOP ───────────────────────────────
   useEffect(() => {
     if (!modelLoaded) return;
+    if (!isActive) return; // only active instance detects
 
     intervalRef.current = setInterval(async () => {
       if (!videoRef.current || videoRef.current.readyState < 2) return;
@@ -71,29 +77,21 @@ function ExamCameraFeed({ onViolation }) {
           new faceapi.TinyFaceDetectorOptions()
         );
 
-        // ── NO FACE ──────────────────────────────────
         if (detections.length === 0) {
           noFaceCount.current++;
-          multiFaceCount.current = 0; // reset other counter
-
+          multiFaceCount.current = 0;
           if (noFaceCount.current >= 2) {
             onViolation("No Face Detected", 5);
-            noFaceCount.current = 0; // reset after deducting
+            noFaceCount.current = 0;
           }
-
-        // ── MULTIPLE FACES ────────────────────────────
         } else if (detections.length > 1) {
           multiFaceCount.current++;
-          noFaceCount.current = 0; // reset other counter
-
+          noFaceCount.current = 0;
           if (multiFaceCount.current >= 2) {
             onViolation("Multiple Faces Detected", 5);
-            multiFaceCount.current = 0; // reset after deducting
+            multiFaceCount.current = 0;
           }
-
-        // ── NORMAL — one face ─────────────────────────
         } else {
-          // everything fine, reset both counters
           noFaceCount.current = 0;
           multiFaceCount.current = 0;
         }
@@ -106,12 +104,11 @@ function ExamCameraFeed({ onViolation }) {
 
     return () => clearInterval(intervalRef.current);
 
-  }, [modelLoaded]);
+  }, [modelLoaded, isActive]);
 
   // ─── UI ───────────────────────────────────────────
   return (
     <div className="relative">
-
       <video
         ref={videoRef}
         autoPlay
@@ -120,7 +117,7 @@ function ExamCameraFeed({ onViolation }) {
         className="w-full h-40 object-cover rounded-xl bg-black"
       />
 
-      {!modelLoaded && !error && (
+      {!modelLoaded && !error && isActive && (
         <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-60 rounded-xl">
           <p className="text-white text-xs">Loading camera...</p>
         </div>
@@ -131,7 +128,6 @@ function ExamCameraFeed({ onViolation }) {
           <p className="text-red-400 text-xs text-center px-2">{error}</p>
         </div>
       )}
-
     </div>
   );
 }

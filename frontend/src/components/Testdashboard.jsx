@@ -118,7 +118,7 @@ function TestDashboard({ setSelectedExam }) {
               id: 5,
               name: "MOCK TEST 5",
               type: "proctored",
-              duration: 0.5,
+              duration: 1,
               subject: "Data Science",
                questions: [
                 { question: "What is 2+2?", options: ["1","2","3","4"], answer: "4" },
