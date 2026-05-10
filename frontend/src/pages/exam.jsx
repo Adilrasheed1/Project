@@ -197,7 +197,7 @@ useEffect(() => {
             onClick={() => setShowInstructions(false)}
             className="w-full py-3 bg-[#165ee7] text-white text-lg font-bold rounded-2xl"
           >
-            {exam?.type === "proctored" ? "I Agree — Start Exam" : "Start Exam"}
+            {exam?.type === "proctored" ? "Start Exam" : "Start Exam"}
           </button>
 
         </div>
@@ -395,7 +395,7 @@ useEffect(() => {
                 <div className="bg-[#eeeff1] rounded-2xl p-4 flex flex-col gap-2">
                   <p className="font-bold text-sm">📷 Camera</p>
 
-                  <ExamCameraFeed />
+                 <ExamCameraFeed onViolation={deductIntegrity} />
 
                 </div>
               )}
