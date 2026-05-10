@@ -1,7 +1,19 @@
 import { useEffect, useState, useRef } from "react";
 import Question from "./question";
 import Result from "./result";
-import { OctagonX } from "lucide-react";
+import {
+  OctagonX,
+  ClipboardList,
+  Trophy,
+  Timer,
+  BarChart2,
+  CheckCircle,
+  AlertTriangle,
+  XCircle,
+  Camera,
+  User
+} from "lucide-react";
+
 import ExamCameraFeed from "../components/ExamCameraFeed";
 
 function Exam({ exam, onBack }) {
@@ -133,78 +145,131 @@ useEffect(() => {
   const seconds = timeLeft % 60;
 
   // ─── PRE EXAM SCREEN ──────────────────────────────
-  if (showInstructions) {
-    return (
-      <div className="min-h-screen w-full flex justify-center items-center bg-white">
-        <div className="w-full max-w-2xl bg-[#eeeff1] rounded-3xl shadow-lg p-8 mx-3 flex flex-col gap-6">
+if (showInstructions) {
+  return (
+    <div className="min-h-screen w-full flex justify-center items-center bg-white">
+      <div className="w-full max-w-2xl bg-[#eeeff1] rounded-3xl shadow-lg p-8 mx-3 flex flex-col gap-6">
 
-          <h1 className="text-3xl font-bold text-center">{exam?.name}</h1>
+        <h1 className="text-3xl font-bold text-center">{exam?.name}</h1>
 
-          {/* EXAM DETAILS */}
-          <div className="bg-white rounded-2xl p-5 flex flex-col gap-3 shadow-sm">
-            <h2 className="text-lg font-bold">Exam Details</h2>
-            <p>📋 Total Questions: <span className="font-semibold">{questions.length}</span></p>
-            <p>🏆 Marks per Question: <span className="font-semibold">10</span></p>
-            <p>⏱ Duration: <span className="font-semibold">{exam?.duration} minutes</span></p>
-            <p>📊 Total Marks: <span className="font-semibold">{questions.length * 10}</span></p>
+        {/* EXAM DETAILS */}
+        <div className="bg-white rounded-2xl p-5 flex flex-col gap-3 shadow-sm">
+          <h2 className="text-lg font-bold">Exam Details</h2>
+
+          <div className="flex items-center gap-3 text-gray-700">
+            <ClipboardList size={18} className="text-[#165ee7]"/>
+            <p>Total Questions: <span className="font-semibold">{questions.length}</span></p>
           </div>
 
-          {/* COLOR LEGEND */}
-          <div className="bg-white rounded-2xl p-5 flex flex-col gap-3 shadow-sm">
-            <h2 className="text-lg font-bold">Question Navigator Guide</h2>
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-full bg-[#9fd200]"/>
-              <p>Answered</p>
-            </div>
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-full bg-orange-400"/>
-              <p>Marked for Review</p>
-            </div>
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-full bg-gray-200"/>
-              <p>Unanswered</p>
-            </div>
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-full bg-[#165ee7]"/>
-              <p>Current Question</p>
-            </div>
+          <div className="flex items-center gap-3 text-gray-700">
+            <Trophy size={18} className="text-[#9fd200]"/>
+            <p>Marks per Question: <span className="font-semibold">10</span></p>
           </div>
 
-          {/* GENERAL RULES */}
-          <div className="bg-white rounded-2xl p-5 flex flex-col gap-3 shadow-sm">
-            <h2 className="text-lg font-bold">Rules</h2>
-            <p>✅ You can navigate between questions freely</p>
-            <p>✅ You can mark questions for review and return later</p>
-            <p>⚠️ If time runs out your exam will be submitted automatically</p>
-            <p>⚠️ Leaving the exam will not save your progress</p>
+          <div className="flex items-center gap-3 text-gray-700">
+            <Timer size={18} className="text-orange-400"/>
+            <p>Duration: <span className="font-semibold">{exam?.duration} minutes</span></p>
           </div>
 
-          {/* PROCTORING RULES — proctored only */}
-          {exam?.type === "proctored" && (
-            <div className="bg-white rounded-2xl p-5 flex flex-col gap-3 shadow-sm border-2 border-red-400">
-              <h2 className="text-lg font-bold text-red-500">⚠️ Proctoring Rules</h2>
-              <p>🔴 Tab switch detected → <span className="font-semibold">-2.5% integrity score</span></p>
-              <p>🔴 Camera turned off → <span className="font-semibold">-5% integrity score</span></p>
-              <p>🔴 Multiple people detected → <span className="font-semibold">-5% integrity score</span></p>
-              <p>🔴 Blurred camera → <span className="font-semibold">warning first, then -2.5%</span></p>
-              <p>📷 Please ensure your camera is on and your face is clearly visible</p>
-              <p>👤 Make sure you are alone in the frame</p>
-            </div>
-          )}
-
-          {/* START BUTTON */}
-          <button
-            onClick={() => setShowInstructions(false)}
-            className="w-full py-3 bg-[#165ee7] text-white text-lg font-bold rounded-2xl"
-          >
-            {exam?.type === "proctored" ? "Start Exam" : "Start Exam"}
-          </button>
-
+          <div className="flex items-center gap-3 text-gray-700">
+            <BarChart2 size={18} className="text-[#165ee7]"/>
+            <p>Total Marks: <span className="font-semibold">{questions.length * 10}</span></p>
+          </div>
         </div>
-      </div>
-    );
-  }
 
+        {/* COLOR LEGEND */}
+        <div className="bg-white rounded-2xl p-5 flex flex-col gap-3 shadow-sm">
+          <h2 className="text-lg font-bold">Question Navigator Guide</h2>
+          <div className="flex items-center gap-3">
+            <div className="w-7 h-7 rounded-full bg-[#9fd200]"/>
+            <p className="text-gray-700">Answered</p>
+          </div>
+          <div className="flex items-center gap-3">
+            <div className="w-7 h-7 rounded-full bg-orange-400"/>
+            <p className="text-gray-700">Marked for Review</p>
+          </div>
+          <div className="flex items-center gap-3">
+            <div className="w-7 h-7 rounded-full bg-gray-200"/>
+            <p className="text-gray-700">Unanswered</p>
+          </div>
+          <div className="flex items-center gap-3">
+            <div className="w-7 h-7 rounded-full bg-[#165ee7]"/>
+            <p className="text-gray-700">Current Question</p>
+          </div>
+        </div>
+
+        {/* GENERAL RULES */}
+        <div className="bg-white rounded-2xl p-5 flex flex-col gap-3 shadow-sm">
+          <h2 className="text-lg font-bold">Rules</h2>
+
+          <div className="flex items-center gap-3 text-gray-700">
+            <CheckCircle size={18} className="text-[#9fd200]"/>
+            <p>You can navigate between questions freely</p>
+          </div>
+
+          <div className="flex items-center gap-3 text-gray-700">
+            <CheckCircle size={18} className="text-[#9fd200]"/>
+            <p>You can mark questions for review and return later</p>
+          </div>
+
+          <div className="flex items-center gap-3 text-gray-700">
+            <AlertTriangle size={18} className="text-orange-400"/>
+            <p>If time runs out your exam will be submitted automatically</p>
+          </div>
+
+          <div className="flex items-center gap-3 text-gray-700">
+            <AlertTriangle size={18} className="text-orange-400"/>
+            <p>Leaving the exam will not save your progress</p>
+          </div>
+        </div>
+
+        {/* PROCTORING RULES — proctored only */}
+        {exam?.type === "proctored" && (
+          <div className="bg-white rounded-2xl p-5 flex flex-col gap-3 shadow-sm border-2 border-red-400">
+            <h2 className="text-lg font-bold text-red-500 flex items-center gap-2">
+              <AlertTriangle size={20}/> Proctoring Rules
+            </h2>
+
+            <div className="flex items-center gap-3 text-gray-700">
+              <XCircle size={18} className="text-red-500"/>
+              <p>Tab switch detected → <span className="font-semibold">-2.5% integrity</span></p>
+            </div>
+
+            <div className="flex items-center gap-3 text-gray-700">
+              <XCircle size={18} className="text-red-500"/>
+              <p>Camera turned off → <span className="font-semibold">-5% integrity</span></p>
+            </div>
+
+            <div className="flex items-center gap-3 text-gray-700">
+              <XCircle size={18} className="text-red-500"/>
+              <p>Multiple people detected → <span className="font-semibold">-5% integrity</span></p>
+            </div>
+
+            <div className="flex items-center gap-3 text-gray-700">
+              <Camera size={18} className="text-[#165ee7]"/>
+              <p>Ensure your camera is on and face is clearly visible</p>
+            </div>
+
+            <div className="flex items-center gap-3 text-gray-700">
+              <User size={18} className="text-[#165ee7]"/>
+              <p>Make sure you are alone in the frame</p>
+            </div>
+
+          </div>
+        )}
+
+        {/* START BUTTON */}
+        <button
+          onClick={() => setShowInstructions(false)}
+          className="w-full py-3 bg-[#165ee7] text-white text-lg font-bold rounded-2xl"
+        >
+          {exam?.type === "proctored" ? "I Agree — Start Exam" : "Start Exam"}
+        </button>
+
+      </div>
+    </div>
+  );
+}
   // ─── RESULT SCREEN ────────────────────────────────
   if (score !== null) {
     return (
@@ -393,7 +458,7 @@ useEffect(() => {
            {/* CAMERA — proctored only */}
               {exam?.type === "proctored" && (
                 <div className="bg-[#eeeff1] rounded-2xl p-4 flex flex-col gap-2">
-                  <p className="font-bold text-sm">📷 Camera</p>
+                  <p className="font-bold flex items-center gap-2 text-sm"><Camera size={16} /> You are being proctored</p>
 
                  <ExamCameraFeed onViolation={deductIntegrity} />
 

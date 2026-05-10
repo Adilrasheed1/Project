@@ -1,4 +1,4 @@
-import { X, Check, OctagonX } from "lucide-react";
+import { X, Check, OctagonX, ClipboardList, Trophy, Timer, BarChart2, CheckCircle, AlertTriangle, XCircle } from "lucide-react";
 import { useState } from "react";
 
 function Result({ score, examScore, integrityScore, examType, violations, questions, answers, resetExam, onBack }) {
@@ -21,6 +21,11 @@ function Result({ score, examScore, integrityScore, examType, violations, questi
     return "bg-gray-100";
   };
 
+  // max possible final score
+  const maxFinal = examType === "proctored"
+    ? Math.round((questions.length * 10 + 100) / 2)
+    : questions.length * 10;
+
   return (
     <div className="min-h-screen w-full flex justify-center bg-white relative">
       <div className="w-full max-w-4xl p-6">
@@ -28,52 +33,61 @@ function Result({ score, examScore, integrityScore, examType, violations, questi
         {/* CLOSE */}
         <button
           onClick={() => { resetExam(); onBack(); }}
-          className="absolute top-5 right-5 text-xl"
+          className="absolute top-5 right-5 text-gray-400 hover:text-gray-600"
         >
-          ❌
+          <X size={24}/>
         </button>
 
         {/* RESULT CARD */}
         <div className="bg-[#eeeff1] rounded-3xl shadow-lg p-6 md:p-10">
 
-          <h2 className="text-4xl font-extrabold mb-6 text-center">
+          <h2 className="text-4xl font-extrabold mb-8 text-center">
             Your Result
           </h2>
 
           {/* SCORES */}
           <div className="flex flex-wrap justify-center gap-4 mb-6">
 
-            {/* EXAM SCORE — always shown */}
-            <div className="bg-white rounded-2xl px-8 py-6 shadow-md text-center">
-              <p className="text-lg text-gray-500">Exam Score</p>
+            {/* EXAM SCORE */}
+            <div className="bg-white rounded-2xl px-8 py-6 shadow-md text-center flex flex-col gap-1">
+              <div className="flex items-center justify-center gap-2 text-gray-500 mb-1">
+                <ClipboardList size={18}/>
+                <p className="text-sm">Exam Score</p>
+              </div>
               <h3 className="text-4xl font-bold text-[#165ee7]">
-                {examScore} / {questions.length * 10}
+                {examScore}
+                <span className="text-xl text-gray-400"> / {questions.length * 10}</span>
               </h3>
             </div>
 
-            {/* INTEGRITY + FINAL SCORE — proctored only */}
+            {/* INTEGRITY SCORE — proctored only */}
             {examType === "proctored" && (
-              <>
-                <div className="bg-white rounded-2xl px-8 py-6 shadow-md text-center">
-                  <p className="text-lg text-gray-500">Integrity Score</p>
-                  <h3 className="text-4xl font-bold text-orange-400">
-                    {integrityScore} / 100
-                  </h3>
+              <div className="bg-white rounded-2xl px-8 py-6 shadow-md text-center flex flex-col gap-1">
+                <div className="flex items-center justify-center gap-2 text-gray-500 mb-1">
+                  <CheckCircle size={18}/>
+                  <p className="text-sm">Integrity Score</p>
                 </div>
-
-                <div className="bg-white rounded-2xl px-8 py-6 shadow-md text-center">
-                  <p className="text-lg text-gray-500">Final Score</p>
-                  <h3 className="text-4xl font-bold text-[#9fd200]">
-                    {score}
-                  </h3>
-                  <p className="text-xs text-gray-400 mt-1">
-                    (Exam + Integrity) / 2
-                  </p>
-                </div>
-              </>
+                <h3 className="text-4xl font-bold text-orange-400">
+                  {integrityScore}
+                  <span className="text-xl text-gray-400"> / 100</span>
+                </h3>
+              </div>
             )}
 
           </div>
+
+          {/* FINAL SCORE — proctored only, shown as single clean line */}
+          {examType === "proctored" && (
+            <div className="bg-white rounded-2xl px-8 py-4 shadow-md text-center mb-6">
+              <p className="text-sm text-gray-500 mb-1">
+                Final Score (Exam + Integrity) ÷ 2
+              </p>
+              <h3 className="text-3xl font-bold text-[#9fd200]">
+                {score}
+                <span className="text-xl text-gray-400"> / {maxFinal}</span>
+              </h3>
+            </div>
+          )}
 
           {/* STATS */}
           <div className="flex justify-center gap-6 text-lg bg-white shadow-lg rounded-2xl font-semibold mb-6 p-4">
@@ -83,36 +97,41 @@ function Result({ score, examScore, integrityScore, examType, violations, questi
             <p className="flex items-center gap-2 text-[#F64515]">
               <X size={20}/> WRONG {wrong}
             </p>
-            <p className="flex items-center gap-2">
+            <p className="flex items-center gap-2 text-gray-500">
               <OctagonX size={20}/> UNANSWERED {unanswered}
             </p>
           </div>
 
           {/* VIOLATIONS LOG — proctored only */}
           {examType === "proctored" && (
-            <div className="mb-6">
+            <div className="mb-4">
               <button
                 onClick={() => setShowViolations(!showViolations)}
-                className="w-full py-3 bg-white border-2 border-red-400 text-red-500 font-bold rounded-2xl"
+                className="w-full py-3 bg-white border-2 border-red-400 text-red-500 font-bold rounded-2xl flex items-center justify-center gap-2"
               >
+                <AlertTriangle size={18}/>
                 {showViolations ? "Hide Integrity Deductions" : "Check Integrity Deductions"}
               </button>
 
               {showViolations && (
                 <div className="mt-4 bg-white rounded-2xl p-4 flex flex-col gap-3">
                   {violations.length === 0 ? (
-                    <p className="text-center text-green-500 font-semibold">
-                      ✅ No violations detected. Perfect integrity!
-                    </p>
+                    <div className="flex items-center justify-center gap-2 text-green-500 font-semibold py-2">
+                      <CheckCircle size={18}/>
+                      <p>No violations detected. Perfect integrity!</p>
+                    </div>
                   ) : (
                     violations.map((v, i) => (
                       <div
                         key={i}
                         className="flex justify-between items-center p-3 bg-red-50 rounded-xl border border-red-200"
                       >
-                        <div>
-                          <p className="font-semibold text-red-500">{v.type}</p>
-                          <p className="text-sm text-gray-500">{v.time}</p>
+                        <div className="flex items-center gap-3">
+                          <XCircle size={18} className="text-red-500"/>
+                          <div>
+                            <p className="font-semibold text-red-500">{v.type}</p>
+                            <p className="text-sm text-gray-500">{v.time}</p>
+                          </div>
                         </div>
                         <p className="font-bold text-red-500">-{v.deduction}%</p>
                       </div>
