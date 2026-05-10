@@ -6,6 +6,8 @@ import TestDashboard from "../components/TestDashboard";
 import { Courses } from "./Courses";
 import { CoursesCard } from "./CoursesCard";
 import { StudentSideCourses } from "./StudentSideCourses";
+import logo from "../assets/Dsalogo.png"
+import { ButtonComp } from "./ButtonComp";
 
 export function CentralContent({ section, className, setSelectedExam }) {
 
@@ -34,7 +36,7 @@ export function CentralContent({ section, className, setSelectedExam }) {
   },[filter])
   
 
-  const recentDoubts = doubts.slice(0, 4); 
+  const recentDoubts = doubts.slice(0, 3); 
 
   return (
     <div className={`h-full overflow-y-auto overflow-x-hidden no-scrollbar ${className}`}>
@@ -58,7 +60,7 @@ export function CentralContent({ section, className, setSelectedExam }) {
 
         
 
-            <div className="ml-10">
+            <div className="ml-5 pl-5 pb-10 mt-5 h-full bg-gray-200 bg-opacity-10 rounded-lg">
               <h3 className="pt-10 text-lg font-bold text-gray-600">
                 Recent doubts
               </h3>
@@ -68,17 +70,16 @@ export function CentralContent({ section, className, setSelectedExam }) {
                 {recentDoubts.map((doubt) => (
                   <FeatureCard
                     key={doubt._id}
+                    image={logo}
                     title={doubt.title}
                     description={doubt.description}
-                    className="mt-5 bg-gray-200 h-40 w-52 p-4 rounded-lg border border-gray-300 text-gray-700"
+                    className="mt-5 bg-gray-200 h-50 w-52 p-4 rounded-lg border border-gray-300 text-gray-700  hover:shadow-lg hover:scale-105 transition duration-200"
                   />
                 ))}
               </div>
 
               
-              <a href="#" className="block mt-4 hover:text-blue-500">
-                See all
-              </a>
+              <ButtonComp title="View All Doubts" className="mt-6 ml-8  sm:w-150 bg-gray-300 hover:bg-blue-400 hover:text-white"  />
             </div>
           </>
         )}
