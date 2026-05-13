@@ -19,7 +19,7 @@ const [remoteStream, setRemoteStream] = useState(null);
     const[description,setDescription]=useState("");
     const[image,setImage]=useState("")
       useEffect(() => {
-    const ws = new WebSocket("ws://localhost:8000");
+    const ws = new WebSocket("wss://project-3-7kx1.onrender.com");
 
     ws.onopen = () => {
       console.log("connected as student");

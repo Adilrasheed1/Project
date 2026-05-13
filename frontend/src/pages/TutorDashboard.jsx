@@ -19,7 +19,7 @@ const [request , setRequest]=useState(null)
   const [inCall,setInCall]=useState(false);
   
   useEffect(()=>{
-     const ws=new WebSocket('ws://localhost:8000')
+     const ws=new WebSocket('wss://project-3-7kx1.onrender.com')
     console.log("connecting to wss")
   
    ws.onopen=()=>{
