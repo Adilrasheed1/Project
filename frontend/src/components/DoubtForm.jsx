@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useEffect } from "react";
 import { VideoComponent } from "./VideoComponent";
 import { useRef } from "react";
-import { set } from "mongoose";
+
 export function DoubtForm({setInCall}){
  const pcRef = useRef(null);
     const [showVideo, setShowVideo] = useState(false);
@@ -196,21 +196,44 @@ useEffect(() => {
     </div>
     )}
     {showVideo && (
-      <div className="fixed inset-0 z-50 bg-black flex flex-col gap-4 p-4">
-       <video
-        ref={videoRef}
-        autoPlay
-        muted
-        playsInline
-        className="w-180 h-80 object-cover"
-      />
-     <video
-  ref={remoteVideoRef}
-  autoPlay
-  playsInline
-  className="w-180 h-80 object-cover"
-/>
-   </div>   )}
+   
+        <div className="fixed inset-0 flex flex-col justify-center items-center  bg-white z-50">
+           <div className="bg-gray-200 h-120 w-180 flex flex-col items-center justify-center rounded-sm">
+           <video
+             ref={videoRef}
+             autoPlay
+             muted={false}
+             playsInline
+             className="absolute
+       top-20
+       right-80
+       w-40
+       sm:w-52
+       md:w-64
+       aspect-video
+       object-cover
+       rounded-xl
+       border-2
+       border-white
+       shadow-2xl
+       z-50
+       "
+           
+           />
+           <video
+             ref={remoteVideoRef}
+             autoPlay
+             muted={false}
+             playsInline
+             className="w-[600px] h-[400px] bg-black rounded-xl shadow-lg"
+           
+           />
+          
+           </div>
+         </div>
+       )}
+          
+
 </>
     )
 }
