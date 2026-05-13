@@ -3,7 +3,7 @@ import { Home, HelpCircle, FileText, BarChart , NotebookTabs } from "lucide-reac
 
 export function SideMenu(props) {
   return (
-    <div className={`${props.className} h-full flex items-center justify-center`}>
+    <div className={`${props.className}  flex items-center justify-center `}>
       
       <div className="bg-[#eeeff1] h-[90%] w-full ml-5 rounded-xl shadow-2xl flex flex-col items-center justify-evenly p-4">
 
@@ -24,7 +24,7 @@ export function SideMenu(props) {
         />
 {/*courses*/}
   <SideCompo
-    title={props.title3}
+    title= "Courses"
     icon={NotebookTabs}
      className={`${props.classCourses}`}
       onClick={props.onClickCourses}
