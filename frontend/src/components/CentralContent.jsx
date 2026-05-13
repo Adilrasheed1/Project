@@ -2,7 +2,7 @@ import { FeatureCard } from "../components/FeatureCard";
 import { DoubtSection } from "../pages/DoubtSection";
 import { SearchBar } from "./SearchBar";
 import { useState, useEffect, use } from "react";
-import TestDashboard from "../components/TestDashboard";
+import TestDashboard from "./TestDashboard";
 import { Courses } from "./Courses";
 import { CoursesCard } from "./CoursesCard";
 import { StudentSideCourses } from "./StudentSideCourses";

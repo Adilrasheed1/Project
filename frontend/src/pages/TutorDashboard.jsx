@@ -9,6 +9,7 @@ import { TutorCentralContent } from "../components/TutorCentralContent";
 import { ButtonComp } from "../components/ButtonComp";
 import { ShareScreen } from "../components/ShareScreen";
 export function TutorDashboard(){
+  const localVideoRef=useRef(null)
   const remoteVideoRef=useRef(null)
    const [socket, setSocket] = useState(null);
     const pcRef = useRef(null);
@@ -50,6 +51,9 @@ const [request , setRequest]=useState(null)
     video: true,
     audio: true
   });
+  if (localVideoRef.current) {
+    localVideoRef.current.srcObject = stream;
+  }
 
   stream.getTracks().forEach(track => pc.addTrack(track, stream));
 
@@ -129,6 +133,27 @@ setSocket(ws)
 {inCall && (
   <div className="fixed inset-0 flex flex-col justify-center items-center  bg-white z-50">
     <div className="bg-gray-200 h-120 w-180 flex flex-col items-center justify-center rounded-sm">
+    <video
+      ref={localVideoRef}
+      autoPlay
+      muted={false}
+      playsInline
+      className="absolute
+top-20
+right-80
+w-40
+sm:w-52
+md:w-64
+aspect-video
+object-cover
+rounded-xl
+border-2
+border-white
+shadow-2xl
+z-50
+"
+    
+    />
     <video
       ref={remoteVideoRef}
       autoPlay
