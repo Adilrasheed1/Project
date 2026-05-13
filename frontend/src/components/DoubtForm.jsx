@@ -160,7 +160,7 @@ useEffect(() => {
                 setImage(e.target.value)
             }}/>
         <ButtonComp   click={ ()=>{
-         fetch("http://localhost:3000/doubts/DoubtSection", {
+         fetch("https://project-3-7kx1.onrender.com/doubts/DoubtSection", {
           method: "POST",
            headers: {
            "Content-Type": "application/json"

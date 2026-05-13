@@ -12,7 +12,7 @@ export function TutorCentralContent({section}){
       const [doubts, setDoubts] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:3000/doubts/DoubtSection")
+    fetch("https://project-3-7kx1.onrender.com/doubts/DoubtSection")
       .then(res => res.json())
       .then(data => {
         setDoubts(data);

@@ -6,7 +6,7 @@ export const TutorSignup=()=>{
     return <div>
         
         <LoginCard msg="Sign up to start teaching Journey" onclick={ ()=>{
-         fetch("http://localhost:3000/tutor/signup", {
+         fetch("https://project-3-7kx1.onrender.com/tutor/signup", {
           method: "POST",
           headers: {
            "Content-Type": "application/json"

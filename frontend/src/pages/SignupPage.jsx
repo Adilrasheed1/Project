@@ -8,7 +8,7 @@ export const SignupPage=()=>{
     return <div>
         
         <LoginCard msg="Sign up to continue learning" onclick={ ()=>{
-         fetch("http://localhost:3000/user/signup", {
+         fetch("https://project-3-7kx1.onrender.com/user/signup", {
           method: "POST",
           headers: {
            "Content-Type": "application/json"
