@@ -22,13 +22,13 @@ export function CentralContent({ section, className, setSelectedExam ,setInCall}
     const user = username?.split(" ")[0];
     setUsername(user || ""); // ✅ safe
 
-    fetch("http://localhost:3000/doubts/DoubtSection")
+    fetch("https://project-3-7kx1.onrender.com/doubts/DoubtSection")
       .then(res => res.json())
       .then(data => setDoubts(data))
       .catch(() => setDoubts([]));
   }, []);
   useEffect(()=>{
-    fetch("http://localhost:3000/courses/bulk?filter=" +filter )
+    fetch("https://project-3-7kx1.onrender.com/courses/bulk?filter=" +filter )
     .then(res=>res.json())
     .then(data=>{
       setCourses(data.course)

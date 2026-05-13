@@ -6,7 +6,7 @@ export function ProfileSection({ className }) {
   const [courses, setCourses] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:3000/courses/")
+    fetch("https://project-3-7kx1.onrender.com/courses/")
       .then(res => res.json())
       .then(data => setCourses(data))
       .catch(err => {
