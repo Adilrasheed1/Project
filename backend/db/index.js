@@ -1,5 +1,5 @@
 const mongoose=require("mongoose");
-require('../server')
+
 
 mongoose.connect("mongodb+srv://Adil:Adil123@cluster0.ldkvky8.mongodb.net/DoubtsolvingApp");
 
