@@ -6,67 +6,73 @@ import { Home, HelpCircle, FileText, BarChart } from "lucide-react";
 import Exam from "../pages/exam";
 
 export function StudentDashboard() {
-const pcRef = useRef(null);
+
 const [socket,setSocket]=useState();
+const [inCall,setInCall]=useState(false);
   // ================================
   // ADIL'S 
   // ================================
  
 
 
-  async function startCall(ws) {
-   const pc = new RTCPeerConnection({
-      iceServers: [{ urls: "stun:stun.l.google.com:19302" }]
-    });
-      pcRef.current = pc;
+//   async function startCall(ws) {
+//    const pc = new RTCPeerConnection({
+//       iceServers: [{ urls: "stun:stun.l.google.com:19302" }]
+//     });
+//       pcRef.current = pc;
       
- const stream = await navigator.mediaDevices.getUserMedia({
-      video: true,
-      audio: false
-    });
+//  const stream = await navigator.mediaDevices.getUserMedia({
+//       video: true,
+//       audio: false
+//     });
 
-    stream.getTracks().forEach(track => pc.addTrack(track, stream));
+//     stream.getTracks().forEach(track => pc.addTrack(track, stream));
 
-    const offer = await pc.createOffer();
-    await pc.setLocalDescription(offer);
+//     const offer = await pc.createOffer();
+//     await pc.setLocalDescription(offer);
 
-    ws.send(JSON.stringify({
-      type: "offer",
-      sdp: offer
-    }));
+//     ws.send(JSON.stringify({
+//       type: "offer",
+//       sdp: offer
+//     }));
 
-    pc.onicecandidate = (e) => {
-      if (e.candidate) {
-        ws.send(JSON.stringify({
-          type: "iceCandidate",
-          candidate: e.candidate
-        }));
-      }
-    };
-  }
+//     pc.onicecandidate = (e) => {
+//       if (e.candidate) {
+//         ws.send(JSON.stringify({
+//           type: "iceCandidate",
+//           candidate: e.candidate
+//         }));
+//       }
+//     };
+//   }
 
-      useEffect(()=>{
-    const ws = new WebSocket('ws://localhost:8000');
-    ws.onopen = () => {
-      ws.send(JSON.stringify({ type: 'student' }));
-    };
+//       useEffect(()=>{
+//     const ws = new WebSocket('ws://localhost:8000');
+//     ws.onopen = () => {
+//       ws.send(JSON.stringify({ type: 'student' }));
+//     };
 
    
-  ws.onmessage = async (event) => {
-    const msg = JSON.parse(event.data);
+//   ws.onmessage = async (event) => {
+//     const msg = JSON.parse(event.data);
 
-    if (msg.type === "accepted") startCall(ws);
-    if (msg.type === "answer") await pcRef.current.setRemoteDescription(msg.sdp);
-    if (msg.type === "iceCandidate") await pcRef.current.addIceCandidate(msg.candidate);
-  }
-   setSocket(ws);
-  },[])
+//     if (msg.type === "accepted"){
+//       startCall(ws);
+//       setInCall(true);
+//     } 
+//     if (msg.type === "answer") await pcRef.current.setRemoteDescription(msg.sdp);
+//     if (msg.type === "iceCandidate") await pcRef.current.addIceCandidate(msg.candidate);
+//   }
+//    setSocket(ws);
+//   },[])
+
 
   // ================================
   // FOR STATE CHANGE
   // ================================
   const [section, setSection] = useState("home");
   const [selectedExam, setSelectedExam] = useState(null);
+  
 
   // ================================
   //  EXAM FLOW
@@ -81,12 +87,15 @@ const [socket,setSocket]=useState();
       </div>
     );
   }
+ 
 
-  // ================================
-  // STUDENT DASHBOARD UI
+  // ==============================  // STUDENT DASHBOARD UI
   // ================================
   return (
-    <div className="h-screen w-full bg-white flex overflow-hidden">
+    
+
+   
+     <div className="h-screen w-full bg-white flex overflow-hidden">
 
       {/* SIDEBAR */}
       <div className="hidden md:flex w-[120px]">
@@ -105,7 +114,9 @@ const [socket,setSocket]=useState();
         section={section}
         setSelectedExam={setSelectedExam}
         className="flex-1 overflow-y-auto no-scrollbar overflow-x-hidden px-3 sm:px-6 md:px-8"
+        setInCall={setInCall}
       />
+      
 
       {/* RIGHT */}
       <div className="hidden lg:flex w-[260px] justify-center items-center">
@@ -156,5 +167,11 @@ const [socket,setSocket]=useState();
       </div>
 
     </div>
-  );
+   
+     
+  
+
+          )
+         
+
 }

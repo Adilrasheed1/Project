@@ -42,7 +42,7 @@ export function ProfileSection({ className }) {
                 image={logo}
                 title={course.title}
                 description={course.description}
-                className="bg-linear-to-bl from-orange-500 to-blue-500 text-gray-200 h-50 ml-3 mr-3 mt-3 pt-5 pl-5 pr-5 rounded-lg"
+                className="bg-linear-to-bl from-orange-500 to-blue-200 text-gray-200 h-50 ml-3 mr-3 mt-3 pt-5 pl-5 pr-5 rounded-lg"
               />
             ))
           ) : (

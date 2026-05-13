@@ -9,7 +9,7 @@ import { StudentSideCourses } from "./StudentSideCourses";
 import logo from "../assets/Dsalogo.png"
 import { ButtonComp } from "./ButtonComp";
 
-export function CentralContent({ section, className, setSelectedExam }) {
+export function CentralContent({ section, className, setSelectedExam ,setInCall}) {
 
   const [doubts, setDoubts] = useState([]);
   const [user, setUsername] = useState("");
@@ -85,7 +85,7 @@ export function CentralContent({ section, className, setSelectedExam }) {
         )}
 
         {/* DOUBTS */}
-        {section === "doubts" && <DoubtSection />}
+        {section === "doubts" && <DoubtSection setInCall={setInCall} />}
 
         {/* TEST */}
         {section === "Test" && (
