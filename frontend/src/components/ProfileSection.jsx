@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { FeatureCard } from "./FeatureCard";
+import logo from "../assets/Dsalogo.png"
 
 export function ProfileSection({ className }) {
   const [courses, setCourses] = useState([]);
@@ -14,7 +15,7 @@ export function ProfileSection({ className }) {
       });
   }, []);
 
-  const recentCourses = courses.slice(-3);
+  const recentCourses = courses.slice(-2);
 
   return (
     <div className={`${className} h-full flex items-center justify-center mr-5`}>
@@ -38,9 +39,10 @@ export function ProfileSection({ className }) {
             recentCourses.map((course) => (
               <FeatureCard
                 key={course._id}
+                image={logo}
                 title={course.title}
                 description={course.description}
-                className="bg-blue-600 text-gray-200 h-24 ml-3 mr-3 mt-3 pt-5 pl-5 rounded-lg"
+                className="bg-linear-to-bl from-orange-500 to-blue-200 text-gray-200 h-50 ml-3 mr-3 mt-3 pt-5 pl-5 pr-5 rounded-lg"
               />
             ))
           ) : (
@@ -59,7 +61,7 @@ export function ProfileSection({ className }) {
               <FeatureCard
                 title="course3"
                 description="complete Machine Learning Playlist"
-                className="bg-blue-600 text-gray-300 h-24 ml-3 mr-3 mt-3 pt-5 pl-5 rounded-lg"
+                className="bg-blue-600 text-gray-300 h-24 ml-3 mr-3 mt-3 pt-5 pl-5 rounded-lg "
               />
             </>
           )}

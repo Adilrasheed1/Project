@@ -4,11 +4,14 @@ import { useState } from "react";
 import { useEffect } from "react";
 import { VideoComponent } from "./VideoComponent";
 import { useRef } from "react";
-export function DoubtForm(){
-    const [inCall, setInCall] = useState(false);
-    const videoRef = useRef(null);
-    const pcRef = useRef(null);
-    const remoteVideoRef = useRef(null);
+import { set } from "mongoose";
+export function DoubtForm({setInCall}){
+ const pcRef = useRef(null);
+    const [showVideo, setShowVideo] = useState(false);
+     const videoRef = useRef(null);
+     const remoteVideoRef = useRef(null);
+    const [localStream, setLocalStream] = useState(null);
+const [remoteStream, setRemoteStream] = useState(null);
    
   const [socket, setSocket] = useState(null);
 
@@ -29,7 +32,11 @@ export function DoubtForm(){
       // 🔥 tutor accepted
       if (msg.type === "accepted") {
         console.log("request Accepted")
-        startWebRTC(ws);
+         
+         await startWebRTC(ws);
+         setShowVideo(true);
+        
+        
       }
 
       // 🔥 answer from tutor
@@ -47,63 +54,88 @@ export function DoubtForm(){
 
     setSocket(ws);
   }, []);
-async function startWebRTC(socket) {
-  const pc = new RTCPeerConnection({
-    iceServers: [{ urls: "stun:stun.l.google.com:19302" }]
-  });
-  pcRef.current = pc; 
-  
+  useEffect(() => {
 
-  
-  setInCall(true);
-  console.log(inCall)
+  if (videoRef.current && localStream) {
 
-  const stream = await navigator.mediaDevices.getUserMedia({
-    video: true,
-    audio: false
-  });
-  if (videoRef.current) {
-      videoRef.current.srcObject = stream;
-    }
-    
-    
+    console.log(videoRef.current);
+    console.log("local stream:", localStream);
 
-  // send video
-  stream.getTracks().forEach(track => {
-    pc.addTrack(track, stream);
-  });
-  
-   console.log("start receiving")
-  // receive tutor video
-pc.ontrack = (event) => {
-console.log("TRACK RECEIVED 🔥", event.streams);
-  if (remoteVideoRef.current) {
-    remoteVideoRef.current.srcObject = event.streams[0];
+    videoRef.current.srcObject = localStream;
+
+    console.log("local stream attached");
   }
-};
 
-  // create offer
-  const offer = await pc.createOffer();
-  await pc.setLocalDescription(offer);
+}, [localStream, showVideo]);
 
-  socket.send(JSON.stringify({
-    type: "offer",
-    sdp: offer
-  }));
+useEffect(() => {
+
+  if (remoteVideoRef.current && remoteStream) {
+
+
+    remoteVideoRef.current.srcObject = remoteStream;
+
+    console.log("remote stream attached");
+  }
+
+}, [remoteStream, showVideo]);
   
-
-  // ICE
-  pc.onicecandidate = (e) => {
-    if (e.candidate) {
-      socket.send(JSON.stringify({
-        type: "iceCandidate",
-        candidate: e.candidate
-      }));
-    }
+  async function startWebRTC(socket) {
+    const pc = new RTCPeerConnection({
+      iceServers: [{ urls: "stun:stun.l.google.com:19302" }]
+    });
+    pcRef.current = pc; 
+    
+  
+    
+    setInCall(true);
+   
+  
+    const stream = await navigator.mediaDevices.getUserMedia({
+      video: true,
+      audio: false
+    });
+    console.log("got local stream",stream);
+   
+      setLocalStream(stream);
+  
+    // send video
+    stream.getTracks().forEach(track => {
+      pc.addTrack(track, stream);
+    });
+    
+     console.log("start receiving")
+    // receive tutor video
+  pc.ontrack = (event) => {
+  console.log("TRACK RECEIVED 🔥", event.streams);
+  setRemoteStream(event.streams[0]);
   };
-}
-    return <div className="h-120 bg-gray-100 w-150  mx-5 my-5 rounded-lg border-1 border-gray-200 pt-5 pl-5 ">
-        {!inCall &&( 
+  
+    // create offer
+    const offer = await pc.createOffer();
+    await pc.setLocalDescription(offer);
+  
+    socket.send(JSON.stringify({
+      type: "offer",
+      sdp: offer
+    }));
+    
+  
+    // ICE
+    pc.onicecandidate = (e) => {
+      if (e.candidate) {
+        socket.send(JSON.stringify({
+          type: "iceCandidate",
+          candidate: e.candidate
+        }));
+      }
+    };
+  }
+    return (
+    <>
+    {!showVideo && (
+     <div className="h-120 bg-gray-100 w-150  mx-5 my-5 rounded-lg border-1 border-gray-200 pt-5 pl-5 ">
+    
          
         <>
         <InputCompo label="Doubt" Type="text"  className="w-80 h-10 px-3 text-sm text-gray-700  border-1 border-gray-200  rounded-lg  mb-5 " Placeholder="write the name of doubt" value={title} onchangemail={function(e){
@@ -158,23 +190,27 @@ console.log("TRACK RECEIVED 🔥", event.streams);
 
     alert("Finding tutor...");
     }} title="Connect To Tutor" className={"bg-gray-200 text-gray-700 border-1 border-gray-200 mt-5 ml-3 hover:bg-blue-500 hover:text-white"} />
-    </>)}
-    {inCall && (
-        <div>
-         <video
+    </>
+ 
+         
+    </div>
+    )}
+    {showVideo && (
+      <div className="fixed inset-0 z-50 bg-black flex flex-col gap-4 p-4">
+       <video
         ref={videoRef}
         autoPlay
         muted
         playsInline
-        className="w-64 h-40 bg-black"
+        className="w-180 h-80 object-cover"
       />
      <video
   ref={remoteVideoRef}
   autoPlay
   playsInline
-  className="w-64 h-40 object-cover"
-/> </div>
-    )}
-    </div>
-
+  className="w-180 h-80 object-cover"
+/>
+   </div>   )}
+</>
+    )
 }
