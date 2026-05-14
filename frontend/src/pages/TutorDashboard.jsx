@@ -100,75 +100,84 @@ setSocket(ws)
 }
    
 
-       return <div className="grid grid-cols-5 bg-[#fcedf2] h-full relative  ">
-     <SideMenu title1='Home' title2="Sessions" title3="Courses" title4="MyStudents" title5="Tests"  classHome={section==='home' ? "bg-sky-500 text-slate-800" : "bg-gray-200 text-gray-950" } onClickHome={()=> setSection("home")} onClickDoubts={() => setSection("doubts")} className="col-span-1 fixed w-40 mt-8  ml-8 " classDoubts={section==='doubts' ? "bg-sky-500 text-slate-800" : "bg-gray-200 text-gray-950" } onClickCourses={() => setSection("courses")} className="col-span-1 w-40 mt-8  ml-8 " classCourses={section==='courses' ? "bg-sky-500 text-slate-800" : "bg-gray-200 text-gray-950" } onClickTest={()=>setSection("Test")}/>
-     
-   <TutorCentralContent section={section}/>
-      
-          
-       
-   
-     <ProfileSection />
-   {incomingCall && (
-  <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-center">
-    <div className="bg-white p-6 rounded-xl shadow-lg text-center">
-      <h2 className="text-lg font-semibold mb-4">Incoming Call</h2>
-      
-      <button
-        onClick={() => accept()}
-        className="bg-green-500 text-white px-4 py-2 rounded mr-2"
-      >
-        Accept
-      </button>
+  
 
-      <button
-        onClick={() => setIncomingCall(false)}
-        className="bg-red-500 text-white px-4 py-2 rounded"
-      >
-        Reject
-      </button>
-    </div>
-  </div>
-)}
-{inCall && (
-  <div className="fixed inset-0 flex flex-col justify-center items-center  bg-white z-50">
-    <div className="bg-gray-200 h-120 w-180 flex flex-col items-center justify-center rounded-sm">
-    <video
-      ref={localVideoRef}
-      autoPlay
-      muted={false}
-      playsInline
-      className="absolute
-top-20
-right-80
-w-40
-sm:w-52
-md:w-64
-aspect-video
-object-cover
-rounded-xl
-border-2
-border-white
-shadow-2xl
-z-50
-"
-    
+const [isMobile, setIsMobile] = useState(window.innerWidth < 1024);
+
+useEffect(() => {
+  const handleResize = () => setIsMobile(window.innerWidth < 1024);
+  window.addEventListener("resize", handleResize);
+  return () => window.removeEventListener("resize", handleResize);
+}, []);
+
+return (
+  <div className="bg-[#fcedf2] min-h-screen relative">
+
+
+    <SideMenu
+      section={section}
+      isMobile={isMobile}
+      onClickHome={() => setSection("home")}
+      onClickDoubts={() => setSection("doubts")}
+      onClickCourses={() => setSection("courses")}
+      onClickTest={() => setSection("Test")}
+      onClickProgress={() => setSection("Progress")}
     />
-    <video
-      ref={remoteVideoRef}
-      autoPlay
-      muted={false}
-      playsInline
-      className="w-[600px] h-[400px] bg-black rounded-xl shadow-lg"
-    
-    />
-    <div className=" w-180 flex flex-row mt-2 justify-evenly">
-      <ButtonComp title="share Screen" className="bg-gray-300 sm:w-10  " click={ShareScreen}/>
-    <ButtonComp  click={() => setInCall(false)} title="End Call" className="bg-red-400 text-white " />
+
+
+    <div className={`flex flex-col lg:flex-row transition-all duration-200
+      ${isMobile ? "pb-16" : "ml-44"}`}>
+
+
+      <div className="flex-1">
+        <TutorCentralContent section={section} />
+      </div>
+
+  
+      <div className="hidden lg:block w-64 shrink-0">
+        <ProfileSection />
+      </div>
     </div>
-    </div>
+
+
+    {incomingCall && (
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+        <div className="bg-white p-6 rounded-xl shadow-lg text-center mx-4 w-full max-w-sm">
+          <h2 className="text-lg font-semibold mb-4">Incoming Call</h2>
+          <button onClick={() => accept()} className="bg-green-500 text-white px-6 py-2 rounded mr-2">
+            Accept
+          </button>
+          <button onClick={() => setIncomingCall(false)} className="bg-red-500 text-white px-6 py-2 rounded">
+            Reject
+          </button>
+        </div>
+      </div>
+    )}
+
+
+    {inCall && (
+      <div className="fixed inset-0 flex flex-col justify-center items-center bg-white z-50 p-4">
+        <div className="bg-gray-200 w-full max-w-3xl flex flex-col items-center rounded-lg p-4 gap-4">
+          <video
+            ref={localVideoRef}
+            autoPlay muted={false} playsInline
+            className="absolute top-4 right-4 sm:top-8 sm:right-8
+              w-24 sm:w-36 md:w-48
+              aspect-video object-cover
+              rounded-xl border-2 border-white shadow-2xl z-50"
+          />
+          <video
+            ref={remoteVideoRef}
+            autoPlay muted={false} playsInline
+            className="w-full max-w-2xl aspect-video bg-black rounded-xl shadow-lg"
+          />
+          <div className="w-full flex flex-row justify-evenly mt-2">
+            <ButtonComp title="Share Screen" className="bg-gray-300" click={ShareScreen} />
+            <ButtonComp click={() => setInCall(false)} title="End Call" className="bg-red-400 text-white" />
+          </div>
+        </div>
+      </div>
+    )}
+
   </div>
-)}
-   
-       </div>
-}
+) }
