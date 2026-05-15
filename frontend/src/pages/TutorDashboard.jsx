@@ -156,12 +156,15 @@ return (
 
 
     {inCall && (
-      <div className="fixed inset-0 flex flex-col justify-center items-center bg-white z-50 p-4">
-        <div className="bg-gray-200 w-full max-w-3xl flex flex-col items-center rounded-lg p-4 gap-4">
+      <div className="fixed  inset-0 flex flex-col justify-center items-center bg-black z-50 p-4">
+        <div className="bg-gray-800 w-full h-screen max-w-3xl flex flex-col items-center rounded-lg p-4 gap-4">
           <video
             ref={localVideoRef}
             autoPlay muted={false} playsInline
-            className="absolute top-4 right-4 sm:top-8 sm:right-8
+            className="absolute top-74
+       right-10
+       sm:top-5
+       sm:right-60
               w-24 sm:w-36 md:w-48
               aspect-video object-cover
               rounded-xl border-2 border-white shadow-2xl z-50"
@@ -169,7 +172,7 @@ return (
           <video
             ref={remoteVideoRef}
             autoPlay muted={false} playsInline
-            className="w-full max-w-2xl aspect-video bg-black rounded-xl shadow-lg"
+            className="w-full h-screen bg-black rounded-xl shadow-lg"
           />
           <div className="w-full flex flex-row justify-evenly mt-2">
             <ButtonComp title="Share Screen" className="bg-gray-300" click={ShareScreen} />

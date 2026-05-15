@@ -134,7 +134,7 @@ useEffect(() => {
     return (
     <>
     {!showVideo && (
-     <div className="h-120 bg-gray-100 w-150  mx-5 my-5 rounded-lg border-1 border-gray-200 pt-5 pl-5 ">
+     <div className="h-130 sm:h-120 bg-gray-100 w-80  sm:w-full mx-5 my-5  mt-10 rounded-lg border-1 border-gray-200 pt-5 pl-5 ">
     
          
         <>
@@ -189,7 +189,7 @@ useEffect(() => {
    
 
     alert("Finding tutor...");
-    }} title="Connect To Tutor" className={"bg-gray-200 text-gray-700 border-1 border-gray-200 mt-5 ml-3 hover:bg-blue-500 hover:text-white"} />
+    }} title="Connect To Tutor" className={"bg-gray-200  text-gray-700 border-1 border-gray-200 mt-5 sm:ml-3 hover:bg-blue-500 hover:text-white"} />
     </>
  
          
@@ -198,15 +198,17 @@ useEffect(() => {
     {showVideo && (
    
         <div className="fixed inset-0 flex flex-col justify-center items-center  bg-white z-50">
-           <div className="bg-gray-200 h-120 w-180 flex flex-col items-center justify-center rounded-sm">
+           <div className="bg-gray-200 h-screen w-screen flex flex-col items-center justify-center rounded-sm">
            <video
              ref={videoRef}
              autoPlay
              muted={false}
              playsInline
              className="absolute
-       top-20
-       right-80
+       top-80
+       right-0
+       sm:top-0
+       sm:right-50
        w-40
        sm:w-52
        md:w-64
@@ -225,7 +227,7 @@ useEffect(() => {
              autoPlay
              muted={false}
              playsInline
-             className="w-[600px] h-[400px] bg-black rounded-xl shadow-lg"
+             className="w-full h-screen bg-black rounded-xl shadow-lg"
            
            />
           

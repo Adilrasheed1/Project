@@ -41,15 +41,12 @@ export function CentralContent({ section, className, setSelectedExam ,setInCall}
   return (
     <div className={`h-full overflow-y-auto overflow-x-hidden no-scrollbar ${className}`}>
       <div className="max-w-6xl mb-30 mx-auto w-full">
-            <SearchBar onChange={(e) => {
-                setFilter(e.target.value)
-            }} />
-
+           
         {/* HOME */}
         {section === "home" && (
           <>
            
-            <h1 className="text-7xl font-extrabold font-serif mt-2 sm:mt-20 ml-10">
+            <h1 className="text-2xl sm:text-4xl  lg:text-5xl font-bold text-slate-700 font-duitect-trail mt-2 sm:mt-10  ml-10">
               COURSES THAT TEACH. MENTORS THAT GUIDE.
             </h1>
 
@@ -58,7 +55,10 @@ export function CentralContent({ section, className, setSelectedExam ,setInCall}
               Welcome back, {user}
             </p>
 
-        
+         <SearchBar onChange={(e) => {
+                setFilter(e.target.value)
+            }} />
+
 
             <div className="ml-5 pl-5 pb-10 mt-5 h-full bg-gray-200 bg-opacity-10 rounded-lg">
               <h3 className="pt-10 text-lg font-bold text-gray-600">
@@ -73,7 +73,7 @@ export function CentralContent({ section, className, setSelectedExam ,setInCall}
                     image={logo}
                     title={doubt.title}
                     description={doubt.description}
-                    className="mt-5 bg-gray-200 h-50 w-52 p-4 rounded-lg border border-gray-300 text-gray-700  hover:shadow-lg hover:scale-105 transition duration-200"
+                    className="mt-5 bg-gray-200 h-60 sm:h-50  w-70 sm:w-52 p-4 rounded-lg border border-gray-300 text-gray-700  hover:shadow-lg hover:scale-105 transition duration-200"
                   />
                 ))}
               </div>
@@ -92,11 +92,16 @@ export function CentralContent({ section, className, setSelectedExam ,setInCall}
           <TestDashboard setSelectedExam={setSelectedExam} />
         )}
 {section ==="courses" && (
+<div>
+   <SearchBar onChange={(e) => {
+                setFilter(e.target.value)
+            }} />
   
   <div className=" h-50 flex gap-4 flex-wrap">
     
-   
+     
  {courses.map(course=> <StudentSideCourses course={course}/>)}
+ </div>
  </div>
 )}
     
