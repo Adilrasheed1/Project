@@ -8,7 +8,7 @@ export function SideMenu(props) {
     <div className={
       isMobile
         ? "fixed bottom-0 left-0 w-full z-40 bg-[#eeeff1] border-t border-gray-200 shadow-lg h-16 flex flex-row items-center justify-around px-2"
-        : "fixed top-0 left-0 h-screen w-44 z-40 flex items-center justify-center py-6"
+        : "fixed top-0 left-0 h-screen w-30 z-40 flex items-center justify-center py-6"
     }>
      
       {!isMobile && (
