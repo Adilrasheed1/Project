@@ -227,7 +227,7 @@ return (
           />
           <video
             ref={remoteVideoRef}
-            autoPlay muted={false} playsInline
+            autoPlay muted playsInline
             className="w-full h-screen bg-black rounded-xl shadow-lg"
           />
           <div className="w-full flex flex-row justify-evenly mt-2">

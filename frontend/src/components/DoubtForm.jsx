@@ -7,6 +7,7 @@ import { useRef } from "react";
 
 export function DoubtForm({setInCall}){
  const pcRef = useRef(null);
+ const pendingCandidates = useRef([]);
     const [showVideo, setShowVideo] = useState(false);
      const videoRef = useRef(null);
      const remoteVideoRef = useRef(null);
@@ -41,15 +42,60 @@ const [remoteStream, setRemoteStream] = useState(null);
 
       // 🔥 answer from tutor
       if (msg.type === "answer") {
-        await pcRef.current?.setRemoteDescription(msg.sdp);
+        await pcRef.current?.setRemoteDescription(
+  new RTCSessionDescription(msg.sdp)
+);
+for (const candidate of pendingCandidates.current) {
+
+  try {
+
+    await pcRef.current.addIceCandidate(
+      new RTCIceCandidate(candidate)
+    );
+
+    console.log("Queued ICE added");
+
+  } catch (err) {
+
+    console.error("Queued ICE error:", err);
+
+  }
+}
+
+pendingCandidates.current = [];
         console.log("answer:",msg.sdp)
       }
 
       // 🔥 ICE
-      if (msg.type === "iceCandidate") {
-        await  pcRef.current?.addIceCandidate(msg.candidate);
-        console.log("ice:",msg.candidate)
-      }
+     if (msg.type === "iceCandidate" && msg.candidate) {
+
+  if (
+    pcRef.current &&
+    pcRef.current.remoteDescription
+  ) {
+
+    try {
+
+      await pcRef.current.addIceCandidate(
+        new RTCIceCandidate(msg.candidate)
+      );
+
+      console.log("ICE added");
+
+    } catch (err) {
+
+      console.error("ICE ERROR:", err);
+
+    }
+
+  } else {
+
+    console.log("Queueing ICE");
+
+    pendingCandidates.current.push(msg.candidate);
+
+  }
+}
     };
 
     setSocket(ws);
@@ -100,6 +146,15 @@ useEffect(() => {
   ],
 });
     pcRef.current = pc; 
+    // ICE
+    pc.onicecandidate = (e) => {
+      if (e.candidate) {
+        socket.send(JSON.stringify({
+          type: "iceCandidate",
+          candidate: e.candidate
+        }));
+      }
+    };
     
   
     
@@ -136,15 +191,7 @@ useEffect(() => {
     }));
     
   
-    // ICE
-    pc.onicecandidate = (e) => {
-      if (e.candidate) {
-        socket.send(JSON.stringify({
-          type: "iceCandidate",
-          candidate: e.candidate
-        }));
-      }
-    };
+    
   }
     return (
     <>
@@ -217,7 +264,7 @@ useEffect(() => {
            <video
              ref={videoRef}
              autoPlay
-             muted={false}
+             muted
              playsInline
              className="absolute
        top-80
