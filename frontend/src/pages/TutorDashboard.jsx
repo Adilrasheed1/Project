@@ -184,7 +184,7 @@ return (
             className="w-full h-screen bg-black rounded-xl shadow-lg"
           />
           <div className="w-full flex flex-row justify-evenly mt-2">
-            <ButtonComp title="Share Screen" className="bg-gray-300" click={ShareScreen} />
+            <ButtonComp title="Share Screen" className="bg-gray-300"  click={() => ShareScreen(pcRef, localVideoRef)}/>
             <ButtonComp click={() => setInCall(false)} title="End Call" className="bg-red-400 text-white" />
           </div>
         </div>
