@@ -17,6 +17,7 @@ export function TutorDashboard(){
 const [request , setRequest]=useState(null)
   const [incomingCall, setIncomingCall] = useState(false);
   const [inCall,setInCall]=useState(false);
+  const pendingCandidates = useRef([]);
   
   useEffect(()=>{
      const ws=new WebSocket('wss://project-3-7kx1.onrender.com')
@@ -36,25 +37,60 @@ const [request , setRequest]=useState(null)
      setIncomingCall(true)
 
   }
-  if (msg.type === "iceCandidate") {
-  if (pcRef.current) {
-    await pcRef.current.addIceCandidate(msg.candidate);
+ if (msg.type === "iceCandidate" && msg.candidate) {
+
+  if (
+    pcRef.current &&
+    pcRef.current.remoteDescription
+  ) {
+
+    try {
+      await pcRef.current.addIceCandidate(
+        new RTCIceCandidate(msg.candidate)
+      );
+
+      console.log("ICE candidate added");
+
+    } catch (err) {
+      console.error("ICE ERROR:", err);
+    }
+
+  } else {
+
+    console.log("Queueing ICE candidate");
+
+    pendingCandidates.current.push(msg.candidate);
+
   }
 }
    if (msg.type === "offer") {
  const pc = new RTCPeerConnection({
   iceServers: [
     {
-      urls: "stun:stun.l.google.com:19302",
+      urls: [
+        "stun:stun.l.google.com:19302",
+        "stun:stun1.l.google.com:19302",
+      ],
     },
     {
-      urls: "turn:192.158.29.39:3478?transport=udp",
+      urls: [
+        "turn:192.158.29.39:3478?transport=udp",
+        "turn:192.158.29.39:3478?transport=tcp",
+      ],
       username: "28224511:1379330808",
       credential: "JZEOEt2V3Qb0y27GRntt2u2PAYA=",
     },
   ],
 });
   pcRef.current=pc;
+   pc.onicecandidate = (e) => {
+    if (e.candidate) {
+      ws.send(JSON.stringify({
+        type: "iceCandidate",
+        candidate: e.candidate
+      }));
+    }
+  };
 
   const stream = await navigator.mediaDevices.getUserMedia({
     video: true,
@@ -79,6 +115,24 @@ const [request , setRequest]=useState(null)
 };
   
 await pc.setRemoteDescription(msg.sdp);
+for (const candidate of pendingCandidates.current) {
+
+  try {
+
+    await pc.addIceCandidate(
+      new RTCIceCandidate(candidate)
+    );
+
+    console.log("Queued ICE added");
+
+  } catch (err) {
+
+    console.error("Queued ICE error:", err);
+
+  }
+}
+
+pendingCandidates.current = [];
 const answer = await pc.createAnswer();
   await pc.setLocalDescription(answer);
 
@@ -87,14 +141,7 @@ const answer = await pc.createAnswer();
     sdp: answer
   }));
 
-  pc.onicecandidate = (e) => {
-    if (e.candidate) {
-      ws.send(JSON.stringify({
-        type: "iceCandidate",
-        candidate: e.candidate
-      }));
-    }
-  };
+ 
 }
 
 };

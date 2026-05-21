@@ -7,7 +7,6 @@ export async function ShareScreen(pcRef, localVideoRef) {
 
   const screenTrack = screenStream.getVideoTracks()[0];
 
-  // Replace video track being sent to student
   const sender = pcRef.current
     .getSenders()
     .find(sender =>
@@ -18,12 +17,10 @@ export async function ShareScreen(pcRef, localVideoRef) {
     await sender.replaceTrack(screenTrack);
   }
 
-  // Update local preview
   if (localVideoRef.current) {
     localVideoRef.current.srcObject = screenStream;
   }
 
-  // When sharing stops, return to camera
   screenTrack.onended = async () => {
 
     const cameraStream = await navigator.mediaDevices.getUserMedia({
