@@ -8,6 +8,7 @@ import { useEffect, useRef, useState } from "react";
 import { TutorCentralContent } from "../components/TutorCentralContent";
 import { ButtonComp } from "../components/ButtonComp";
 import { ShareScreen } from "../components/ShareScreen";
+import SessionCalendar from "../components/SessionCalendar";
 export function TutorDashboard(){
   const localVideoRef=useRef(null)
   const remoteVideoRef=useRef(null)
@@ -167,7 +168,7 @@ useEffect(() => {
 }, []);
 
 return (
-  <div className="bg-[#fcedf2] min-h-screen relative">
+  <div className="bg-slate-700 min-h-screen relative">
 
 
     <SideMenu
@@ -190,8 +191,9 @@ return (
       </div>
 
   
-      <div className="hidden lg:block w-64 shrink-0">
-        <ProfileSection />
+      <div className="hidden lg:block w-64 bg-gray-600 h-screen shrink-0">
+       <SessionCalendar/>
+       <ProfileSection/>
       </div>
     </div>
 
