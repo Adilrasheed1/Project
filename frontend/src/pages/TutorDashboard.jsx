@@ -9,6 +9,7 @@ import { TutorCentralContent } from "../components/TutorCentralContent";
 import { ButtonComp } from "../components/ButtonComp";
 import { ShareScreen } from "../components/ShareScreen";
 import SessionCalendar from "../components/SessionCalendar";
+import { PendingDoubts } from "../components/PendingDoubts";
 export function TutorDashboard(){
   const localVideoRef=useRef(null)
   const remoteVideoRef=useRef(null)
@@ -168,7 +169,7 @@ useEffect(() => {
 }, []);
 
 return (
-  <div className="bg-slate-700 min-h-screen relative">
+  <div className="bg-gray-300 min-h-screen relative">
 
 
     <SideMenu
@@ -191,9 +192,9 @@ return (
       </div>
 
   
-      <div className="hidden lg:block w-64 bg-gray-600 h-screen shrink-0">
+      <div className="hidden lg:block w-64 bg-gray-200 h-screen shrink-0">
        <SessionCalendar/>
-       <ProfileSection/>
+      <PendingDoubts/>
       </div>
     </div>
 
