@@ -338,7 +338,7 @@ function Exam({ exam, onBack }) {
         {/* ── TOP BAR ── */}
         <div className="bg-[#eeeff1] rounded-2xl p-4 flex items-center justify-between">
 
-          <h1 className="text-lg font-bold truncate max-w-[120px] md:max-w-none">
+          <h1 className="text-lg font-bold truncate max-width:120px md:max-w-none">
             {exam?.name}
           </h1>
 
