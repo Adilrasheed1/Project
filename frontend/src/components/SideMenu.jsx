@@ -12,7 +12,7 @@ export function SideMenu(props) {
     }>
      
       {!isMobile && (
-        <div className="bg-[#eeeff1] h-full w-full ml-5 rounded-xl shadow-2xl flex flex-col items-center justify-evenly p-4">
+        <div className="bg-[#eeeff1]  sticky  overflow-y-auto h-full w-full ml-5 rounded-xl shadow-2xl flex flex-col items-center justify-evenly p-4">
           <SideCompo title="Home" icon={Home} onClick={props.onClickHome} isActive={props.section === "home"} />
           <SideCompo title="Doubts" icon={HelpCircle} onClick={props.onClickDoubts} isActive={props.section === "doubts"} />
           <SideCompo title="Courses" icon={NotebookTabs} onClick={props.onClickCourses} isActive={props.section === "courses"} />
