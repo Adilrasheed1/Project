@@ -28,7 +28,7 @@ export function TutorCentralContent({ section }) {
       {section === 'home' && (
         <div>
 
-          {/* Welcome banner */}
+
           <div className="bg-gray-300 mt-6 rounded-xl px-5 py-5 flex flex-col gap-3 md:flex-row md:items-center md:justify-between md:h-40 md:py-0">
             <div>
               <h3 className="text-xl font-semibold text-gray-600 md:text-2xl">
@@ -46,7 +46,7 @@ export function TutorCentralContent({ section }) {
             </div>
           </div>
 
-          {/* Stats grid */}
+        
           <div className="mt-4 grid grid-cols-2 gap-3 md:grid-cols-3 md:gap-4">
 
             <div className="bg-gray-200 rounded-xl flex flex-col items-center justify-center py-5 px-3 text-center">
