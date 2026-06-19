@@ -1,15 +1,14 @@
 import { useEffect, useRef, useState } from "react";
 import * as faceapi from "face-api.js";
 
-// shared flag — model only needs to load once
+// model only loads once globally
 let modelLoadedGlobal = false;
 
-function ExamCameraFeed({ onViolation, isActive = true }) {
+function ExamCameraFeed({ onViolation }) {
 
   const videoRef = useRef(null);
   const streamRef = useRef(null);
   const intervalRef = useRef(null);
-
   const noFaceCount = useRef(0);
   const multiFaceCount = useRef(0);
 
@@ -18,7 +17,6 @@ function ExamCameraFeed({ onViolation, isActive = true }) {
 
   // ─── LOAD MODEL + START CAMERA ────────────────────
   useEffect(() => {
-    if (!isActive) return; // only active instance runs
 
     const init = async () => {
       try {
@@ -29,11 +27,7 @@ function ExamCameraFeed({ onViolation, isActive = true }) {
         setModelLoaded(true);
 
         streamRef.current = await navigator.mediaDevices.getUserMedia({
-          video: {
-            width: 640,
-            height: 480,
-            facingMode: "user",
-          }
+          video: { width: 640, height: 480, facingMode: "user" }
         });
 
         if (videoRef.current) {
@@ -61,12 +55,11 @@ function ExamCameraFeed({ onViolation, isActive = true }) {
       }
     };
 
-  }, [isActive]);
+  }, []);
 
   // ─── DETECTION LOOP ───────────────────────────────
   useEffect(() => {
     if (!modelLoaded) return;
-    if (!isActive) return; // only active instance detects
 
     intervalRef.current = setInterval(async () => {
       if (!videoRef.current || videoRef.current.readyState < 2) return;
@@ -104,7 +97,7 @@ function ExamCameraFeed({ onViolation, isActive = true }) {
 
     return () => clearInterval(intervalRef.current);
 
-  }, [modelLoaded, isActive]);
+  }, [modelLoaded]);
 
   // ─── UI ───────────────────────────────────────────
   return (
@@ -116,13 +109,11 @@ function ExamCameraFeed({ onViolation, isActive = true }) {
         muted
         className="w-full h-40 object-cover rounded-xl bg-black"
       />
-
-      {!modelLoaded && !error && isActive && (
+      {!modelLoaded && !error && (
         <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-60 rounded-xl">
           <p className="text-white text-xs">Loading camera...</p>
         </div>
       )}
-
       {error && (
         <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-60 rounded-xl">
           <p className="text-red-400 text-xs text-center px-2">{error}</p>

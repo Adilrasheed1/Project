@@ -38,7 +38,7 @@ function Exam({ exam, onBack }) {
   // ─── REFS ─────────────────────────────────────────
   const answersRef = useRef(answers);
   const integrityRef = useRef(100);
-  const examDoneRef = useRef(false); // ← tracks if exam is over
+  const examDoneRef = useRef(false);
 
   useEffect(() => {
     answersRef.current = answers;
@@ -50,9 +50,7 @@ function Exam({ exam, onBack }) {
 
   // ─── INTEGRITY DEDUCTION ──────────────────────────
   const deductIntegrity = (reason, amount) => {
-    // don't deduct if exam is already over
     if (examDoneRef.current) return;
-
     const time = new Date().toLocaleTimeString();
     setViolations((prev) => [
       ...prev,
@@ -63,7 +61,7 @@ function Exam({ exam, onBack }) {
 
   // ─── SUBMIT ───────────────────────────────────────
   const handleSubmit = () => {
-    examDoneRef.current = true; // ← mark exam as done
+    examDoneRef.current = true;
 
     let examScore = 0;
     questions.forEach((q, i) => {
@@ -115,7 +113,7 @@ function Exam({ exam, onBack }) {
 
   // ─── RESET ────────────────────────────────────────
   const resetExam = () => {
-    examDoneRef.current = false; // ← reset for new exam
+    examDoneRef.current = false;
     setCurrentQuestion(0);
     setAnswers(Array(questions.length).fill(null));
     setMarkedForReview(Array(questions.length).fill(false));
@@ -383,7 +381,7 @@ function Exam({ exam, onBack }) {
         {/* ── MAIN CONTENT ── */}
         <div className="flex flex-col md:flex-row gap-4 items-start">
 
-          {/* ── LEFT COLUMN ── */}
+          {/* ── LEFT COLUMN — Question ── */}
           <div className="flex-1 w-full bg-[#eeeff1] rounded-2xl p-4 md:p-6 flex flex-col gap-6">
 
             <p className="text-gray-600 font-semibold">
@@ -404,6 +402,7 @@ function Exam({ exam, onBack }) {
               </div>
             )}
 
+            {/* NAV BUTTONS */}
             <div className="flex gap-3 justify-center flex-wrap">
               <button
                 onClick={() => setCurrentQuestion((prev) => prev - 1)}
@@ -450,33 +449,28 @@ function Exam({ exam, onBack }) {
               )}
             </div>
 
-            {/* CAMERA — mobile only */}
-            {exam?.type === "proctored" && (
-              <div className="md:hidden bg-white rounded-2xl p-3 flex flex-col gap-2">
-                <p className="font-bold text-sm flex items-center gap-2">
-                  <Camera size={16}/> Camera
-                </p>
-                <ExamCameraFeed onViolation={deductIntegrity} isActive={false}/>
-              </div>
-            )}
-
           </div>
 
-          {/* ── RIGHT COLUMN — desktop only ── */}
-          <div className="hidden md:flex w-72 flex-col gap-4">
+          {/* ── RIGHT COLUMN ── */}
+          <div className={`w-full md:w-72 flex flex-col gap-4
+            ${exam?.type !== "proctored" ? "hidden md:flex" : "flex"}
+          `}>
 
-            <div className="bg-[#eeeff1] rounded-2xl p-4 flex flex-col gap-3">
+            {/* NAVIGATOR — desktop only */}
+            <div className="hidden md:flex bg-[#eeeff1] rounded-2xl p-4 flex-col gap-3">
               <p className="font-bold text-sm">Question Navigator</p>
               <NavigatorButtons/>
               <ColorLegend/>
             </div>
 
+            {/* CAMERA — proctored only */}
             {exam?.type === "proctored" && (
               <div className="bg-[#eeeff1] rounded-2xl p-4 flex flex-col gap-2">
                 <p className="font-bold text-sm flex items-center gap-2">
-                  <Camera size={16}/> Camera
+                  <Camera size={16} />
+                  You are being proctored
                 </p>
-                <ExamCameraFeed onViolation={deductIntegrity} isActive={true}/>
+                <ExamCameraFeed onViolation={deductIntegrity}/>
               </div>
             )}
 
@@ -489,7 +483,7 @@ function Exam({ exam, onBack }) {
       {showNavDrawer && (
         <>
           <div
-            className="fixed inset-0 bg-black bg-opacity-30 z-40 md:hidden"
+            className="fixed inset-0 z-40 md:hidden"
             onClick={() => setShowNavDrawer(false)}
           />
           <div className="fixed top-0 right-0 h-full w-3/4 max-w-xs bg-white shadow-2xl z-50 p-6 flex flex-col gap-4 md:hidden">
