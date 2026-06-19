@@ -68,7 +68,7 @@ export function DoubtForm({ setInCall }) {
     }
   }, [remoteStream, showVideo]);
 
-  // call timer
+ 
   useEffect(() => {
     if (showVideo) {
       setCallDuration(0);
@@ -132,7 +132,7 @@ export function DoubtForm({ setInCall }) {
 
   return (
     <>
-      {/* ── Doubt form ── */}
+    
       {!showVideo && (
         <div className="min-h-screen bg-gray-100 flex items-start justify-center px-4 py-8">
           <div className="bg-white rounded-2xl border border-gray-200 w-full max-w-lg p-6 shadow-sm">
@@ -140,7 +140,7 @@ export function DoubtForm({ setInCall }) {
             <h2 className="text-base font-medium text-gray-800 mb-1">Ask a doubt</h2>
             <p className="text-sm text-gray-400 mb-6">Fill in the details and connect to a tutor instantly</p>
 
-            {/* Title */}
+    
             <div className="mb-4">
               <label className="block text-xs font-medium text-gray-500 mb-1.5">Doubt title</label>
               <input
@@ -152,7 +152,7 @@ export function DoubtForm({ setInCall }) {
               />
             </div>
 
-            {/* Description */}
+        
             <div className="mb-4">
               <label className="block text-xs font-medium text-gray-500 mb-1.5">Detailed description</label>
               <textarea
@@ -164,7 +164,7 @@ export function DoubtForm({ setInCall }) {
               />
             </div>
 
-            {/* Subject */}
+        
             <div className="mb-4">
               <label className="block text-xs font-medium text-gray-500 mb-1.5">Subject</label>
               <select className="w-full h-10 px-3 text-sm text-gray-700 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-orange-400 appearance-none transition">
@@ -175,7 +175,6 @@ export function DoubtForm({ setInCall }) {
               </select>
             </div>
 
-            {/* Attachment */}
             <div className="mb-6">
               <label className="block text-xs font-medium text-gray-500 mb-1.5">Attachment (optional)</label>
               <input
@@ -186,7 +185,7 @@ export function DoubtForm({ setInCall }) {
               />
             </div>
 
-            {/* Submit */}
+         
             <button
               onClick={() => {
                 fetch("https://project-3-7kx1.onrender.com/doubts/DoubtSection", {
@@ -220,11 +219,10 @@ export function DoubtForm({ setInCall }) {
         </div>
       )}
 
-      {/* ── Video call UI ── */}
+  
       {showVideo && (
         <div className="fixed inset-0 bg-black z-50 flex flex-col overflow-hidden">
 
-          {/* Top bar */}
           <div className="flex-none flex items-center justify-between px-4 py-3 bg-[#1a1a1a]">
             <div className="flex items-center gap-3">
               <div className="w-8 h-8 rounded-full bg-orange-500 flex items-center justify-center text-white text-xs font-medium">
@@ -244,10 +242,9 @@ export function DoubtForm({ setInCall }) {
             </div>
           </div>
 
-          {/* Video area */}
+        
           <div className="relative flex-1 min-h-0 bg-[#111]">
 
-            {/* Remote (tutor) video — fills container */}
             <video
               ref={remoteVideoRef}
               autoPlay
@@ -256,7 +253,7 @@ export function DoubtForm({ setInCall }) {
               className="absolute inset-0 w-full h-full object-cover"
             />
 
-            {/* Tutor name tag */}
+         
             <div className="absolute bottom-4 left-4 flex items-center gap-2 bg-black/60 text-white text-xs px-3 py-1.5 rounded-lg z-10">
               <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"/>
@@ -264,7 +261,7 @@ export function DoubtForm({ setInCall }) {
               Tutor
             </div>
 
-            {/* Self (local) video — PiP */}
+          
             <div className="absolute top-3 right-3 z-20 rounded-xl overflow-hidden border-2 border-gray-600 w-24 sm:w-32 md:w-40 shadow-xl">
               <video
                 ref={videoRef}
@@ -279,7 +276,7 @@ export function DoubtForm({ setInCall }) {
             </div>
           </div>
 
-          {/* Controls */}
+       
           <div className="flex-none bg-[#1a1a1a] px-6 py-4 flex items-center justify-center gap-4">
 
             <div className="flex flex-col items-center gap-1">
