@@ -92,7 +92,7 @@ export function TutorDashboard() {
     setSocket(ws);
   }, []);
 
-  // --- call timer ---
+ 
   useEffect(() => {
     if (inCall) {
       setCallDuration(0);
@@ -160,7 +160,7 @@ export function TutorDashboard() {
         </div>
       </div>
 
-      {/* ── Incoming call modal ── */}
+      
       {incomingCall && (
         <div className="fixed inset-0 bg-black/60 flex justify-center items-center z-50 px-4">
           <div className="bg-white rounded-2xl p-6 w-full max-w-xs text-center">
@@ -192,7 +192,7 @@ export function TutorDashboard() {
     {inCall && (
   <div className="fixed inset-0 bg-black z-50 flex flex-col overflow-hidden">
 
-    {/* Top bar — fixed height */}
+  
     <div className="flex-none flex items-center justify-between px-4 py-3 bg-[#1a1a1a]">
       <div className="flex items-center gap-3">
         <div className="w-8 h-8 rounded-full bg-orange-500 flex items-center justify-center text-white text-xs font-medium">
@@ -212,10 +212,10 @@ export function TutorDashboard() {
       </div>
     </div>
 
-    {/* Video area — fills remaining space between topbar and controls */}
+
     <div className="relative flex-1 min-h-0 bg-[#111]">
       
-      {/* Remote video — fully fills the flex area, never overflows */}
+     
       <video
         ref={remoteVideoRef}
         autoPlay
@@ -223,7 +223,7 @@ export function TutorDashboard() {
         className="absolute inset-0 w-full h-full object-cover"
       />
 
-      {/* Student name tag */}
+      
       <div className="absolute bottom-4 left-4 flex items-center gap-2 bg-black/60 text-white text-xs px-3 py-1.5 rounded-lg z-10">
         <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"/>
@@ -231,7 +231,7 @@ export function TutorDashboard() {
         Student
       </div>
 
-      {/* Self view PiP — absolutely positioned, never affects layout */}
+    
       <div className="absolute top-3 right-3 z-20 rounded-xl overflow-hidden border-2 border-gray-600 w-24 sm:w-32 md:w-40 shadow-xl">
         <video
           ref={localVideoRef}
@@ -246,7 +246,7 @@ export function TutorDashboard() {
       </div>
     </div>
 
-    {/* Controls — fixed height, never pushed by video */}
+  
     <div className="flex-none bg-[#1a1a1a] px-6 py-4 flex items-center justify-center gap-4">
       
       <div className="flex flex-col items-center gap-1">
