@@ -12,7 +12,7 @@ export function TutorLogin(){
             
      
       <LoginCard  msg="Sign in to continue Teaching" onclick={  ()=>{
-         fetch("http://localhost:3000/tutor/login", {
+         fetch("https://project-3-7kx1.onrender.com/tutor/login", {
           method: "POST",
           headers: {
         username: email,

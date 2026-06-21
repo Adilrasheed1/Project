@@ -1,4 +1,3 @@
-
 import { FeatureCard } from "../components/FeatureCard";
 import { DoubtSection } from "../pages/DoubtSection";
 import { ButtonComp } from "./ButtonComp";
@@ -8,55 +7,73 @@ import { useEffect } from "react";
 import { Courses } from "./Courses";
 import { TutorTestCompo } from "./TutorTestCompo";
 
-export function TutorCentralContent({section}){
-      const [doubts, setDoubts] = useState([]);
+export function TutorCentralContent({ section }) {
+  const [doubts, setDoubts] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:3000/doubts/DoubtSection")
+    fetch("https://project-3-7kx1.onrender.com/doubts/DoubtSection")
       .then(res => res.json())
       .then(data => {
         setDoubts(data);
       });
   }, []);
+
   const recentDoubts = doubts.slice(-4);
 
+  return (
+    <div className="col-span-3 mt-4 px-4 md:mt-5 md:ml-8 md:mr-8">
 
-    return  <div className=" col-span-3 mt-5  ml-8 mr-8  ">
-        <div><SearchBar/></div>
-    {section==='home' &&
-     <div >
-    <div className="bg-gray-400 h-50 mt-20  rounded-lg pl-5  flex flex-row justify-between">
+      <div><SearchBar /></div>
+
+      {section === 'home' && (
         <div>
-    <h3 className="text-4xl font-semibold  pt-10 text-gray-800">Welcome Back , Adil!</h3> 
-    <p className="pl-4 pt-2 text-lg text-gray-600 font-sans italic ! ">Be the mentor students rely on</p></div>
-     <div className="h-50 w-50  bg-[url('./assets/profile.jpg')] bg-cover bg-blend-multiply border-1 border-gray-400 rounded-md"></div>
+
+          {/* Welcome banner */}
+          <div className="bg-gray-300 mt-6 rounded-xl px-5 py-5 flex flex-col gap-3 md:flex-row md:items-center md:justify-between md:h-40 md:py-0">
+            <div>
+              <h3 className="text-xl font-semibold text-gray-600 md:text-2xl">
+                Welcome Back, Adil!
+              </h3>
+              <p className="text-sm text-gray-500 mt-1">
+                You have 5 pending sessions today.
+              </p>
+              <div className="flex items-center mt-2 bg-gray-200 w-36 h-9 rounded-lg justify-center">
+                <span className="text-sm text-orange-500">5 sessions today</span>
+              </div>
+            </div>
+            <div className="md:mr-5">
+              <ButtonComp className="w-full md:w-auto text-white bg-orange-500" title="Session history" />
+            </div>
+          </div>
+
+          {/* Stats grid */}
+          <div className="mt-4 grid grid-cols-2 gap-3 md:grid-cols-3 md:gap-4">
+
+            <div className="bg-gray-200 rounded-xl flex flex-col items-center justify-center py-5 px-3 text-center">
+              <h2 className="text-sm text-gray-500 font-medium">Total students</h2>
+              <span className="text-3xl text-gray-600 font-semibold mt-1 md:text-4xl">104</span>
+              <span className="text-xs text-green-700 mt-2 md:text-sm">13 new this month</span>
+            </div>
+
+            <div className="bg-gray-200 rounded-xl flex flex-col items-center justify-center py-5 px-3 text-center">
+              <h2 className="text-sm text-gray-500 font-medium">Open doubts</h2>
+              <span className="text-3xl text-gray-600 font-semibold mt-1 md:text-4xl">3</span>
+              <span className="text-xs text-orange-700 mt-2 md:text-sm">oldest: 4 hrs ago</span>
+            </div>
+
+            <div className="bg-gray-200 rounded-xl flex flex-col items-center justify-center py-5 px-3 text-center col-span-2 md:col-span-1">
+              <h2 className="text-sm text-gray-500 font-medium">Average Rating</h2>
+              <span className="text-3xl text-gray-600 font-semibold mt-1 md:text-4xl">4.8</span>
+              <span className="text-xs text-green-700 mt-2 md:text-sm">based on 120 reviews</span>
+            </div>
+
+          </div>
+        </div>
+      )}
+
+      {section === 'courses' && <Courses />}
+      {section === 'Test' && <TutorTestCompo />}
+
     </div>
-   
-   <div className="h-50 mt-5 bg-white rounded-sm flex flex-row">
-    <div className=" h-50 w-40 pt-10 pl-3 bg-gray-200 rounded-sm text-lg font-semibold flex flex-col">
-        <p>Sessions Today:</p>
-        <a className="pl-9 pt-3 text-4xl">5</a>
-    </div>
-    <div className="pt-10 pl-4  text-gray-400 font-semibold">
-    <a >Click here To check Session history: </a>
-    <ButtonComp className="text-white bg-sky-500 mt-4 ml-3" title='Session history'/>
- </div>
-   </div>
-     
-   
-   
-    
-    </div>
-    }
-    {section==='courses' &&
-    
-    <Courses/>
-    }
-    {section==='Test' &&
-    <TutorTestCompo/>
-    }
-     
-    </div> 
-      
- 
+  );
 }

@@ -1,6 +1,8 @@
+
 const { WebSocketServer } = require("ws");
 
-const wss = new WebSocketServer({ port: 8000 });
+module.exports = function(server) {
+  const wss = new WebSocketServer({ server });
 
 let student = null;
 let tutor = null;
@@ -35,3 +37,4 @@ wss.on("connection", (ws) => {
     }
   });
 });
+};

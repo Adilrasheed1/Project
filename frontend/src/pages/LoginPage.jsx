@@ -12,7 +12,7 @@ export function LoginPage(){
             
      
       <LoginCard  msg="Sign in to continue learning" onclick={  ()=>{
-         fetch("http://localhost:3000/user/login", {
+         fetch("https://project-3-7kx1.onrender.com/user/login", {
           method: "POST",
           headers: {
         username: email,

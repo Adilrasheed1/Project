@@ -4,11 +4,15 @@ import { useState } from "react";
 import { useEffect } from "react";
 import { VideoComponent } from "./VideoComponent";
 import { useRef } from "react";
-export function DoubtForm(){
-    const [inCall, setInCall] = useState(false);
-    const videoRef = useRef(null);
-    const pcRef = useRef(null);
-    const remoteVideoRef = useRef(null);
+
+export function DoubtForm({setInCall}){
+ const pcRef = useRef(null);
+ const pendingCandidates = useRef([]);
+    const [showVideo, setShowVideo] = useState(false);
+     const videoRef = useRef(null);
+     const remoteVideoRef = useRef(null);
+    const [localStream, setLocalStream] = useState(null);
+const [remoteStream, setRemoteStream] = useState(null);
    
   const [socket, setSocket] = useState(null);
 
@@ -16,7 +20,7 @@ export function DoubtForm(){
     const[description,setDescription]=useState("");
     const[image,setImage]=useState("")
       useEffect(() => {
-    const ws = new WebSocket("ws://localhost:8000");
+    const ws = new WebSocket("wss://project-3-7kx1.onrender.com");
 
     ws.onopen = () => {
       console.log("connected as student");
@@ -29,81 +33,171 @@ export function DoubtForm(){
       // 🔥 tutor accepted
       if (msg.type === "accepted") {
         console.log("request Accepted")
-        startWebRTC(ws);
+         
+         await startWebRTC(ws);
+         setShowVideo(true);
+        
+        
       }
 
       // 🔥 answer from tutor
       if (msg.type === "answer") {
-        await pcRef.current?.setRemoteDescription(msg.sdp);
+        await pcRef.current?.setRemoteDescription(
+  new RTCSessionDescription(msg.sdp)
+);
+for (const candidate of pendingCandidates.current) {
+
+  try {
+
+    await pcRef.current.addIceCandidate(
+      new RTCIceCandidate(candidate)
+    );
+
+    console.log("Queued ICE added");
+
+  } catch (err) {
+
+    console.error("Queued ICE error:", err);
+
+  }
+}
+
+pendingCandidates.current = [];
         console.log("answer:",msg.sdp)
       }
 
       // 🔥 ICE
-      if (msg.type === "iceCandidate") {
-        await  pcRef.current?.addIceCandidate(msg.candidate);
-        console.log("ice:",msg.candidate)
-      }
+     if (msg.type === "iceCandidate" && msg.candidate) {
+
+  if (
+    pcRef.current &&
+    pcRef.current.remoteDescription
+  ) {
+
+    try {
+
+      await pcRef.current.addIceCandidate(
+        new RTCIceCandidate(msg.candidate)
+      );
+
+      console.log("ICE added");
+
+    } catch (err) {
+
+      console.error("ICE ERROR:", err);
+
+    }
+
+  } else {
+
+    console.log("Queueing ICE");
+
+    pendingCandidates.current.push(msg.candidate);
+
+  }
+}
     };
 
     setSocket(ws);
   }, []);
-async function startWebRTC(socket) {
-  const pc = new RTCPeerConnection({
-    iceServers: [{ urls: "stun:stun.l.google.com:19302" }]
-  });
-  pcRef.current = pc; 
-  
+  useEffect(() => {
 
-  
-  setInCall(true);
-  console.log(inCall)
+  if (videoRef.current && localStream) {
 
-  const stream = await navigator.mediaDevices.getUserMedia({
-    video: true,
-    audio: false
-  });
-  if (videoRef.current) {
-      videoRef.current.srcObject = stream;
-    }
-    
-    
+    console.log(videoRef.current);
+    console.log("local stream:", localStream);
 
-  // send video
-  stream.getTracks().forEach(track => {
-    pc.addTrack(track, stream);
-  });
-  
-   console.log("start receiving")
-  // receive tutor video
-pc.ontrack = (event) => {
-console.log("TRACK RECEIVED 🔥", event.streams);
-  if (remoteVideoRef.current) {
-    remoteVideoRef.current.srcObject = event.streams[0];
+    videoRef.current.srcObject = localStream;
+
+    console.log("local stream attached");
   }
-};
 
-  // create offer
-  const offer = await pc.createOffer();
-  await pc.setLocalDescription(offer);
+}, [localStream, showVideo]);
 
-  socket.send(JSON.stringify({
-    type: "offer",
-    sdp: offer
-  }));
+useEffect(() => {
+
+  if (remoteVideoRef.current && remoteStream) {
+
+
+    remoteVideoRef.current.srcObject = remoteStream;
+
+    console.log("remote stream attached");
+  }
+
+}, [remoteStream, showVideo]);
   
-
-  // ICE
-  pc.onicecandidate = (e) => {
-    if (e.candidate) {
-      socket.send(JSON.stringify({
-        type: "iceCandidate",
-        candidate: e.candidate
-      }));
-    }
+  async function startWebRTC(socket) {
+    const pc = new RTCPeerConnection({
+  iceServers: [
+    {
+      urls: [
+        "stun:stun.l.google.com:19302",
+        "stun:stun1.l.google.com:19302",
+      ],
+    },
+    {
+      urls: [
+        "turn:192.158.29.39:3478?transport=udp",
+        "turn:192.158.29.39:3478?transport=tcp",
+      ],
+      username: "28224511:1379330808",
+      credential: "JZEOEt2V3Qb0y27GRntt2u2PAYA=",
+    },
+  ],
+});
+    pcRef.current = pc; 
+    // ICE
+    pc.onicecandidate = (e) => {
+      if (e.candidate) {
+        socket.send(JSON.stringify({
+          type: "iceCandidate",
+          candidate: e.candidate
+        }));
+      }
+    };
+    
+  
+    
+    setInCall(true);
+   
+  
+    const stream = await navigator.mediaDevices.getUserMedia({
+      video: true,
+      audio: false
+    });
+    console.log("got local stream",stream);
+   
+      setLocalStream(stream);
+  
+    // send video
+    stream.getTracks().forEach(track => {
+      pc.addTrack(track, stream);
+    });
+    
+     console.log("start receiving")
+    // receive tutor video
+  pc.ontrack = (event) => {
+  console.log("TRACK RECEIVED 🔥", event.streams);
+  setRemoteStream(event.streams[0]);
   };
-}
-    return <div className="h-120 bg-gray-100 w-150  mx-5 my-5 rounded-lg border-1 border-gray-200 pt-5 pl-5 ">
-        {!inCall &&( 
+  
+    // create offer
+    const offer = await pc.createOffer();
+    await pc.setLocalDescription(offer);
+  
+    socket.send(JSON.stringify({
+      type: "offer",
+      sdp: offer
+    }));
+    
+  
+    
+  }
+    return (
+    <>
+    {!showVideo && (
+     <div className="h-130 sm:h-120 bg-gray-100 w-80  sm:w-full mx-5 my-5  mt-10 rounded-lg border-1 border-gray-200 pt-5 pl-5 ">
+    
          
         <>
         <InputCompo label="Doubt" Type="text"  className="w-80 h-10 px-3 text-sm text-gray-700  border-1 border-gray-200  rounded-lg  mb-5 " Placeholder="write the name of doubt" value={title} onchangemail={function(e){
@@ -128,7 +222,7 @@ console.log("TRACK RECEIVED 🔥", event.streams);
                 setImage(e.target.value)
             }}/>
         <ButtonComp   click={ ()=>{
-         fetch("http://localhost:3000/doubts/DoubtSection", {
+         fetch("https://project-3-7kx1.onrender.com/doubts/DoubtSection", {
           method: "POST",
            headers: {
            "Content-Type": "application/json"
@@ -157,24 +251,53 @@ console.log("TRACK RECEIVED 🔥", event.streams);
    
 
     alert("Finding tutor...");
-    }} title="Connect To Tutor" className={"bg-gray-200 text-gray-700 border-1 border-gray-200 mt-5 ml-3 hover:bg-blue-500 hover:text-white"} />
-    </>)}
-    {inCall && (
-        <div>
-         <video
-        ref={videoRef}
-        autoPlay
-        muted
-        playsInline
-        className="w-64 h-40 bg-black"
-      />
-     <video
-  ref={remoteVideoRef}
-  autoPlay
-  playsInline
-  className="w-64 h-40 object-cover"
-/> </div>
-    )}
+    }} title="Connect To Tutor" className={"bg-gray-200  text-gray-700 border-1 border-gray-200 mt-5 sm:ml-3 hover:bg-blue-500 hover:text-white"} />
+    </>
+ 
+         
     </div>
+    )}
+    {showVideo && (
+   
+        <div className="fixed inset-0 flex flex-col justify-center items-center  bg-white z-50">
+           <div className="bg-gray-200 h-screen w-screen flex flex-col items-center justify-center rounded-sm">
+           <video
+             ref={videoRef}
+             autoPlay
+             muted
+             playsInline
+             className="absolute
+       top-80
+       right-0
+       sm:top-0
+       sm:right-50
+       w-40
+       sm:w-52
+       md:w-64
+       aspect-video
+       object-cover
+       rounded-xl
+       border-2
+       border-white
+       shadow-2xl
+       z-50
+       "
+           
+           />
+           <video
+             ref={remoteVideoRef}
+             autoPlay
+             muted={false}
+             playsInline
+             className="w-full h-screen bg-black rounded-xl shadow-lg"
+           
+           />
+          
+           </div>
+         </div>
+       )}
+          
 
+</>
+    )
 }

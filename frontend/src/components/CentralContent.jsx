@@ -2,14 +2,14 @@ import { FeatureCard } from "../components/FeatureCard";
 import { DoubtSection } from "../pages/DoubtSection";
 import { SearchBar } from "./SearchBar";
 import { useState, useEffect, use } from "react";
-import TestDashboard from "../components/TestDashboard";
+import TestDashboard from "./TestDashboard";
 import { Courses } from "./Courses";
 import { CoursesCard } from "./CoursesCard";
 import { StudentSideCourses } from "./StudentSideCourses";
 import logo from "../assets/Dsalogo.png"
 import { ButtonComp } from "./ButtonComp";
 
-export function CentralContent({ section, className, setSelectedExam }) {
+export function CentralContent({ section, className, setSelectedExam ,setInCall}) {
 
   const [doubts, setDoubts] = useState([]);
   const [user, setUsername] = useState("");
@@ -22,13 +22,13 @@ export function CentralContent({ section, className, setSelectedExam }) {
     const user = username?.split(" ")[0];
     setUsername(user || ""); // ✅ safe
 
-    fetch("http://localhost:3000/doubts/DoubtSection")
+    fetch("https://project-3-7kx1.onrender.com/doubts/DoubtSection")
       .then(res => res.json())
       .then(data => setDoubts(data))
       .catch(() => setDoubts([]));
   }, []);
   useEffect(()=>{
-    fetch("http://localhost:3000/courses/bulk?filter=" +filter )
+    fetch("https://project-3-7kx1.onrender.com/courses/bulk?filter=" +filter )
     .then(res=>res.json())
     .then(data=>{
       setCourses(data.course)
@@ -41,15 +41,12 @@ export function CentralContent({ section, className, setSelectedExam }) {
   return (
     <div className={`h-full overflow-y-auto overflow-x-hidden no-scrollbar ${className}`}>
       <div className="max-w-6xl mb-30 mx-auto w-full">
-            <SearchBar onChange={(e) => {
-                setFilter(e.target.value)
-            }} />
-
+           
         {/* HOME */}
         {section === "home" && (
           <>
            
-            <h1 className="text-7xl font-extrabold font-serif mt-2 sm:mt-20 ml-10">
+            <h1 className="text-2xl sm:text-4xl  lg:text-5xl font-bold text-slate-700 font-duitect-trail mt-2 sm:mt-10  ml-10">
               COURSES THAT TEACH. MENTORS THAT GUIDE.
             </h1>
 
@@ -58,7 +55,10 @@ export function CentralContent({ section, className, setSelectedExam }) {
               Welcome back, {user}
             </p>
 
-        
+         <SearchBar onChange={(e) => {
+                setFilter(e.target.value)
+            }} />
+
 
             <div className="ml-5 pl-5 pb-10 mt-5 h-full bg-gray-200 bg-opacity-10 rounded-lg">
               <h3 className="pt-10 text-lg font-bold text-gray-600">
@@ -73,7 +73,7 @@ export function CentralContent({ section, className, setSelectedExam }) {
                     image={logo}
                     title={doubt.title}
                     description={doubt.description}
-                    className="mt-5 bg-gray-200 h-50 w-52 p-4 rounded-lg border border-gray-300 text-gray-700  hover:shadow-lg hover:scale-105 transition duration-200"
+                    className="mt-5 bg-gray-200 h-60 sm:h-50  w-70 sm:w-52 p-4 rounded-lg border border-gray-300 text-gray-700  hover:shadow-lg hover:scale-105 transition duration-200"
                   />
                 ))}
               </div>
@@ -85,18 +85,23 @@ export function CentralContent({ section, className, setSelectedExam }) {
         )}
 
         {/* DOUBTS */}
-        {section === "doubts" && <DoubtSection />}
+        {section === "doubts" && <DoubtSection setInCall={setInCall} />}
 
         {/* TEST */}
         {section === "Test" && (
           <TestDashboard setSelectedExam={setSelectedExam} />
         )}
 {section ==="courses" && (
+<div>
+   <SearchBar onChange={(e) => {
+                setFilter(e.target.value)
+            }} />
   
   <div className=" h-50 flex gap-4 flex-wrap">
     
-   
+     
  {courses.map(course=> <StudentSideCourses course={course}/>)}
+ </div>
  </div>
 )}
     

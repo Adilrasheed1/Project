@@ -1,4 +1,6 @@
 const mongoose=require("mongoose");
+
+
 mongoose.connect("mongodb+srv://Adil:Adil123@cluster0.ldkvky8.mongodb.net/DoubtsolvingApp");
 
 const adminSchema= new mongoose.Schema({
