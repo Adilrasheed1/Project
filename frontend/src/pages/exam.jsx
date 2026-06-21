@@ -60,20 +60,13 @@ function Exam({ exam, onBack }) {
   };
 
   // ─── SUBMIT ───────────────────────────────────────
-  const handleSubmit = () => {
-    examDoneRef.current = true;
-
-    let examScore = 0;
-    questions.forEach((q, i) => {
-      if (answersRef.current[i] === q.answer) examScore += 10;
-    });
-
-    const finalScore = exam?.type === "proctored"
-      ? Math.round((examScore + integrityRef.current) / 2)
-      : examScore;
-
-    setScore({ examScore, finalScore });
-  };
+ const handleSubmit = () => {
+  let examScore = 0;
+  questions.forEach((q, i) => {
+    if (answersRef.current[i] === q.answer) examScore += 10;
+  });
+  setScore({ examScore }); 
+};
 
   // ─── TIMER ────────────────────────────────────────
   useEffect(() => {

@@ -1,10 +1,10 @@
 const express = require("express");
 const cors = require("cors");
-const http = require("http"); // 👈 add this
+const http = require("http");
 const bodyParser = require("body-parser");
 
 const app = express();
-const server = http.createServer(app); // 👈 create HTTP server from express app
+const server = http.createServer(app);
 
 app.use(cors());
 app.use(express.json());
@@ -15,12 +15,14 @@ const userRouter = require("./routes/user");
 const doubtsRouter = require("./routes/doubts");
 const tutorRouter = require("./routes/tutor");
 const courseRouter = require('./routes/courses');
+const examRouter = require("./routes/exam");
 
 app.use("/admin", adminRouter);
 app.use("/user", userRouter);
 app.use("/doubts", doubtsRouter);
 app.use("/tutor", tutorRouter);
 app.use("/courses", courseRouter);
+app.use("/exam", examRouter);
 
 // 👇 pass the server to your WebSocket setup
 require('./server')(server);
