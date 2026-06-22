@@ -12,6 +12,10 @@ dist
 dist-ssr
 *.local
 desktop.ini
+node_modules/
+backend/.env
+.env
+
 
 # Editor directories and files
 .vscode/*
