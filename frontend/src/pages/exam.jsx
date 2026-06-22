@@ -60,20 +60,13 @@ function Exam({ exam, onBack }) {
   };
 
   // ─── SUBMIT ───────────────────────────────────────
-  const handleSubmit = () => {
-    examDoneRef.current = true;
-
-    let examScore = 0;
-    questions.forEach((q, i) => {
-      if (answersRef.current[i] === q.answer) examScore += 10;
-    });
-
-    const finalScore = exam?.type === "proctored"
-      ? Math.round((examScore + integrityRef.current) / 2)
-      : examScore;
-
-    setScore({ examScore, finalScore });
-  };
+ const handleSubmit = () => {
+  let examScore = 0;
+  questions.forEach((q, i) => {
+    if (answersRef.current[i] === q.answer) examScore += 10;
+  });
+  setScore({ examScore }); 
+};
 
   // ─── TIMER ────────────────────────────────────────
   useEffect(() => {
@@ -338,7 +331,7 @@ function Exam({ exam, onBack }) {
         {/* ── TOP BAR ── */}
         <div className="bg-[#eeeff1] rounded-2xl p-4 flex items-center justify-between">
 
-          <h1 className="text-lg font-bold truncate max-w-[120px] md:max-w-none">
+          <h1 className="text-lg font-bold truncate max-width:120px md:max-w-none">
             {exam?.name}
           </h1>
 

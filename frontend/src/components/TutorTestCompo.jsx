@@ -1,29 +1,24 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 // ── CONSTANTS ──────────────────────────────────────
-// Subject list with emojis
 const subjects = [
   "Full Stack", "Data Science", "AI / ML",
   "Mathematics", "Science", "English",
   "Business", "Design", "General"
 ];
 
-// Card color options (matches your existing UI colors)
 const colorOptions = ["#F64515", "#165ee7", "#9fd200", "#000000"];
 
-// Option labels
-const optionLabels = ["A", "B", "C", "D"];
+const API_URL = "http://localhost:3000/exam";
 
 // ── COMPONENT ──────────────────────────────────────
 export function TutorTestCompo() {
 
-  // controls form visibility
   const [showForm, setShowForm] = useState(false);
-
-  // list of created exams
   const [exams, setExams] = useState([]);
+  const [editingId, setEditingId] = useState(null); // null = creating new, otherwise editing this exam's id
+  const [loading, setLoading] = useState(false);
 
-  // what the teacher is currently filling in
   const [formData, setFormData] = useState({
     name: "",
     subject: "General",
@@ -34,6 +29,24 @@ export function TutorTestCompo() {
       { question: "", options: ["", "", "", ""], answer: "" }
     ]
   });
+
+  // ── FETCH EXAMS ON LOAD ──
+  useEffect(() => {
+    fetchExams();
+  }, []);
+
+  const fetchExams = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch(API_URL);
+      const data = await response.json();
+      setExams(data);
+    } catch (err) {
+      console.error("Failed to fetch exams:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // ── ADD A NEW EMPTY QUESTION ──
   const addQuestion = () => {
@@ -48,12 +61,11 @@ export function TutorTestCompo() {
 
   // ── REMOVE A QUESTION BY INDEX ──
   const removeQuestion = (index) => {
-    // dont allow removing if only one question left
     if (formData.questions.length === 1) return;
 
     setFormData((prev) => ({
       ...prev,
-      questions: prev.questions.filter((_, i) => i !== index) // _ : current question , i : current question index
+      questions: prev.questions.filter((_, i) => i !== index)
     }));
   };
 
@@ -78,23 +90,8 @@ export function TutorTestCompo() {
     setFormData((prev) => ({ ...prev, questions: updated }));
   };
 
-  // ── SAVE EXAM ──
-  const handleSave = () => {
-    // basic validation
-    if (!formData.name.trim()) {
-      alert("Please enter an exam name");
-      return;
-    }
-
-    const newExam = {
-      ...formData,
-      id: Date.now() // temporary id until backend
-    };
-
-    setExams((prev) => [...prev, newExam]);
-    setShowForm(false);
-
-    // reset form for next exam
+  // ── RESET FORM TO BLANK ──
+  const resetForm = () => {
     setFormData({
       name: "",
       subject: "General",
@@ -105,6 +102,78 @@ export function TutorTestCompo() {
         { question: "", options: ["", "", "", ""], answer: "" }
       ]
     });
+    setEditingId(null);
+  };
+
+  // ── SAVE EXAM (CREATE OR UPDATE) ──
+  const handleSave = async () => {
+  if (!formData.name.trim()) {
+    alert("Please enter an exam name");
+    return;
+  }
+
+  // check every question is filled properly
+  const hasInvalidQuestion = formData.questions.some((q) => {
+    const emptyOption = q.options.some((opt) => !opt.trim());
+    return !q.question.trim() || emptyOption || !q.answer.trim();
+  });
+
+  if (hasInvalidQuestion) {
+    alert("Please fill in all question fields, options, and select a correct answer for every question.");
+    return;
+  }
+
+  try {
+    const url = editingId ? `${API_URL}/${editingId}` : API_URL;
+    const method = editingId ? "PUT" : "POST";
+
+    await fetch(url, {
+      method,
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(formData)
+    });
+
+    await fetchExams();
+    setShowForm(false);
+    resetForm();
+
+  } catch (err) {
+    console.error("Failed to save exam:", err);
+    alert("Something went wrong while saving. Check console.");
+  }
+};
+
+  // ── CLICK EXISTING EXAM TO EDIT ──
+  const handleEditClick = (exam) => {
+    setFormData({
+      name: exam.name,
+      subject: exam.subject,
+      type: exam.type,
+      duration: exam.duration,
+      color: exam.color,
+      questions: exam.questions
+    });
+    setEditingId(exam._id);
+    setShowForm(true);
+  };
+
+  // ── DELETE EXAM ──
+  const handleDelete = async (id, e) => {
+    e.stopPropagation(); // prevent triggering edit click
+    if (!confirm("Delete this exam? This cannot be undone.")) return;
+
+    try {
+      await fetch(`${API_URL}/${id}`, { method: "DELETE" });
+      await fetchExams();
+    } catch (err) {
+      console.error("Failed to delete exam:", err);
+    }
+  };
+
+  // ── CANCEL FORM ──
+  const handleCancel = () => {
+    setShowForm(false);
+    resetForm();
   };
 
   // ── UI ──────────────────────────────────────────
@@ -115,18 +184,20 @@ export function TutorTestCompo() {
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold">My Exams</h2>
         <button
-          onClick={() => setShowForm(!showForm)}
+          onClick={() => showForm ? handleCancel() : setShowForm(true)}
           className="px-4 py-2 bg-[#165ee7] text-white rounded-xl font-semibold"
         >
           {showForm ? "Cancel" : "+ Create Exam"}
         </button>
       </div>
 
-      {/* EXAM CREATION FORM */}
+      {/* EXAM CREATION / EDIT FORM */}
       {showForm && (
         <div className="bg-[#eeeff1] rounded-2xl p-6 mb-6 flex flex-col gap-4">
 
-          <h3 className="text-xl font-bold">Create New Exam</h3>
+          <h3 className="text-xl font-bold">
+            {editingId ? "Edit Exam" : "Create New Exam"}
+          </h3>
 
           {/* EXAM NAME */}
           <input
@@ -196,7 +267,6 @@ export function TutorTestCompo() {
             {formData.questions.map((q, qIndex) => (
               <div key={qIndex} className="bg-white rounded-xl p-4 flex flex-col gap-3">
 
-                {/* QUESTION HEADER */}
                 <div className="flex justify-between items-center">
                   <p className="font-semibold">Question {qIndex + 1}</p>
                   <button
@@ -207,7 +277,6 @@ export function TutorTestCompo() {
                   </button>
                 </div>
 
-                {/* QUESTION TEXT */}
                 <input
                   type="text"
                   placeholder="Enter question"
@@ -216,19 +285,17 @@ export function TutorTestCompo() {
                   className="p-2 border border-gray-300 rounded-lg"
                 />
 
-                {/* OPTIONS */}
                 {q.options.map((opt, oIndex) => (
                   <input
                     key={oIndex}
                     type="text"
-                    placeholder={`Option ${optionLabels[oIndex]}`}
+                    placeholder={`Option ${String.fromCharCode(65 + oIndex)}`}
                     value={opt}
                     onChange={(e) => updateOption(qIndex, oIndex, e.target.value)}
                     className="p-2 border border-gray-300 rounded-lg"
                   />
                 ))}
 
-                {/* CORRECT ANSWER */}
                 <select
                   value={q.answer}
                   onChange={(e) => updateAnswer(qIndex, e.target.value)}
@@ -259,23 +326,30 @@ export function TutorTestCompo() {
             onClick={handleSave}
             className="px-4 py-2 bg-[#165ee7] text-white rounded-xl font-semibold"
           >
-            Create Exam
+            {editingId ? "Update Exam" : "Create Exam"}
           </button>
 
         </div>
       )}
 
-      {/* EXAM LIST */}
-      {exams.length === 0 && !showForm && (
+      {/* LOADING STATE */}
+      {loading && (
+        <p className="text-center text-gray-400">Loading exams...</p>
+      )}
+
+      {/* EMPTY STATE */}
+      {!loading && exams.length === 0 && !showForm && (
         <p className="text-gray-400 text-center mt-10">
           No exams created yet. Click "+ Create Exam" to start.
         </p>
       )}
 
-      {exams.map((exam) => (
+      {/* EXAM LIST — click to edit, X to delete */}
+      {!loading && exams.map((exam) => (
         <div
-          key={exam.id}
-          className="bg-white rounded-xl p-4 mb-3 shadow-sm flex justify-between items-center"
+          key={exam._id}
+          onClick={() => handleEditClick(exam)}
+          className="bg-white rounded-xl p-4 mb-3 shadow-sm flex justify-between items-center cursor-pointer hover:shadow-md transition"
         >
           <div>
             <p className="font-bold text-lg">{exam.name}</p>
@@ -283,13 +357,22 @@ export function TutorTestCompo() {
               {exam.subject} · {exam.type} · {exam.duration} mins · {exam.questions.length} questions
             </p>
           </div>
-          <div
-            style={{ backgroundColor: exam.color }}
-            className="w-4 h-10 rounded-full"
-          />
+
+          <div className="flex items-center gap-3">
+            <div
+              style={{ backgroundColor: exam.color }}
+              className="w-4 h-10 rounded-full"
+            />
+            <button
+              onClick={(e) => handleDelete(exam._id, e)}
+              className="text-red-500 text-sm font-semibold hover:underline"
+            >
+              Delete
+            </button>
+          </div>
         </div>
       ))}
 
     </div>
-  );
+  )
 }
