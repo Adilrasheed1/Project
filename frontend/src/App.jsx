@@ -11,6 +11,13 @@ import { DoubtSection } from './pages/DoubtSection';
 import {AuthPages} from "./pages/AuthPages";
 import {CoursesPage} from "./pages/CoursesPage";
 import { TeacherDashboard } from './pages/TeacherDashboard';
+import OrdersPage from "./pages/OrdersPage";
+import LecturePage from "./pages/LecturePage";
+import StudentDashboard from "./pages/StudentDashboard";
+import CourseDetail from "./pages/CourseDetail";
+import PaymentPage from "./pages/PaymentPage";
+import ForgotPassword from "./pages/ForgotPassword";
+import StudentProfile from "./pages/StudentProfile";
 function DoubtSectionPage() {
   const [inCall, setInCall] = useState(false);
   return <DoubtSection setInCall={setInCall} inCall={inCall} />;
@@ -34,6 +41,13 @@ function App() {
       <Route path="/teacher" element={<TeacherDashboard />} />
 
       <Route path="/DoubtSection" element={<DoubtSectionPage/>}/>
+       <Route path="/orders" element={<OrdersPage />} />
+        <Route path="/lecture" element={<LecturePage />} />
+        <Route path="/dashboard" element={<StudentDashboard />} />
+        <Route path="/course/:id" element={<CourseDetail />} />
+        <Route path="/payment/:id" element={<PaymentPage />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/student-profile" element={<StudentProfile />} />
     
     </Routes>
     </BrowserRouter>
