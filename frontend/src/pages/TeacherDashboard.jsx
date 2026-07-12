@@ -1,12 +1,14 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ShareScreen } from "../components/ShareScreen"; // adjust path if your components folder is elsewhere
+import { TutorTestCompo } from "../components/TutorTestCompo";
 
 const sidebarItems = [
     { icon: "⊞", label: "Dashboard", page: "dashboard" },
      { icon: "", label: "Doubts", page: "courses" },
     { icon: "👥", label: "Students", page: "students" },
     { icon: "💰", label: "Earnings", page: "earnings" },
+    { icon: "📝", label: "Tests", page: "tests" },
 ];
 
 const subjectOptions = ["Mathematics", "Physics", "Chemistry", "Biology", "English", "Computer Science"];
@@ -667,6 +669,11 @@ export function TeacherDashboard() {
                         </div>
                     </>
                 )}
+
+                {/* TESTS TAB */}
+                {activeTab === "tests" && (
+                    <TutorTestCompo />
+                )}
             </div>
 
             {/* RIGHT PANEL */}
@@ -682,6 +689,7 @@ export function TeacherDashboard() {
                     <button style={s.quickBtn} onClick={openCreateModal}>📤 Upload New Course</button>
                     <button style={s.quickBtn} onClick={() => setActiveTab("students")}>👥 View Students</button>
                     <button style={s.quickBtn} onClick={() => setActiveTab("earnings")}>💰 View Earnings</button>
+                    <button style={s.quickBtn} onClick={() => setActiveTab("tests")}>📝 Manage Tests</button>
                 </div>
             </div>
 

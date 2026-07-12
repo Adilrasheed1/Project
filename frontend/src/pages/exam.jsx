@@ -60,21 +60,47 @@ function Exam({ exam, onBack }) {
   };
 
   // ─── SUBMIT ───────────────────────────────────────
-  const handleSubmit = () => {
-    examDoneRef.current = true;
+ const handleSubmit = async () => {
+  examDoneRef.current = true;
 
-    let examScore = 0;
-    questions.forEach((q, i) => {
-      if (answersRef.current[i] === q.answer) examScore += 10;
+  // ─── CALCULATE SCORES ──────────────────────────────
+  let examScore = 0;
+  questions.forEach((q, i) => {
+    if (answersRef.current[i] === q.answer) examScore += 10;
+  });
+
+  const currentIntegrity = integrityRef.current;
+
+  const deductionPercent = 100 - currentIntegrity;
+  const deductionAmount = Math.round((examScore * deductionPercent) / 100);
+  const finalScore = exam?.type === "proctored"
+    ? examScore - deductionAmount
+    : examScore;
+
+  // ─── SAVE RESULT TO BACKEND ────────────────────────
+  try {
+    await fetch("http://localhost:3000/api/result", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        examId: exam._id,
+        examName: exam.name,
+        studentUsername: localStorage.getItem("username") || "Guest",
+        examScore,
+        integrityScore: currentIntegrity,
+        finalScore,
+        totalMarks: questions.length * 10,
+        examType: exam?.type,
+        violations
+      })
     });
+  } catch (err) {
+    console.error("Failed to save result:", err);
+    // don't block the student from seeing results even if save fails
+  }
 
-    const finalScore = exam?.type === "proctored"
-      ? Math.round((examScore + integrityRef.current) / 2)
-      : examScore;
-
-    setScore({ examScore, finalScore });
-  };
-
+  setScore({ examScore, finalScore });
+};
   // ─── TIMER ────────────────────────────────────────
   useEffect(() => {
     if (!exam?.duration) return;
@@ -338,7 +364,7 @@ function Exam({ exam, onBack }) {
         {/* ── TOP BAR ── */}
         <div className="bg-[#eeeff1] rounded-2xl p-4 flex items-center justify-between">
 
-          <h1 className="text-lg font-bold truncate max-w-[120px] md:max-w-none">
+          <h1 className="text-lg font-bold truncate max-width:120px md:max-w-none">
             {exam?.name}
           </h1>
 

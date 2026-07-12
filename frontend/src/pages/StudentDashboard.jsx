@@ -92,6 +92,7 @@ export default function StudentDashboard() {
               onClick={() => {
                 if (item.page === "courses") navigate("/courses");
                 if (item.page === "orders") navigate("/orders");
+                if (item.page === "tests") navigate("/testdashboard");
               }}
             >
               <span style={s.sideIcon}>{item.icon}</span>
