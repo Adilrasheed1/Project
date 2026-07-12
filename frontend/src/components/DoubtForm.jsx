@@ -21,7 +21,7 @@ export function DoubtForm({ setInCall }) {
   const timerRef = useRef(null);
 
   useEffect(() => {
-    const ws = new WebSocket("wss://project-3-7kx1.onrender.com");
+    const ws = new WebSocket(import.meta.env.VITE_WS_URL);
     ws.onopen = () => {
       console.log("connected as student");
       ws.send(JSON.stringify({ type: "student" }));
@@ -189,7 +189,7 @@ export function DoubtForm({ setInCall }) {
             {/* Submit */}
             <button
               onClick={() => {
-                fetch("https://project-3-7kx1.onrender.com/doubts/DoubtSection", {
+                fetch(`${import.meta.env.VITE_API_URL}/doubts/DoubtSection`, {
                   method: "POST",
                   headers: { "Content-Type": "application/json" },
                   body: JSON.stringify({ title, description, image }),

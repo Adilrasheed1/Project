@@ -1,7 +1,7 @@
 const express=require("express");
 
 
-const { Doubts} = require("../db");
+const { Doubts} = require("../models/Doubts");
 const router=express.Router();
 router.post("/DoubtSection",(req,res)=>{
     res.json({
