@@ -9,8 +9,8 @@ const subjects = [
 
 const colorOptions = ["#F64515", "#165ee7", "#9fd200", "#000000"];
 
-const API_URL = "http://localhost:3000/api/exam";
-const RESULT_API_URL = "http://localhost:3000/api/result";
+const API_URL = `${import.meta.env.VITE_API_URL}/api/exam`;
+const RESULT_API_URL = `${import.meta.env.VITE_API_URL}/api/result`;
 
 // ── COMPONENT ──────────────────────────────────────
 export function TutorTestCompo() {

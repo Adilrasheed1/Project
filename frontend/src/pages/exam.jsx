@@ -79,7 +79,7 @@ function Exam({ exam, onBack }) {
 
   // ─── SAVE RESULT TO BACKEND ────────────────────────
   try {
-    await fetch("http://localhost:3000/api/result", {
+    await fetch(`${import.meta.env.VITE_API_URL}/api/result`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({

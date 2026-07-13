@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import ExamCard from "./ExamCard";
 import { IndianRupee, Cctv } from "lucide-react";
 
-const API_URL = "http://localhost:3000/api/exam";
+const API_URL = `${import.meta.env.VITE_API_URL}/api/exam`;
 
 function TestDashboard({ setSelectedExam }) {
 
