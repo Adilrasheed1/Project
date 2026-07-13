@@ -26,6 +26,8 @@ app.use("/api/support", require("./routes/support"));
 // app.use("/api/admin", require("./routes/admin"));
 // app.use("/api/tutor", require("./routes/tutor"));
 // app.use("/api/user", require("./routes/user"));
+app.use("/api/exam", require("./routes/exam"));
+app.use("/api/result", require("./routes/result"));
 
 require('./server')(server);
 
