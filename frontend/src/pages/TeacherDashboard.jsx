@@ -2,21 +2,32 @@ import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ShareScreen } from "../components/ShareScreen"; // adjust path if your components folder is elsewhere
 import { TutorTestCompo } from "../components/TutorTestCompo";
+import {
+    LayoutGrid,
+    HelpCircle,
+    Users,
+    Wallet,
+    FileText,
+    User,
+    BookOpen,
+    Star,
+    Upload,
+} from "lucide-react";
 
 const sidebarItems = [
-    { icon: "⊞", label: "Dashboard", page: "dashboard" },
-     { icon: "", label: "Doubts", page: "courses" },
-    { icon: "👥", label: "Students", page: "students" },
-    { icon: "💰", label: "Earnings", page: "earnings" },
-    { icon: "📝", label: "Tests", page: "tests" },
+    { icon: LayoutGrid, label: "Dashboard", page: "dashboard" },
+    { icon: HelpCircle, label: "Doubts", page: "courses" },
+    { icon: Users, label: "Students", page: "students" },
+    { icon: Wallet, label: "Earnings", page: "earnings" },
+    { icon: FileText, label: "Tests", page: "tests" },
 ];
 
 const subjectOptions = ["Mathematics", "Physics", "Chemistry", "Biology", "English", "Computer Science"];
-const colorSwatches = ["#4FB88A", "#7A73D8", "#E89B3C", "#D8493F", "#4A90D9", "#333333"];
+const colorSwatches = ["#F64515", "#165ee7", "#9fd200", "#000000"];
 
 const API =  `${import.meta.env.VITE_API_URL}/api/teacher-courses`;;
 
-const emptyForm = { title: "", subject: "", price: "", description: "", color: "#4FB88A" };
+const emptyForm = { title: "", subject: "", price: "", description: "", color: "#F64515" };
 
 const newId = () => `id_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
 
@@ -212,7 +223,7 @@ export function TeacherDashboard() {
             subject: course.subject || "",
             price: course.price || "",
             description: course.description || "",
-            color: course.color || "#4FB88A",
+            color: course.color || "#F64515",
         });
         setThumbFile(null);
         setExistingThumbUrl(course.thumbnailUrl || "");
@@ -392,7 +403,7 @@ export function TeacherDashboard() {
                 return;
             }
 
-            alert(editingId ? "Course updated ✅" : "Course uploaded ✅");
+            alert(editingId ? "Course updated" : "Course uploaded");
             setShowUpload(false);
             loadDashboard();
         } catch (err) {
@@ -447,10 +458,10 @@ export function TeacherDashboard() {
     const { stats, courses, recentStudents } = dashboard;
 
     const statCards = [
-        { label: "Total Students", value: stats.totalStudents, icon: "👥", color: "#4FB88A", soft: "#E3F5EC" },
-        { label: "Total Courses", value: stats.totalCourses, icon: "📚", color: "#7A73D8", soft: "#EAE8FB" },
-        { label: "This Month Earnings", value: `₹${stats.monthEarnings}`, icon: "💰", color: "#E89B3C", soft: "#FCEFDD" },
-        { label: "Avg. Rating", value: stats.avgRating, icon: "⭐", color: "#D8493F", soft: "#FBE6E4" },
+        { label: "Total Students", value: stats.totalStudents, icon: Users, color: "#9fd200", soft: "#EEFBD8" },
+        { label: "Total Courses", value: stats.totalCourses, icon: BookOpen, color: "#165ee7", soft: "#E4EEFD" },
+        { label: "This Month Earnings", value: `₹${stats.monthEarnings}`, icon: Wallet, color: "#F64515", soft: "#FDE6DF" },
+        { label: "Avg. Rating", value: stats.avgRating, icon: Star, color: "#000000", soft: "#eeeff1" },
     ];
 
     if (loading) return <h2 style={{ padding: 40 }}>Loading...</h2>;
@@ -460,7 +471,7 @@ export function TeacherDashboard() {
             <style>{`
               * { box-sizing:border-box; margin:0; padding:0; }
               html,body,#root { width:100%; min-height:100vh; }
-              body { font-family:'Segoe UI',Arial,sans-serif; background:#F7F4EE; }
+              body { font-family: ui-sans-serif, system-ui, Arial, sans-serif; background:#ffffff; }
 
               @media (max-width: 900px) {
                 .app-shell { flex-direction: column !important; }
@@ -468,14 +479,14 @@ export function TeacherDashboard() {
                   position: fixed !important; bottom: 0 !important; left: 0 !important; right: 0 !important; top: auto !important;
                   width: 100% !important; height: 64px !important; min-height: 64px !important;
                   flex-direction: row !important; padding: 0 !important; border-right: none !important;
-                  border-top: 1px solid #DDD6CC; z-index: 200 !important;
+                  border-top: 1px solid #dfe3e6; z-index: 200 !important;
                 }
                 .app-logoBox { display: none !important; }
                 .app-sideNav { flex-direction: row !important; width: 100% !important; height: 100% !important; justify-content: space-around !important; }
                 .app-sideItem { padding: 6px 4px !important; border-radius: 0 !important; flex: 1 !important; }
                 .app-sideBottom { display: none !important; }
                 .app-main { padding: 16px 14px 84px !important; width: 100% !important; order: 2 !important; }
-                .app-rightPanel { width: 100% !important; min-height: auto !important; border-left: none !important; border-bottom: 1px solid #DDD6CC; order: 1 !important; }
+                .app-rightPanel { width: 100% !important; min-height: auto !important; border-left: none !important; border-bottom: 1px solid #dfe3e6; order: 1 !important; }
                 .app-statsGrid { grid-template-columns: repeat(2, 1fr) !important; }
                 .app-topRow { flex-direction: column !important; align-items: flex-start !important; gap: 12px !important; }
                 .app-courseRow { flex-wrap: wrap !important; }
@@ -484,26 +495,39 @@ export function TeacherDashboard() {
 
             {/* SIDEBAR */}
             <div style={s.sidebar} className="app-sidebar">
-                <div style={s.logoBox} className="app-logoBox"><span style={s.logoText}>TUTOR<br />CONNECT</span></div>
-                <div style={s.sideNav} className="app-sideNav">
-                    {sidebarItems.map(item => (
-                        <div key={item.page}
-                            style={{ ...s.sideItem, background: activeTab === item.page ? "#E8E0D4" : "transparent" }}
-                            className="app-sideItem"
-                            onClick={() => setActiveTab(item.page)}
-                        >
-                            <span style={s.sideIcon}>{item.icon}</span>
-                            <span style={s.sideLabel}>{item.label}</span>
+                <div style={s.sidebarInner}>
+                    <div style={s.sideNav} className="app-sideNav">
+                        {sidebarItems.map(item => {
+                            const Icon = item.icon;
+                            const active = activeTab === item.page;
+                            return (
+                                <div key={item.page}
+                                    style={s.sideItem}
+                                    className="app-sideItem"
+                                    onClick={() => setActiveTab(item.page)}
+                                >
+                                    <div style={{
+                                        ...s.sideIconCircle,
+                                        background: active ? "#F64515" : "white",
+                                        color: active ? "white" : "#1A1A1A",
+                                    }}>
+                                        <Icon size={20} />
+                                    </div>
+                                    <span style={{ ...s.sideLabel, color: active ? "#F64515" : "#666" }}>{item.label}</span>
+                                </div>
+                            );
+                        })}
+                    </div>
+                    <div
+                        style={{ ...s.sideItem, cursor: "pointer" }}
+                        className="app-sideBottom"
+                        onClick={() => navigate("/forgot-password")}
+                    >
+                        <div style={s.sideIconCircle}>
+                            <User size={20} />
                         </div>
-                    ))}
-                </div>
-                <div
-                    style={s.sideBottom}
-                    className="app-sideBottom"
-                    onClick={() => navigate("/forgot-password")}
-                >
-                    <div style={s.avatarCircle}>👤</div>
-                    <span style={s.sideLabel}>Support</span>
+                        <span style={s.sideLabel}>Support</span>
+                    </div>
                 </div>
             </div>
 
@@ -516,7 +540,7 @@ export function TeacherDashboard() {
                         <div style={s.topRow} className="app-topRow">
                             <div>
                                 <h1 style={s.pageTitle}>Teacher Dashboard</h1>
-                                <p style={s.pageSub}>Welcome back, {teacher.firstName || "Teacher"} 👋</p>
+                                <p style={s.pageSub}>Welcome back, {teacher.firstName || "Teacher"}</p>
                             </div>
                             <button style={s.uploadBtn} onClick={openCreateModal}>+ Upload New Course</button>
                         </div>
@@ -524,7 +548,7 @@ export function TeacherDashboard() {
                         <div style={s.statsGrid} className="app-statsGrid">
                             {statCards.map(st => (
                                 <div key={st.label} style={{ ...s.statCard, border: `1.5px solid ${st.color}20` }}>
-                                    <div style={{ ...s.statIcon, background: st.soft }}>{st.icon}</div>
+                                    <div style={{ ...s.statIcon, background: st.soft, color: st.color }}><st.icon size={22} /></div>
                                     <div>
                                         <div style={{ ...s.statVal, color: st.color }}>{st.value}</div>
                                         <div style={s.statLabel}>{st.label}</div>
@@ -545,12 +569,12 @@ export function TeacherDashboard() {
                                     </div>
                                     <div style={{ flex: 1, minWidth: 160 }}>
                                         <p style={s.courseTitle}>{c.title}</p>
-                                        <p style={s.courseMeta}>{c.subject} · {c.lectures?.length || 0} lectures · {c.students || 0} students · ⭐ {c.rating || 0}</p>
+                                        <p style={s.courseMeta}>{c.subject} · {c.lectures?.length || 0} lectures · {c.students || 0} students · {c.rating || 0}★</p>
                                     </div>
                                     <div style={{ textAlign: "right" }}>
                                         <p style={s.courseEarnings}>₹{c.earnings || 0}</p>
                                         <span
-                                            style={{ ...s.statusBadge, cursor: "pointer", background: c.status === "Published" ? "#E3F5EC" : "#F0EAE0", color: c.status === "Published" ? "#4FB88A" : "#888" }}
+                                            style={{ ...s.statusBadge, cursor: "pointer", background: c.status === "Published" ? "#EEFBD8" : "#eeeff1", color: c.status === "Published" ? "#7ba500" : "#888" }}
                                             onClick={() => togglePublish(c)}
                                             title="Click to toggle Draft/Published"
                                         >
@@ -579,7 +603,7 @@ export function TeacherDashboard() {
                             {recentStudents.map((st, i) => (
                                 <div key={i} style={s.tableRow}>
                                     <div style={{ flex: 2, display: "flex", alignItems: "center", gap: 10 }}>
-                                        <div style={s.stuAvatar}>👤</div>
+                                        <div style={s.stuAvatar}><User size={16} /></div>
                                         <span style={s.stuName}>{st.name}</span>
                                     </div>
                                     <span style={{ flex: 2, fontSize: 13, color: "#555" }}>{st.course}</span>
@@ -604,13 +628,13 @@ export function TeacherDashboard() {
                         <h1 style={s.pageTitle}>Earnings</h1>
                         <div style={s.statsGrid} className="app-statsGrid">
                             {[
-                                { label: "This Month", value: `₹${stats.monthEarnings}`, icon: "📈", color: "#4FB88A", soft: "#E3F5EC" },
-                                { label: "Avg. Rating", value: stats.avgRating, icon: "⭐", color: "#7A73D8", soft: "#EAE8FB" },
-                                { label: "Total Courses", value: stats.totalCourses, icon: "📚", color: "#E89B3C", soft: "#FCEFDD" },
-                                { label: "Total Students", value: stats.totalStudents, icon: "👥", color: "#D8493F", soft: "#FBE6E4" },
+                                { label: "This Month", value: `₹${stats.monthEarnings}`, icon: Wallet, color: "#9fd200", soft: "#EEFBD8" },
+                                { label: "Avg. Rating", value: stats.avgRating, icon: Star, color: "#165ee7", soft: "#E4EEFD" },
+                                { label: "Total Courses", value: stats.totalCourses, icon: BookOpen, color: "#F64515", soft: "#FDE6DF" },
+                                { label: "Total Students", value: stats.totalStudents, icon: Users, color: "#000000", soft: "#eeeff1" },
                             ].map(st => (
                                 <div key={st.label} style={{ ...s.statCard, border: `1.5px solid ${st.color}20` }}>
-                                    <div style={{ ...s.statIcon, background: st.soft }}>{st.icon}</div>
+                                    <div style={{ ...s.statIcon, background: st.soft, color: st.color }}><st.icon size={22} /></div>
                                     <div>
                                         <div style={{ ...s.statVal, color: st.color }}>{st.value}</div>
                                         <div style={s.statLabel}>{st.label}</div>
@@ -618,16 +642,16 @@ export function TeacherDashboard() {
                                 </div>
                             ))}
                         </div>
-                        <div style={{ background: "white", borderRadius: 16, padding: "24px", border: "1px solid #E8E2D8", marginTop: 20 }}>
+                        <div style={{ background: "white", borderRadius: 16, padding: "24px", border: "1px solid #eeeff1", marginTop: 20 }}>
                             <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 16 }}>Earnings by Course</h3>
                             {courses.length === 0 && <p style={{ color: "#888", fontSize: 13 }}>No courses yet.</p>}
                             {courses.map((c) => (
-                                <div key={c._id} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "14px 0", borderBottom: "1px solid #F0EAE0" }}>
+                                <div key={c._id} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "14px 0", borderBottom: "1px solid #eeeff1" }}>
                                     <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
                                         <div style={{ width: 10, height: 10, borderRadius: "50%", background: c.color }} />
                                         <span style={{ fontSize: 14, fontWeight: 600, color: "#1A1A1A" }}>{c.title}</span>
                                     </div>
-                                    <span style={{ fontSize: 15, fontWeight: 700, color: "#4FB88A" }}>₹{c.earnings || 0}</span>
+                                    <span style={{ fontSize: 15, fontWeight: 700, color: "#9fd200" }}>₹{c.earnings || 0}</span>
                                 </div>
                             ))}
                         </div>
@@ -651,7 +675,7 @@ export function TeacherDashboard() {
                             {recentStudents.map((st, i) => (
                                 <div key={i} style={s.tableRow}>
                                     <div style={{ flex: 2, display: "flex", alignItems: "center", gap: 10 }}>
-                                        <div style={s.stuAvatar}>👤</div>
+                                        <div style={s.stuAvatar}><User size={16} /></div>
                                         <span style={s.stuName}>{st.name}</span>
                                     </div>
                                     <span style={{ flex: 2, fontSize: 13, color: "#555" }}>{st.course}</span>
@@ -679,17 +703,17 @@ export function TeacherDashboard() {
             {/* RIGHT PANEL */}
             <div style={s.rightPanel} className="app-rightPanel">
                 <div style={s.profileCard}>
-                    <div style={s.profileAvatar}>👤</div>
+                    <div style={s.profileAvatar}><User size={28} /></div>
                     <p style={s.profileName}>{teacher.firstName} {teacher.lastName}</p>
                     <p style={s.profileEmail}>{teacher.email}</p>
-                    <div style={{ ...s.profileBadge, background: "#EAE8FB", color: "#7A73D8" }}>Verified Tutor</div>
+                    <div style={{ ...s.profileBadge, background: "#E4EEFD", color: "#165ee7" }}>Verified Tutor</div>
                 </div>
                 <h3 style={s.panelTitle}>Quick Actions</h3>
                 <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-                    <button style={s.quickBtn} onClick={openCreateModal}>📤 Upload New Course</button>
-                    <button style={s.quickBtn} onClick={() => setActiveTab("students")}>👥 View Students</button>
-                    <button style={s.quickBtn} onClick={() => setActiveTab("earnings")}>💰 View Earnings</button>
-                    <button style={s.quickBtn} onClick={() => setActiveTab("tests")}>📝 Manage Tests</button>
+                    <button style={s.quickBtn} onClick={openCreateModal}><Upload size={16} /> Upload New Course</button>
+                    <button style={s.quickBtn} onClick={() => setActiveTab("students")}><Users size={16} /> View Students</button>
+                    <button style={s.quickBtn} onClick={() => setActiveTab("earnings")}><Wallet size={16} /> View Earnings</button>
+                    <button style={s.quickBtn} onClick={() => setActiveTab("tests")}><FileText size={16} /> Manage Tests</button>
                 </div>
             </div>
 
@@ -762,7 +786,7 @@ export function TeacherDashboard() {
                             </MField>
 
                             <MField label="Upload Thumbnail">
-                                <UploadBox label="Upload a course cover image" accept="image/*" file={thumbFile} onChange={e => setThumbFile(e.target.files[0])} icon="🖼️" />
+                                <UploadBox label="Upload a course cover image" accept="image/*" file={thumbFile} onChange={e => setThumbFile(e.target.files[0])} />
                                 {existingThumbUrl && !thumbFile && (
                                     <p style={{ fontSize: 12, color: "#888", marginTop: 6 }}>Current thumbnail is already set — upload a new one to replace it.</p>
                                 )}
@@ -780,7 +804,7 @@ export function TeacherDashboard() {
            {incomingCall && (
     <div
         className="fixed inset-0 flex justify-center items-center z-50 px-4"
-        style={{ background: "rgba(26,26,26,0.55)", backdropFilter: "blur(4px)" }}
+        style={{ background: "rgba(0,0,0,0.55)", backdropFilter: "blur(4px)" }}
     >
         <div
             className="w-full max-w-sm text-center"
@@ -789,7 +813,7 @@ export function TeacherDashboard() {
                 borderRadius: 24,
                 padding: "36px 32px 28px",
                 boxShadow: "0 20px 60px rgba(0,0,0,0.25)",
-                border: "1px solid #EDE6DC",
+                border: "1px solid #eeeff1",
                 animation: "callPopIn 0.25s ease-out",
             }}
         >
@@ -799,22 +823,22 @@ export function TeacherDashboard() {
                 to { opacity: 1; transform: translateY(0) scale(1); }
               }
               @keyframes ringPulse {
-                0% { box-shadow: 0 0 0 0 rgba(79,184,138,0.35); }
-                70% { box-shadow: 0 0 0 14px rgba(79,184,138,0); }
-                100% { box-shadow: 0 0 0 0 rgba(79,184,138,0); }
+                0% { box-shadow: 0 0 0 0 rgba(246,69,21,0.35); }
+                70% { box-shadow: 0 0 0 14px rgba(246,69,21,0); }
+                100% { box-shadow: 0 0 0 0 rgba(246,69,21,0); }
               }
             `}</style>
 
             <div
                 style={{
                     width: 72, height: 72, borderRadius: "50%",
-                    background: "#E3F5EC",
+                    background: "#FDE6DF",
                     display: "flex", alignItems: "center", justifyContent: "center",
                     margin: "0 auto 20px",
                     animation: "ringPulse 1.8s infinite",
                 }}
             >
-                <svg width="30" height="30" fill="none" stroke="#4FB88A" strokeWidth={2} viewBox="0 0 24 24">
+                <svg width="30" height="30" fill="none" stroke="#F64515" strokeWidth={2} viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                 </svg>
             </div>
@@ -831,11 +855,11 @@ export function TeacherDashboard() {
                     onClick={() => setIncomingCall(false)}
                     style={{
                         flex: 1, padding: "12px 0", borderRadius: 10,
-                        border: "1.5px solid #E8E2D8", background: "white",
+                        border: "1.5px solid #eeeff1", background: "white",
                         color: "#666", fontSize: 14, fontWeight: 700,
                         cursor: "pointer", fontFamily: "inherit", transition: "background 0.15s",
                     }}
-                    onMouseEnter={e => e.currentTarget.style.background = "#F7F4EE"}
+                    onMouseEnter={e => e.currentTarget.style.background = "#f7f7f8"}
                     onMouseLeave={e => e.currentTarget.style.background = "white"}
                 >
                     Reject
@@ -844,12 +868,12 @@ export function TeacherDashboard() {
                     onClick={() => { accept(); setIncomingCall(false); }}
                     style={{
                         flex: 1, padding: "12px 0", borderRadius: 10,
-                        border: "none", background: "#4FB88A",
+                        border: "none", background: "#F64515",
                         color: "white", fontSize: 14, fontWeight: 700,
                         cursor: "pointer", fontFamily: "inherit", transition: "background 0.15s",
                     }}
-                    onMouseEnter={e => e.currentTarget.style.background = "#439E76"}
-                    onMouseLeave={e => e.currentTarget.style.background = "#4FB88A"}
+                    onMouseEnter={e => e.currentTarget.style.background = "#d93a10"}
+                    onMouseLeave={e => e.currentTarget.style.background = "#F64515"}
                 >
                     Accept
                 </button>
@@ -992,17 +1016,17 @@ const minputStyle = {
 
 function MInput(props) {
     return <input {...props} style={minputStyle}
-        onFocus={e => e.target.style.borderColor = "#4FB88A"}
+        onFocus={e => e.target.style.borderColor = "#F64515"}
         onBlur={e => e.target.style.borderColor = "#E0E4EA"}
     />;
 }
 
-function UploadBox({ label, accept, file, onChange, icon }) {
+function UploadBox({ label, accept, file, onChange }) {
     return (
-        <div style={{ border: "1.5px dashed #D1D5DB", borderRadius: 8, padding: "14px 18px", display: "flex", alignItems: "center", gap: 14, background: file ? "#F0FBF6" : "#FAFBFC", cursor: "pointer", position: "relative" }}>
-            <span style={{ fontSize: 22 }}>{file ? "✅" : icon}</span>
+        <div style={{ border: "1.5px dashed #D1D5DB", borderRadius: 8, padding: "14px 18px", display: "flex", alignItems: "center", gap: 14, background: file ? "#EEFBD8" : "#FAFBFC", cursor: "pointer", position: "relative" }}>
+            <Upload size={22} color={file ? "#7ba500" : "#9CA3AF"} />
             <div>
-                <p style={{ fontSize: 13, fontWeight: 600, color: file ? "#4FB88A" : "#374151", marginBottom: 2 }}>{file ? file.name : label}</p>
+                <p style={{ fontSize: 13, fontWeight: 600, color: file ? "#7ba500" : "#374151", marginBottom: 2 }}>{file ? file.name : label}</p>
                 <p style={{ fontSize: 11, color: "#9CA3AF" }}>Click or drag and drop</p>
             </div>
             <input type="file" accept={accept} onChange={onChange} style={{ position: "absolute", inset: 0, opacity: 0, cursor: "pointer", width: "100%", height: "100%" }} />
@@ -1014,7 +1038,7 @@ function LectureCard({ index, lecture, onTitleChange, onVideoChange, onRemove, o
     return (
         <div style={s.lectureCard}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
-                <span style={{ fontSize: 11, fontWeight: 800, color: "#7A73D8", letterSpacing: 0.5 }}>LECTURE {index + 1}</span>
+                <span style={{ fontSize: 11, fontWeight: 800, color: "#165ee7", letterSpacing: 0.5 }}>LECTURE {index + 1}</span>
                 <button type="button" onClick={onRemove} style={s.removeLectureBtn}>Remove lecture</button>
             </div>
 
@@ -1030,7 +1054,6 @@ function LectureCard({ index, lecture, onTitleChange, onVideoChange, onRemove, o
                 accept="video/*"
                 file={lecture.videoFile}
                 onChange={(e) => onVideoChange(e.target.files[0])}
-                icon="🎥"
             />
             {lecture.videoUrl && !lecture.videoFile && (
                 <p style={{ fontSize: 11, color: "#888", marginTop: 6 }}>Video already uploaded — pick a new file to replace it.</p>
@@ -1048,7 +1071,7 @@ function LectureCard({ index, lecture, onTitleChange, onVideoChange, onRemove, o
                                 onChange={(e) => onNoteTitleChange(note.id, e.target.value)}
                             />
                             <label style={s.noteFileBtn}>
-                                {note.file ? "✅ " + note.file.name : note.fileUrl ? "📄 Replace file" : "📄 Choose file"}
+                                {note.file ? "✓ " + note.file.name : note.fileUrl ? "Replace file" : "Choose file"}
                                 <input
                                     type="file"
                                     accept=".pdf,.doc,.docx"
@@ -1067,64 +1090,61 @@ function LectureCard({ index, lecture, onTitleChange, onVideoChange, onRemove, o
 }
 
 const s = {
-    shell: { display: "flex", minHeight: "100vh", width: "100%", background: "#F7F4EE" },
-    sidebar: { width: 90, minHeight: "100vh", background: "#EDE6DC", display: "flex", flexDirection: "column", alignItems: "center", padding: "0 0 24px", flexShrink: 0, borderRight: "1px solid #DDD6CC" },
-    logoBox: { width: "100%", background: "#D8CFC4", padding: "18px 8px", textAlign: "center", marginBottom: 24 },
-    logoText: { fontSize: 11, fontWeight: 800, color: "#333", letterSpacing: 1, lineHeight: 1.4 },
-    sideNav: { display: "flex", flexDirection: "column", alignItems: "center", gap: 4, width: "100%", flex: 1 },
-    sideItem: { width: "100%", display: "flex", flexDirection: "column", alignItems: "center", padding: "14px 8px", cursor: "pointer", borderRadius: 8 },
-    sideIcon: { fontSize: 22, marginBottom: 4 },
-    sideLabel: { fontSize: 9, color: "#666", textAlign: "center", fontWeight: 600, letterSpacing: 0.3 },
-    sideBottom: { display: "flex", flexDirection: "column", alignItems: "center", gap: 4 },
-    avatarCircle: { width: 44, height: 44, borderRadius: "50%", background: "#C8BFB4", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 22, marginBottom: 4 },
+    shell: { display: "flex", minHeight: "100vh", width: "100%", background: "#ffffff" },
+    sidebar: { width: 110, minHeight: "100vh", background: "transparent", display: "flex", alignItems: "center", justifyContent: "center", padding: "24px 0", flexShrink: 0 },
+    sidebarInner: { background: "#eeeff1", height: "100%", width: "100%", marginLeft: 12, borderRadius: 16, boxShadow: "0 8px 24px rgba(0,0,0,0.08)", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "space-evenly", padding: 16 },
+    sideNav: { display: "flex", flexDirection: "column", alignItems: "center", gap: 6, width: "100%", flex: 1, justifyContent: "center" },
+    sideItem: { width: "100%", display: "flex", flexDirection: "column", alignItems: "center", padding: "10px 4px", cursor: "pointer" },
+    sideIconCircle: { width: 48, height: 48, borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", background: "white", boxShadow: "0 2px 6px rgba(0,0,0,0.12)", marginBottom: 4 },
+    sideLabel: { fontSize: 12, color: "#666", textAlign: "center", fontWeight: 600 },
     main: { flex: 1, padding: "36px 32px", minWidth: 0 },
     topRow: { display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 28 },
     pageTitle: { fontSize: 26, fontWeight: 800, color: "#1A1A1A", letterSpacing: -0.5, marginBottom: 4 },
     pageSub: { fontSize: 14, color: "#888" },
-    uploadBtn: { background: "#4FB88A", color: "white", border: "none", borderRadius: 8, padding: "11px 20px", fontSize: 14, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" },
+    uploadBtn: { background: "#F64515", color: "white", border: "none", borderRadius: 8, padding: "11px 20px", fontSize: 14, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" },
     statsGrid: { display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 16, marginBottom: 32 },
-    statCard: { background: "white", borderRadius: 14, padding: "20px 18px", display: "flex", alignItems: "center", gap: 14 },
-    statIcon: { width: 46, height: 46, borderRadius: 12, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 22, flexShrink: 0 },
+    statCard: { background: "white", borderRadius: 14, padding: "20px 18px", display: "flex", alignItems: "center", gap: 14, boxShadow: "0 2px 10px rgba(0,0,0,0.05)" },
+    statIcon: { width: 46, height: 46, borderRadius: 12, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 },
     statVal: { fontSize: 22, fontWeight: 800, letterSpacing: -0.5 },
     statLabel: { fontSize: 12, color: "#888", marginTop: 2 },
     sectionTitle: { fontSize: 17, fontWeight: 700, color: "#1A1A1A", marginBottom: 16 },
-    courseRow: { background: "white", borderRadius: 14, padding: "16px 20px", display: "flex", alignItems: "center", gap: 16, border: "1px solid #EDE6DC" },
+    courseRow: { background: "white", borderRadius: 14, padding: "16px 20px", display: "flex", alignItems: "center", gap: 16, border: "1px solid #eeeff1" },
     courseThumb: { width: 50, height: 50, borderRadius: 10, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 },
     courseTitle: { fontSize: 14, fontWeight: 700, color: "#1A1A1A", marginBottom: 4 },
     courseMeta: { fontSize: 12, color: "#888" },
-    courseEarnings: { fontSize: 15, fontWeight: 700, color: "#4FB88A", marginBottom: 4 },
+    courseEarnings: { fontSize: 15, fontWeight: 700, color: "#9fd200", marginBottom: 4 },
     statusBadge: { fontSize: 11, fontWeight: 700, padding: "3px 10px", borderRadius: 100 },
     courseActions: { display: "flex", gap: 8 },
-    editBtn: { padding: "7px 14px", background: "#F0EAE0", color: "#444", border: "none", borderRadius: 6, fontSize: 12, fontWeight: 600, cursor: "pointer", fontFamily: "inherit" },
-    viewBtn: { padding: "7px 14px", background: "#D8493F", color: "white", border: "none", borderRadius: 6, fontSize: 12, fontWeight: 600, cursor: "pointer", fontFamily: "inherit" },
-    studentsTable: { background: "white", borderRadius: 16, overflow: "hidden", border: "1px solid #E8E2D8" },
-    tableHeader: { display: "flex", padding: "12px 20px", background: "#F7F4EE", fontSize: 11, fontWeight: 700, color: "#888", letterSpacing: "0.06em", textTransform: "uppercase" },
-    tableRow: { display: "flex", alignItems: "center", padding: "14px 20px", borderBottom: "1px solid #F0EAE0" },
-    stuAvatar: { width: 32, height: 32, borderRadius: "50%", background: "#EDE6DC", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16, flexShrink: 0 },
+    editBtn: { padding: "7px 14px", background: "#eeeff1", color: "#444", border: "none", borderRadius: 6, fontSize: 12, fontWeight: 600, cursor: "pointer", fontFamily: "inherit" },
+    viewBtn: { padding: "7px 14px", background: "#F64515", color: "white", border: "none", borderRadius: 6, fontSize: 12, fontWeight: 600, cursor: "pointer", fontFamily: "inherit" },
+    studentsTable: { background: "white", borderRadius: 16, overflow: "hidden", border: "1px solid #e3e6e9" },
+    tableHeader: { display: "flex", padding: "12px 20px", background: "#eeeff1", fontSize: 11, fontWeight: 700, color: "#888", letterSpacing: "0.06em", textTransform: "uppercase" },
+    tableRow: { display: "flex", alignItems: "center", padding: "14px 20px", borderBottom: "1px solid #eeeff1" },
+    stuAvatar: { width: 32, height: 32, borderRadius: "50%", background: "#eeeff1", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, color: "#1A1A1A" },
     stuName: { fontSize: 13, fontWeight: 600, color: "#1A1A1A" },
-    progressBg: { height: 5, background: "#F0EAE0", borderRadius: 3, overflow: "hidden", marginBottom: 3 },
-    progressFill: { height: "100%", background: "#4FB88A", borderRadius: 3 },
+    progressBg: { height: 5, background: "#eeeff1", borderRadius: 3, overflow: "hidden", marginBottom: 3 },
+    progressFill: { height: "100%", background: "#9fd200", borderRadius: 3 },
     progressPct: { fontSize: 11, color: "#888" },
-    rightPanel: { width: 260, background: "#EDE6DC", padding: "24px 16px", flexShrink: 0, borderLeft: "1px solid #DDD6CC" },
-    profileCard: { background: "white", borderRadius: 14, padding: "20px", textAlign: "center", marginBottom: 20, border: "1px solid #E8E2D8" },
-    profileAvatar: { width: 60, height: 60, borderRadius: "50%", background: "#C8BFB4", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 28, margin: "0 auto 10px", border: "3px solid #EDE6DC" },
+    rightPanel: { width: 260, background: "#eeeff1", padding: "24px 16px", flexShrink: 0 },
+    profileCard: { background: "white", borderRadius: 14, padding: "20px", textAlign: "center", marginBottom: 20, border: "1px solid #e3e6e9" },
+    profileAvatar: { width: 60, height: 60, borderRadius: "50%", background: "#eeeff1", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 10px", color: "#1A1A1A" },
     profileName: { fontSize: 15, fontWeight: 700, color: "#1A1A1A", marginBottom: 2 },
     profileEmail: { fontSize: 12, color: "#888", marginBottom: 10 },
     profileBadge: { display: "inline-block", fontSize: 11, fontWeight: 700, padding: "4px 12px", borderRadius: 100 },
     panelTitle: { fontSize: 13, fontWeight: 700, color: "#444", marginBottom: 10 },
-    quickBtn: { width: "100%", padding: "11px", background: "white", color: "#1A1A1A", border: "1px solid #E8E2D8", borderRadius: 8, fontSize: 13, fontWeight: 600, cursor: "pointer", fontFamily: "inherit", textAlign: "left" },
+    quickBtn: { width: "100%", padding: "11px", background: "white", color: "#1A1A1A", border: "1px solid #e3e6e9", borderRadius: 8, fontSize: 13, fontWeight: 600, cursor: "pointer", fontFamily: "inherit", textAlign: "left", display: "flex", alignItems: "center", gap: 8 },
     modalOverlay: { position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000, padding: 20 },
     modal: { background: "white", borderRadius: 20, width: "100%", maxWidth: 540, maxHeight: "90vh", overflow: "hidden", display: "flex", flexDirection: "column" },
-    modalHeader: { display: "flex", justifyContent: "space-between", alignItems: "center", padding: "20px 24px", borderBottom: "1px solid #F0EAE0" },
+    modalHeader: { display: "flex", justifyContent: "space-between", alignItems: "center", padding: "20px 24px", borderBottom: "1px solid #eeeff1" },
     modalTitle: { fontSize: 20, fontWeight: 800, color: "#1A1A1A" },
     closeBtn: { background: "none", border: "none", fontSize: 18, cursor: "pointer", color: "#888" },
     modalBody: { padding: "20px 24px", overflowY: "auto" },
-    submitBtn: { width: "100%", padding: "13px", background: "#4FB88A", color: "white", border: "none", borderRadius: 8, fontSize: 15, fontWeight: 700, cursor: "pointer", fontFamily: "inherit", marginTop: 8 },
+    submitBtn: { width: "100%", padding: "13px", background: "#F64515", color: "white", border: "none", borderRadius: 8, fontSize: 15, fontWeight: 700, cursor: "pointer", fontFamily: "inherit", marginTop: 8 },
     lectureCard: { border: "1.5px solid #E0E4EA", borderRadius: 12, padding: "16px", background: "#FAFBFC" },
-    removeLectureBtn: { background: "none", border: "none", color: "#D8493F", fontSize: 11, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" },
-    addLectureBtn: { padding: "12px", border: "1.5px dashed #4FB88A", borderRadius: 8, background: "none", color: "#4FB88A", fontSize: 13, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" },
+    removeLectureBtn: { background: "none", border: "none", color: "#F64515", fontSize: 11, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" },
+    addLectureBtn: { padding: "12px", border: "1.5px dashed #F64515", borderRadius: 8, background: "none", color: "#F64515", fontSize: 13, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" },
     noteRow: { display: "flex", alignItems: "center", gap: 8 },
-    noteFileBtn: { fontSize: 11, fontWeight: 600, color: "#374151", background: "#F0EAE0", padding: "8px 10px", borderRadius: 6, cursor: "pointer", whiteSpace: "nowrap" },
-    removeNoteBtn: { background: "none", border: "none", color: "#D8493F", fontSize: 14, fontWeight: 700, cursor: "pointer" },
-    addNoteBtn: { marginTop: 8, background: "none", border: "none", color: "#7A73D8", fontSize: 12, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" },
+    noteFileBtn: { fontSize: 11, fontWeight: 600, color: "#374151", background: "#eeeff1", padding: "8px 10px", borderRadius: 6, cursor: "pointer", whiteSpace: "nowrap" },
+    removeNoteBtn: { background: "none", border: "none", color: "#F64515", fontSize: 14, fontWeight: 700, cursor: "pointer" },
+    addNoteBtn: { marginTop: 8, background: "none", border: "none", color: "#165ee7", fontSize: 12, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" },
 };
