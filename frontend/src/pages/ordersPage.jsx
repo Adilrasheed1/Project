@@ -107,6 +107,7 @@ export default function OrdersPage() {
               onClick={() => {
                 if (item.page === "courses") navigate("/courses");
                 if (item.page === "dashboard") navigate("/dashboard");
+                if (item.page === "tests") navigate("/testdashboard");
               }}
             >
               <span style={s.sideIcon}>{item.icon}</span>

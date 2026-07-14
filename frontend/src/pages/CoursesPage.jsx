@@ -159,6 +159,8 @@ export  function CoursesPage() {
                 if (item.page === "orders") navigate("/orders");
 
                 if (item.page === "doubts") navigate("/DoubtSection");
+
+                if (item.page === "tests") navigate("/testdashboard");
               }}
             >
               <span style={s.sideIcon}>{item.icon}</span>
