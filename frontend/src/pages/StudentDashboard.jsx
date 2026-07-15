@@ -1,21 +1,12 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import SharedSidebar from "../components/SharedSidebar";
 import {
-  LayoutGrid,
   BookOpen,
-  ShoppingBag,
-  FileText,
   User,
   Trophy,
   ClipboardList,
 } from "lucide-react";
-
-const sidebarItems = [
-  { icon: LayoutGrid, label: "Dashboard", page: "dashboard" },
-  { icon: BookOpen, label: "My Courses", page: "courses" },
-  { icon: ShoppingBag, label: "Order History", page: "orders" },
-  { icon: FileText, label: "Tests", page: "tests" },
-];
 
 export default function StudentDashboard() {
   const navigate = useNavigate();
@@ -66,20 +57,20 @@ export default function StudentDashboard() {
         html, body, #root { width:100%; min-height:100vh; }
         body { font-family: ui-sans-serif, system-ui, Arial, sans-serif; background:#ffffff; }
 
+        .app-main::-webkit-scrollbar,
+        .app-rightPanel::-webkit-scrollbar {
+          display: none;
+        }
+        .app-main,
+        .app-rightPanel {
+          scrollbar-width: none;
+          -ms-overflow-style: none;
+        }
+
         @media (max-width: 900px) {
           .app-shell { flex-direction: column !important; }
-          .app-sidebar {
-            position: fixed !important; bottom: 0 !important; left: 0 !important; right: 0 !important; top: auto !important;
-            width: 100% !important; height: 64px !important; min-height: 64px !important;
-            flex-direction: row !important; padding: 0 !important; border-right: none !important;
-            border-top: 1px solid #dfe3e6; z-index: 200 !important;
-          }
-          .app-logoBox { display: none !important; }
-          .app-sideNav { flex-direction: row !important; width: 100% !important; height: 100% !important; justify-content: space-around !important; }
-          .app-sideItem { padding: 6px 4px !important; border-radius: 0 !important; flex: 1 !important; }
-          .app-sideBottom { display: none !important; }
           .app-main { padding: 16px 14px 84px !important; width: 100% !important; order: 2 !important; }
-          .app-rightPanel { width: 100% !important; border-left: none !important; border-bottom: 1px solid #dfe3e6; min-height: auto !important; order: 1 !important; }
+          .app-rightPanel { width: 100% !important; min-height: auto !important; height: auto !important; border-left: none !important; border-bottom: 1px solid #e3e6e9; order: 1 !important; }
           .app-statsGrid { grid-template-columns: repeat(2, 1fr) !important; }
           .app-courseGrid { grid-template-columns: 1fr !important; }
           .app-topRow { flex-direction: column !important; align-items: flex-start !important; gap: 12px !important; }
@@ -91,56 +82,7 @@ export default function StudentDashboard() {
       `}</style>
 
       {/* SIDEBAR */}
-      <div style={s.sidebar} className="app-sidebar">
-        <div style={s.sidebarInner}>
-          <div style={s.sideNav} className="app-sideNav">
-            {sidebarItems.map((item) => {
-              const Icon = item.icon;
-              const active = item.page === "dashboard";
-              return (
-                <div
-                  key={item.page}
-                  className="app-sideItem"
-                  style={s.sideItem}
-                  onClick={() => {
-                    if (item.page === "courses") navigate("/courses");
-                    if (item.page === "orders") navigate("/orders");
-                    if (item.page === "tests") navigate("/testdashboard");
-                  }}
-                >
-                  <div
-                    style={{
-                      ...s.sideIconCircle,
-                      background: active ? "#F64515" : "white",
-                      color: active ? "white" : "#1A1A1A",
-                    }}
-                  >
-                    <Icon size={20} />
-                  </div>
-                  <span
-                    style={{
-                      ...s.sideLabel,
-                      color: active ? "#F64515" : "#666",
-                    }}
-                  >
-                    {item.label}
-                  </span>
-                </div>
-              );
-            })}
-          </div>
-          <div
-            style={{ ...s.sideItem, cursor: "pointer" }}
-            className="app-sideBottom"
-            onClick={() => navigate("/student-profile")}
-          >
-            <div style={s.sideIconCircle}>
-              <User size={20} />
-            </div>
-            <span style={s.sideLabel}>Profile</span>
-          </div>
-        </div>
-      </div>
+      <SharedSidebar activePage="dashboard" />
 
       {/* MAIN */}
       <div style={s.main} className="app-main">
@@ -299,14 +241,8 @@ export default function StudentDashboard() {
 }
 
 const s = {
-  shell: { display: "flex", minHeight: "100vh", width: "100%", background: "#ffffff" },
-  sidebar: { width: 110, minHeight: "100vh", background: "transparent", display: "flex", alignItems: "center", justifyContent: "center", padding: "24px 0", flexShrink: 0 },
-  sidebarInner: { background: "#eeeff1", height: "100%", width: "100%", marginLeft: 12, borderRadius: 16, boxShadow: "0 8px 24px rgba(0,0,0,0.08)", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "space-evenly", padding: 16 },
-  sideNav: { display: "flex", flexDirection: "column", alignItems: "center", gap: 6, width: "100%", flex: 1, justifyContent: "center" },
-  sideItem: { width: "100%", display: "flex", flexDirection: "column", alignItems: "center", padding: "10px 4px", cursor: "pointer" },
-  sideIconCircle: { width: 48, height: 48, borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", background: "white", boxShadow: "0 2px 6px rgba(0,0,0,0.12)", marginBottom: 4 },
-  sideLabel: { fontSize: 12, color: "#666", textAlign: "center", fontWeight: 600 },
-  main: { flex: 1, padding: "36px 32px", minWidth: 0 },
+  shell: { display: "flex", height: "100vh", width: "100%", overflow: "hidden", background: "#ffffff" },
+  main: { flex: 1, padding: "36px 32px", minWidth: 0, height: "100vh", overflowY: "auto" },
   topRow: { display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 28 },
   pageTitle: { fontSize: 26, fontWeight: 800, color: "#1A1A1A", letterSpacing: -0.5 },
   pageSub: { fontSize: 14, color: "#888", marginTop: 4 },
@@ -334,7 +270,7 @@ const s = {
   activityIcon: { width: 36, height: 36, borderRadius: 10, background: "#eeeff1", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, color: "#F64515" },
   activityText: { fontSize: 13, fontWeight: 600, color: "#1A1A1A", marginBottom: 3 },
   activityTime: { fontSize: 11, color: "#AAA" },
-  rightPanel: { width: 260, background: "#eeeff1", padding: "24px 16px", flexShrink: 0 },
+  rightPanel: { width: 260, height: "100vh", overflowY: "auto", background: "#eeeff1", padding: "24px 16px", flexShrink: 0 },
   profileCard: { background: "white", borderRadius: 14, padding: "20px", textAlign: "center", marginBottom: 20, border: "1px solid #e3e6e9" },
   profileAvatar: { width: 60, height: 60, borderRadius: "50%", background: "#eeeff1", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 10px", color: "#1A1A1A" },
   profileName: { fontSize: 15, fontWeight: 700, color: "#1A1A1A", marginBottom: 2 },
