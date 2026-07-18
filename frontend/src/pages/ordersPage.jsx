@@ -1,29 +1,18 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import SharedSidebar from "../components/SharedSidebar";
-import { Star, User, Headphones } from "lucide-react";
+import StudentRightPanel from "../components/StudentRightPanel";
+import { Star, Headphones } from "lucide-react";
 
 export default function OrdersPage() {
   const navigate = useNavigate();
 
   const [orders, setOrders] = useState([]);
-  const [myCourses, setMyCourses] = useState([]);
 
   const token = localStorage.getItem("token");
 
-  // Safe parsing fallback for user info
-  const user = (() => {
-    try {
-      const u = localStorage.getItem("user");
-      return u ? JSON.parse(u) : null;
-    } catch {
-      return null;
-    }
-  })();
-
   useEffect(() => {
     loadOrders();
-    loadMyCourses();
   }, []);
 
   async function loadOrders() {
@@ -36,21 +25,6 @@ export default function OrdersPage() {
 
       const data = await res.json();
       setOrders(Array.isArray(data) ? data : []);
-    } catch (err) {
-      console.log(err);
-    }
-  }
-
-  async function loadMyCourses() {
-    try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/courses/my`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      const data = await res.json();
-      setMyCourses(Array.isArray(data) ? data : []);
     } catch (err) {
       console.log(err);
     }
@@ -154,38 +128,7 @@ export default function OrdersPage() {
         </div>
       </div>
 
-      {/* ── RIGHT MINI PANEL ── */}
-      <div style={s.rightPanel} className="app-rightPanel">
-        <div style={s.profileBox}>
-          <div style={s.profileAvatar}><User size={26} /></div>
-          <p style={s.profileName}>WELCOME, {user?.firstName ? user.firstName.toUpperCase() : "STUDENT"}</p>
-        </div>
-        <div style={s.panelHeader}>
-          <span style={s.panelLabel}>MY COURSES</span>
-          <span
-            style={{ ...s.panelLabel, cursor: "pointer", textDecoration: "underline" }}
-            onClick={() => navigate("/dashboard")}
-          >
-            VISIT DASHBOARD
-          </span>
-        </div>
-        <div style={s.myCoursesList}>
-          {myCourses.map((item) => {
-            const c = item?.course;
-            if (!c) return null; // Safe guard loop skip
-
-            return (
-              <div key={c._id} style={{ ...s.myCourseCard, background: c.color || "#9fd200" }} onClick={() => navigate("/lecture")}>
-                <div style={s.cardTop}>
-                  <span style={s.cardSubj}><i style={{ fontSize: 10 }}>ƒ(x)</i> {c.subject || "General"}</span>
-                  <span style={s.cardRating}><Star size={10} fill="#222" /> {c.rating || 0}</span>
-                </div>
-                <p style={{ ...s.cardTitle, fontSize: 12 }}>{c.title || "Untitled Course"}</p>
-              </div>
-            );
-          })}
-        </div>
-      </div>
+      <StudentRightPanel />
     </div>
   );
 }
@@ -208,12 +151,4 @@ const s = {
   helpBox: { background: "#eeeff1", borderRadius: 16, padding: "28px 36px", display: "flex", alignItems: "center", gap: 24 },
   helpText: { fontSize: 14, fontWeight: 700, color: "#333", lineHeight: 1.5, textTransform: "uppercase" },
   helpBtn: { background: "#F64515", color: "white", border: "none", borderRadius: 100, padding: "12px 32px", fontSize: 14, fontWeight: 700, cursor: "pointer", fontFamily: "inherit", flexShrink: 0 },
-  rightPanel: { width: 240, height: "100vh", overflowY: "auto", background: "#eeeff1", padding: "20px 14px", flexShrink: 0 },
-  profileBox: { display: "flex", flexDirection: "column", alignItems: "center", marginBottom: 20 },
-  profileAvatar: { width: 64, height: 64, borderRadius: "50%", background: "white", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 8, boxShadow: "0 2px 6px rgba(0,0,0,0.12)", color: "#1A1A1A" },
-  profileName: { fontSize: 11, fontWeight: 700, color: "#444", letterSpacing: 0.5 },
-  panelHeader: { display: "flex", justifyContent: "space-between", marginBottom: 12 },
-  panelLabel: { fontSize: 9, fontWeight: 700, color: "#888", letterSpacing: "0.08em" },
-  myCoursesList: { display: "flex", flexDirection: "column", gap: 10 },
-  myCourseCard: { borderRadius: 12, padding: "12px 12px 10px", color: "white", cursor: "pointer" },
 };

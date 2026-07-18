@@ -1,5 +1,19 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import {
+  ArrowLeft,
+  Star,
+  Users,
+  Clock,
+  BarChart3,
+  Lock,
+  User,
+  FileText,
+  Smartphone,
+  Award,
+  Video,
+  Check,
+} from "lucide-react";
 
 export default function CourseDetail() {
   const navigate = useNavigate();
@@ -69,7 +83,10 @@ export default function CourseDetail() {
         <h2 style={{ marginBottom: 12 }}>Course not found.</h2>
         <button
           style={{
-            background: "#4FB88A",
+            display: "inline-flex",
+            alignItems: "center",
+            gap: 8,
+            background: "#165ee7",
             color: "white",
             border: "none",
             borderRadius: 8,
@@ -80,7 +97,7 @@ export default function CourseDetail() {
           }}
           onClick={() => navigate("/courses")}
         >
-          ← Back to Courses
+          <ArrowLeft size={16} /> Back to Courses
         </button>
       </div>
     );
@@ -88,12 +105,17 @@ export default function CourseDetail() {
 
   if (!course) return <h2 style={{ padding: "50px" }}>Loading...</h2>;
 
+  // Single accent color for the whole page, taken from the course's own
+  // card color. Every branded/interactive element (logo, links, checkmarks,
+  // Buy Now) uses this, so nothing clashes with the hero banner above it.
+  const accent = course.color || "#165ee7";
+
   return (
     <div style={s.shell}>
       <style>{`
         * { box-sizing:border-box; margin:0; padding:0; }
         html,body,#root { width:100%; min-height:100vh; overflow-x: hidden; }
-        body { font-family:'Segoe UI',Arial,sans-serif; background:#F7F4EE; }
+        body { font-family:ui-sans-serif,system-ui,Arial,sans-serif; background:#eeeff1; }
 
         @media (max-width: 900px) {
           .cd-nav { padding: 0 16px !important; }
@@ -108,18 +130,18 @@ export default function CourseDetail() {
       `}</style>
 
       <div style={s.nav} className="cd-nav">
-        <span style={s.navLogo}>TutorConnect</span>
+        <span style={{ ...s.navLogo, color: accent }}>TutorConnect</span>
         <div style={s.navLinks} className="cd-navLinks">
-          <button style={s.navLink} onClick={() => navigate("/courses")}>
-            ← Back to Courses
+          <button style={{ ...s.navLink, color: accent }} onClick={() => navigate("/courses")}>
+            <ArrowLeft size={15} /> Back to Courses
           </button>
         </div>
-        <button style={s.navBtn} onClick={() => navigate("/courses")}>
+        <button style={{ ...s.navBtn, background: accent }} onClick={() => navigate("/courses")}>
           My Learning
         </button>
       </div>
 
-      <div style={{ ...s.heroBanner, background: course.color || "#4FB88A" }}>
+      <div style={{ ...s.heroBanner, background: accent }}>
         <div style={s.heroInner} className="cd-heroInner">
           <span style={s.heroTag}>{course.subject}</span>
           <h1 style={s.heroTitle} className="cd-heroTitle">{course.title}</h1>
@@ -127,10 +149,10 @@ export default function CourseDetail() {
             {course.description ? course.description.slice(0, 120) : ""}...
           </p>
           <div style={s.heroMeta} className="cd-heroMeta">
-            <span style={s.metaItem}>⭐ {course.rating || 0} ({course.reviews || 0} reviews)</span>
-            <span style={s.metaItem}>👥 {(course.students || 0).toLocaleString()} students</span>
-            <span style={s.metaItem}>⏱ {course.duration || "Not Specified"}</span>
-            <span style={s.metaItem}>📊 {course.level || "Beginner"}</span>
+            <span style={s.metaItem}><Star size={14} fill="white" /> {course.rating || 0} ({course.reviews || 0} reviews)</span>
+            <span style={s.metaItem}><Users size={14} /> {(course.students || 0).toLocaleString()} students</span>
+            <span style={s.metaItem}><Clock size={14} /> {course.duration || "Not Specified"}</span>
+            <span style={s.metaItem}><BarChart3 size={14} /> {course.level || "Beginner"}</span>
           </div>
           <p style={s.heroTutor}>
             Created by <b>{course.tutor}</b>
@@ -145,7 +167,7 @@ export default function CourseDetail() {
             <div style={s.learnGrid} className="cd-learnGrid">
               {(course.whatYouLearn || []).map((item, i) => (
                 <div key={i} style={s.learnItem}>
-                  <span style={s.checkIcon}>✓</span>
+                  <Check size={16} strokeWidth={3} color={accent} style={{ flexShrink: 0, marginTop: 2 }} />
                   <span style={s.learnText}>{item}</span>
                 </div>
               ))}
@@ -171,7 +193,7 @@ export default function CourseDetail() {
                       </p>
                     </div>
                   </div>
-                  <span style={s.curriculumLock}>🔒</span>
+                  <Lock size={15} color="#999" />
                 </div>
               ))}
             </div>
@@ -180,13 +202,13 @@ export default function CourseDetail() {
           <div style={s.card}>
             <h2 style={s.cardTitle}>Your Tutor</h2>
             <div style={s.tutorRow}>
-              <div style={s.tutorAvatar}>👤</div>
+              <div style={s.tutorAvatar}><User size={30} color="#888" /></div>
               <div>
                 <p style={s.tutorName}>{course.tutor}</p>
                 <p style={s.tutorSubject}>{course.subject} Specialist</p>
                 <div style={s.tutorStats}>
-                  <span style={s.tStat}>⭐ {course.rating || 0} Rating</span>
-                  <span style={s.tStat}>👥 {course.students || 0} Students</span>
+                  <span style={s.tStat}><Star size={13} /> {course.rating || 0} Rating</span>
+                  <span style={s.tStat}><Users size={13} /> {course.students || 0} Students</span>
                 </div>
                 <p style={s.tutorBio}>
                   Learn step by step with a structured course designed to make
@@ -209,11 +231,11 @@ export default function CourseDetail() {
             </div>
 
             {alreadyPurchased ? (
-              <button style={{ ...s.buyBtn, opacity: 0.8, cursor: "default" }} disabled>
+              <button style={{ ...s.buyBtn, background: accent, opacity: 0.8, cursor: "default" }} disabled>
                 Already Purchased
               </button>
             ) : (
-              <button style={s.buyBtn} onClick={() => navigate(`/payment/${course._id}`)}>
+              <button style={{ ...s.buyBtn, background: accent }} onClick={() => navigate(`/payment/${course._id}`)}>
                 Buy Now
               </button>
             )}
@@ -223,14 +245,19 @@ export default function CourseDetail() {
             <div style={s.includes}>
               <p style={s.includesTitle}>This course includes:</p>
               {[
-                `⏱ ${course.duration || "Not Specified"} of video content`,
-                `📄 ${course.notes ? course.notes.length : 0} Notes`,
-                "📱 Access on mobile & desktop",
-                "🏆 Certificate of completion",
-                `🎥 ${course.lectures ? course.lectures.length : 0} Video Lectures`,
-              ].map((item, i) => (
-                <p key={i} style={s.includeItem}>{item}</p>
-              ))}
+                { icon: Clock, text: `${course.duration || "Not Specified"} of video content` },
+                { icon: FileText, text: `${course.notes ? course.notes.length : 0} Notes` },
+                { icon: Smartphone, text: "Access on mobile & desktop" },
+                { icon: Award, text: "Certificate of completion" },
+                { icon: Video, text: `${course.lectures ? course.lectures.length : 0} Video Lectures` },
+              ].map((item, i) => {
+                const Icon = item.icon;
+                return (
+                  <p key={i} style={s.includeItem}>
+                    <Icon size={14} color="#666" style={{ flexShrink: 0 }} /> {item.text}
+                  </p>
+                );
+              })}
             </div>
           </div>
         </div>
@@ -240,11 +267,11 @@ export default function CourseDetail() {
 }
 
 const s = {
-  shell: { minHeight: "100vh", width: "100%", background: "#F7F4EE" },
+  shell: { minHeight: "100vh", width: "100%", background: "#eeeff1" },
   nav: {
     width: "100%",
     background: "white",
-    borderBottom: "1px solid #E8E2D8",
+    borderBottom: "1px solid #eeeff1",
     padding: "0 40px",
     height: 62,
     display: "flex",
@@ -254,19 +281,20 @@ const s = {
     top: 0,
     zIndex: 100,
   },
-  navLogo: { fontWeight: 800, fontSize: 20, color: "#4FB88A" },
+  navLogo: { fontWeight: 800, fontSize: 20 },
   navLinks: { display: "flex", gap: 24 },
   navLink: {
+    display: "flex",
+    alignItems: "center",
+    gap: 6,
     background: "none",
     border: "none",
     fontSize: 14,
     fontWeight: 600,
-    color: "#4FB88A",
     cursor: "pointer",
     fontFamily: "inherit",
   },
   navBtn: {
-    background: "#4FB88A",
     color: "white",
     border: "none",
     borderRadius: 8,
@@ -290,7 +318,7 @@ const s = {
   heroTitle: { fontSize: 30, fontWeight: 800, lineHeight: 1.2, marginBottom: 14 },
   heroSub: { fontSize: 15, opacity: 0.9, lineHeight: 1.6, marginBottom: 18 },
   heroMeta: { display: "flex", gap: 20, flexWrap: "wrap", marginBottom: 12 },
-  metaItem: { fontSize: 13, fontWeight: 600, opacity: 0.95 },
+  metaItem: { display: "flex", alignItems: "center", gap: 6, fontSize: 13, fontWeight: 600, opacity: 0.95 },
   heroTutor: { fontSize: 13, opacity: 0.85 },
   body: {
     display: "flex",
@@ -301,11 +329,10 @@ const s = {
     alignItems: "flex-start",
   },
   leftCol: { flex: 1, display: "flex", flexDirection: "column", gap: 20, minWidth: 0 },
-  card: { background: "white", borderRadius: 16, padding: "28px", border: "1px solid #E8E2D8" },
+  card: { background: "white", borderRadius: 16, padding: "28px", border: "1px solid #eeeff1" },
   cardTitle: { fontSize: 20, fontWeight: 700, color: "#1A1A1A", marginBottom: 18 },
   learnGrid: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 },
   learnItem: { display: "flex", gap: 10, alignItems: "flex-start" },
-  checkIcon: { color: "#4FB88A", fontWeight: 800, fontSize: 15, flexShrink: 0 },
   learnText: { fontSize: 14, color: "#333", lineHeight: 1.5 },
   curriculumSub: { fontSize: 13, color: "#888", marginBottom: 16 },
   curriculumList: { display: "flex", flexDirection: "column" },
@@ -314,14 +341,14 @@ const s = {
     justifyContent: "space-between",
     alignItems: "center",
     padding: "14px 0",
-    borderBottom: "1px solid #F0EAE0",
+    borderBottom: "1px solid #eeeff1",
   },
   curriculumLeft: { display: "flex", alignItems: "center", gap: 14 },
   curriculumNum: {
     width: 28,
     height: 28,
     borderRadius: "50%",
-    background: "#F0EAE0",
+    background: "#eeeff1",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
@@ -332,30 +359,28 @@ const s = {
   },
   curriculumTitle: { fontSize: 14, fontWeight: 600, color: "#1A1A1A", marginBottom: 3 },
   curriculumMeta: { fontSize: 12, color: "#888" },
-  curriculumLock: { fontSize: 16 },
   tutorRow: { display: "flex", gap: 20, alignItems: "flex-start" },
   tutorAvatar: {
     width: 70,
     height: 70,
     borderRadius: "50%",
-    background: "#EDE6DC",
+    background: "#eeeff1",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    fontSize: 32,
     flexShrink: 0,
   },
   tutorName: { fontSize: 17, fontWeight: 700, color: "#1A1A1A", marginBottom: 3 },
   tutorSubject: { fontSize: 13, color: "#888", marginBottom: 10 },
   tutorStats: { display: "flex", gap: 16, marginBottom: 12 },
-  tStat: { fontSize: 12, fontWeight: 600, color: "#555" },
+  tStat: { display: "flex", alignItems: "center", gap: 5, fontSize: 12, fontWeight: 600, color: "#555" },
   tutorBio: { fontSize: 13, color: "#555", lineHeight: 1.6 },
   priceCard: {
     width: 300,
     flexShrink: 0,
     background: "white",
     borderRadius: 16,
-    border: "1px solid #E8E2D8",
+    border: "1px solid #eeeff1",
     overflow: "hidden",
     position: "sticky",
     top: 80,
@@ -367,7 +392,6 @@ const s = {
   buyBtn: {
     width: "100%",
     padding: "13px",
-    background: "#4FB88A",
     color: "white",
     border: "none",
     borderRadius: 8,
@@ -378,7 +402,7 @@ const s = {
     fontFamily: "inherit",
   },
   guarantee: { textAlign: "center", fontSize: 12, color: "#888", marginBottom: 16 },
-  includes: { borderTop: "1px solid #F0EAE0", paddingTop: 14 },
+  includes: { borderTop: "1px solid #eeeff1", paddingTop: 14 },
   includesTitle: { fontSize: 13, fontWeight: 700, color: "#1A1A1A", marginBottom: 10 },
-  includeItem: { fontSize: 13, color: "#555", marginBottom: 7, lineHeight: 1.5 },
+  includeItem: { display: "flex", alignItems: "center", gap: 8, fontSize: 13, color: "#555", marginBottom: 7, lineHeight: 1.5 },
 };

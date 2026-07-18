@@ -19,9 +19,38 @@ import PaymentPage from "./pages/PaymentPage";
 import ForgotPassword from "./pages/ForgotPassword";
 import StudentProfile from "./pages/StudentProfile";
 import TestsPage from "./pages/TestsPage";
+
+import SharedSidebar from "./components/SharedSidebar";
+import StudentRightPanel from "./components/StudentRightPanel";
+
 function DoubtSectionPage() {
   const [inCall, setInCall] = useState(false);
-  return <DoubtSection setInCall={setInCall} inCall={inCall} />;
+ return (
+    <div style={{ display: "flex", height: "100vh", width: "100%", overflow: "hidden", background: "#ffffff" }} className="app-shell">
+        <style>{`
+          .app-main::-webkit-scrollbar,
+          .app-rightPanel::-webkit-scrollbar {
+            display: none;
+          }
+          .app-main,
+          .app-rightPanel {
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+          }
+        `}</style>
+
+      <SharedSidebar activePage="doubts" />
+
+      <div
+        style={{ flex: 1, minWidth: 0, height: "100vh", overflowY: "auto" }}
+        className="app-main"
+      >
+        <DoubtSection setInCall={setInCall} inCall={inCall} />
+      </div>
+
+      <StudentRightPanel />
+    </div>
+  );
 }
 
 

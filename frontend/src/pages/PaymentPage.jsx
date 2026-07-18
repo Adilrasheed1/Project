@@ -122,7 +122,7 @@ export default function PaymentPage() {
       <style>{`
         * { box-sizing:border-box; margin:0; padding:0; }
         html,body,#root { width:100%; min-height:100vh; }
-        body { font-family:'Segoe UI',Arial,sans-serif; background:#F7F4EE; }
+        body { font-family:ui-sans-serif,system-ui,Arial,sans-serif; background:#eeeff1; }
       `}</style>
 
       <div style={s.nav}>
@@ -156,10 +156,10 @@ export default function PaymentPage() {
                     ...s.methodBtn,
                     border:
                       method === m.key
-                        ? "2px solid #4FB88A"
-                        : "1.5px solid #E0E4EA",
-                    background: method === m.key ? "#F0FBF6" : "white",
-                    color: method === m.key ? "#4FB88A" : "#444",
+                        ? "2px solid #165ee7"
+                        : "1.5px solid #dfe3e6",
+                    background: method === m.key ? "#E4EEFD" : "white",
+                    color: method === m.key ? "#165ee7" : "#444",
                   }}
                 >
                   {m.label}
@@ -263,7 +263,7 @@ export default function PaymentPage() {
             <h3 style={s.cardTitle}>Order Summary</h3>
 
             <div style={s.courseRow}>
-              <div style={{ ...s.courseThumb, background: course.color || "#4FB88A" }}>
+              <div style={{ ...s.courseThumb, background: course.color || "#165ee7" }}>
                 <span style={s.thumbText}>{course.subject?.charAt(0) || "C"}</span>
               </div>
 
@@ -331,8 +331,8 @@ function Input(props) {
     <input
       {...props}
       style={inputStyle}
-      onFocus={(e) => (e.target.style.borderColor = "#4FB88A")}
-      onBlur={(e) => (e.target.style.borderColor = "#E0E4EA")}
+      onFocus={(e) => (e.target.style.borderColor = "#165ee7")}
+      onBlur={(e) => (e.target.style.borderColor = "#dfe3e6")}
     />
   );
 }
@@ -341,7 +341,7 @@ const inputStyle = {
   width: "100%",
   padding: "11px 14px",
   borderRadius: 8,
-  border: "1.5px solid #E0E4EA",
+  border: "1.5px solid #dfe3e6",
   fontSize: 14,
   color: "#111",
   background: "#FAFBFC",
@@ -350,27 +350,27 @@ const inputStyle = {
 };
 
 const s = {
-  shell: { minHeight: "100vh", width: "100%", background: "#F7F4EE" },
+  shell: { minHeight: "100vh", width: "100%", background: "#eeeff1" },
   center: {
     minHeight: "100vh",
-    background: "#F7F4EE",
+    background: "#eeeff1",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    fontFamily: "'Segoe UI',Arial,sans-serif",
+    fontFamily: "ui-sans-serif,system-ui,Arial,sans-serif",
     padding: 20,
   },
   nav: {
     width: "100%",
     background: "white",
-    borderBottom: "1px solid #E8E2D8",
+    borderBottom: "1px solid #eeeff1",
     padding: "0 40px",
     height: 62,
     display: "flex",
     alignItems: "center",
     justifyContent: "space-between",
   },
-  navLogo: { fontWeight: 800, fontSize: 20, color: "#4FB88A" },
+  navLogo: { fontWeight: 800, fontSize: 20, color: "#165ee7" },
   navSafe: { fontSize: 13, fontWeight: 600, color: "#888" },
   body: {
     display: "flex",
@@ -401,7 +401,7 @@ const s = {
     background: "white",
     borderRadius: 16,
     padding: "24px",
-    border: "1px solid #E8E2D8",
+    border: "1px solid #eeeff1",
   },
   cardTitle: {
     fontSize: 17,
@@ -436,7 +436,7 @@ const s = {
     background: "white",
     borderRadius: 16,
     padding: "24px",
-    border: "1px solid #E8E2D8",
+    border: "1px solid #eeeff1",
     position: "sticky",
     top: 24,
   },
@@ -470,7 +470,7 @@ const s = {
   courseTutor: { fontSize: 12, color: "#888" },
   divider: {
     height: 1,
-    background: "#F0EAE0",
+    background: "#eeeff1",
     margin: "14px 0",
   },
   priceLines: {
@@ -488,7 +488,7 @@ const s = {
   payBtn: {
     width: "100%",
     padding: "14px",
-    background: "#4FB88A",
+    background: "#F64515",
     color: "white",
     border: "none",
     borderRadius: 8,
@@ -514,15 +514,15 @@ const s = {
     padding: "56px 48px",
     textAlign: "center",
     maxWidth: 440,
-    border: "1px solid #E8E2D8",
+    border: "1px solid #eeeff1",
     boxShadow: "0 8px 30px rgba(0,0,0,0.08)",
   },
   successIcon: {
     width: 72,
     height: 72,
     borderRadius: "50%",
-    background: "#E3F5EC",
-    color: "#4FB88A",
+    background: "#F0FBE0",
+    color: "#7CAA00",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",

@@ -198,9 +198,9 @@ const s = {
   page: {
     minHeight: "100vh",
     width: "100%",
-    background: "#f5f7fb",
-    color: "#172033",
-    fontFamily: "'Segoe UI', Arial, sans-serif",
+    background: "#eeeff1",
+    color: "#1A1A1A",
+    fontFamily: "ui-sans-serif, system-ui, Arial, sans-serif",
     boxSizing: "border-box",
   },
   container: {
@@ -217,9 +217,10 @@ const s = {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    background: "#f5f7fb",
+    background: "#eeeff1",
     fontSize: 22,
     fontWeight: 700,
+    color: "#1A1A1A",
   },
 
   header: {
@@ -232,7 +233,7 @@ const s = {
   },
 
   backBtn: {
-    background: "#1f7a68",
+    background: "#165ee7",
     color: "#fff",
     border: "none",
     padding: "12px 18px",
@@ -246,12 +247,12 @@ const s = {
     lineHeight: 1.1,
     fontWeight: 800,
     margin: 0,
-    color: "#172033",
+    color: "#1A1A1A",
     textAlign: "center",
   },
 
   subtitle: {
-    color: "#64857c",
+    color: "#777",
     fontSize: 15,
     margin: "8px 0 0",
   },
@@ -265,11 +266,11 @@ const s = {
 
   profileCard: {
     background: "#fff",
-    border: "1px solid #e4e8f0",
+    border: "1px solid #eeeff1",
     borderRadius: 8,
     padding: 28,
     textAlign: "center",
-    boxShadow: "0 14px 36px rgba(22, 32, 51, .08)",
+    boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
     boxSizing: "border-box",
   },
 
@@ -277,8 +278,8 @@ const s = {
     width: 112,
     height: 112,
     borderRadius: "50%",
-    background: "#1f7a68",
-    color: "#172033",
+    background: "#165ee7",
+    color: "#fff",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
@@ -290,13 +291,13 @@ const s = {
   name: {
     margin: "18px 0 0",
     fontSize: 23,
-    color: "#172033",
+    color: "#1A1A1A",
     lineHeight: 1.25,
     fontWeight: 800,
   },
 
   email: {
-    color: "#647085",
+    color: "#777",
     margin: "8px 0 18px",
     wordBreak: "break-word",
     fontSize: 14,
@@ -304,8 +305,8 @@ const s = {
 
   badge: {
     display: "inline-flex",
-    background: "#e7f5ef",
-    color: "#1f7a68",
+    background: "#E4EEFD",
+    color: "#165ee7",
     padding: "7px 18px",
     borderRadius: 999,
     fontWeight: 800,
@@ -314,10 +315,10 @@ const s = {
 
   formCard: {
     background: "#fff",
-    border: "1px solid #e4e8f0",
+    border: "1px solid #eeeff1",
     borderRadius: 8,
     padding: "28px clamp(18px, 3vw, 34px)",
-    boxShadow: "0 14px 36px rgba(22, 32, 51, .08)",
+    boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
     boxSizing: "border-box",
     minWidth: 0,
   },
@@ -325,13 +326,14 @@ const s = {
   sectionBlock: {
     paddingBottom: 28,
     marginBottom: 28,
-    borderBottom: "1px solid #edf0f5",
+    borderBottom: "1px solid #eeeff1",
   },
 
   sectionTitle: {
     fontSize: 19,
     fontWeight: 800,
     margin: "0 0 18px",
+    color: "#1A1A1A",
   },
 
   grid: {
@@ -353,7 +355,7 @@ const s = {
     display: "block",
     marginBottom: 8,
     fontWeight: 700,
-    color: "#3e4859",
+    color: "#444",
     fontSize: 14,
   },
 
@@ -362,8 +364,8 @@ const s = {
     minHeight: 46,
     padding: "12px 14px",
     borderRadius: 8,
-    border: "1px solid #cfd6e2",
-    color: "#172033",
+    border: "1px solid #dfe3e6",
+    color: "#1A1A1A",
     fontSize: 15,
     outline: "none",
     background: "#fff",
@@ -380,8 +382,8 @@ const s = {
   cancelBtn: {
     minHeight: 46,
     padding: "12px 24px",
-    background: "#eef1f6",
-    color: "#3e4859",
+    background: "#eeeff1",
+    color: "#444",
     border: "none",
     borderRadius: 8,
     cursor: "pointer",
@@ -392,7 +394,7 @@ const s = {
   saveBtn: {
     minHeight: 46,
     padding: "12px 28px",
-    background: "#1f7a68",
+    background: "#F64515",
     color: "#fff",
     border: "none",
     borderRadius: 8,

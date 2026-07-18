@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import SharedSidebar from "../components/SharedSidebar";
-import { Star, User } from "lucide-react";
+import StudentRightPanel from "../components/StudentRightPanel";
+import { Star } from "lucide-react";
 
 const subjects = ["All", "Mathematics", "Physics", "Chemistry", "Biology", "English", "Computer Science"];
 
@@ -11,13 +12,15 @@ export function CoursesPage() {
 
   const [activeSubject, setActiveSubject] = useState("All");
   const [allCourses, setAllCourses] = useState([]);
+  // myCourses is still needed here — it drives the "Purchased" vs "Buy Now"
+  // state on each course card below. StudentRightPanel fetches its own
+  // separate copy for the sidebar list, which is fine — they're used for
+  // different things.
   const [myCourses, setMyCourses] = useState([]);
-  const [student, setStudent] = useState(null);
 
   useEffect(() => {
     loadCourses();
     loadMyCourses();
-    loadStudent();
   }, []);
 
   async function loadCourses() {
@@ -42,19 +45,6 @@ export function CoursesPage() {
       const data = await res.json();
       // Only keep records where the course relationship successfully loaded
       setMyCourses(Array.isArray(data) ? data.filter(item => item && item.course) : []);
-    } catch (err) {
-      console.log(err);
-    }
-  }
-
-  async function loadStudent() {
-    try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/student/profile`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      const data = await res.json();
-      setStudent(data);
     } catch (err) {
       console.log(err);
     }
@@ -184,61 +174,7 @@ export function CoursesPage() {
         </div>
       </div>
 
-      <div style={s.rightPanel} className="app-rightPanel">
-        <div style={s.profileBox}>
-          <div style={s.profileAvatar}>
-            {student?.firstName?.charAt(0).toUpperCase() || <User size={26} />}
-          </div>
-          <p style={s.profileName}>
-            WELCOME, {student?.firstName?.toUpperCase() || "STUDENT"}
-          </p>
-        </div>
-
-        <div style={s.panelHeader}>
-          <span style={s.panelLabel}>MY COURSES</span>
-          <span
-            style={{ ...s.panelLabel, cursor: "pointer", textDecoration: "underline" }}
-            onClick={() => navigate("/dashboard")}
-          >
-            VISIT DASHBOARD
-          </span>
-        </div>
-
-        <div style={s.myCoursesList}>
-          {myCourses.length === 0 ? (
-            <p style={{ textAlign: "center", color: "#777", marginTop: 20, fontSize: 13 }}>
-              No Purchased Courses
-            </p>
-          ) : (
-            myCourses.map((item) => {
-              const c = item?.course;
-              if (!c || !c._id) return null; // Safe guard: bypass broken relationships entirely
-
-              const progress = item.progress || 0;
-
-              return (
-                <div key={c._id} style={{ ...s.myCourseCard, background: c.color || "#9fd200" }}>
-                  <div style={s.cardTop}>
-                    <span style={s.cardSubj}>{c.subject || "General"}</span>
-                    <span style={s.cardRating}><Star size={11} fill="#222" /> {c.rating || 0}</span>
-                  </div>
-
-                  <p style={{ ...s.cardTitle, fontSize: 12, marginBottom: 8 }}>
-                    {c.title || "Untitled Course"}
-                  </p>
-
-                  <div style={s.progressRow}>
-                    <div style={s.progressBar}>
-                      <div style={{ ...s.progressFill, width: `${progress}%` }} />
-                    </div>
-                    <span style={s.progressText}>{progress}% COMPLETED</span>
-                  </div>
-                </div>
-              );
-            })
-          )}
-        </div>
-      </div>
+      <StudentRightPanel />
     </div>
   );
 }
@@ -251,7 +187,7 @@ const s = {
   pill: { display: "flex", alignItems: "center", gap: 8, padding: "8px 8px 8px 8px", borderRadius: 100, fontSize: 13, fontWeight: 700, cursor: "pointer", fontFamily: "inherit", flexShrink: 0 },
   pillIcon: { width: 24, height: 24, borderRadius: "50%", color: "white", fontSize: 12, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 700 },
   sectionLabel: { fontSize: 11, fontWeight: 700, color: "#999", letterSpacing: "0.1em", marginBottom: 16 },
- grid: { display: "grid", gridTemplateColumns: "repeat(3, minmax(0, 1fr))", gap: 16 },
+  grid: { display: "grid", gridTemplateColumns: "repeat(3, minmax(0, 1fr))", gap: 16 },
   card: { borderRadius: 16, padding: "18px 18px 14px", color: "white", cursor: "pointer", minHeight: 240, display: "flex", flexDirection: "column", justifyContent: "space-between" },
   cardTop: { display: "flex", justifyContent: "space-between", alignItems: "center", gap: 8, marginBottom: 10 },
   cardSubj: { background: "rgba(255,255,255,0.22)", padding: "4px 10px", borderRadius: 100, fontSize: 11, fontWeight: 700 },
@@ -259,16 +195,4 @@ const s = {
   cardTitle: { fontSize: 14, fontWeight: 800, lineHeight: 1.35, textTransform: "uppercase", flex: 1, margin: "8px 0" },
   cardTutor: { fontSize: 10, opacity: 0.85, fontWeight: 600, textTransform: "uppercase", letterSpacing: 0.5 },
   buyBtn: { marginTop: 14, border: "none", borderRadius: 8, padding: "10px", width: "100%", background: "white", color: "#111", fontWeight: 700, fontSize: 13 },
-  rightPanel: { width: 260, height: "100vh", overflowY: "auto", background: "#eeeff1", padding: "20px 16px", flexShrink: 0 },
-  profileBox: { display: "flex", flexDirection: "column", alignItems: "center", marginBottom: 20 },
-  profileAvatar: { width: 72, height: 72, borderRadius: "50%", background: "white", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 28, fontWeight: 700, color: "#1A1A1A", marginBottom: 8, boxShadow: "0 2px 6px rgba(0,0,0,0.12)" },
-  profileName: { fontSize: 12, fontWeight: 700, color: "#444", letterSpacing: 0.5 },
-  panelHeader: { display: "flex", justifyContent: "space-between", gap: 12, marginBottom: 12 },
-  panelLabel: { fontSize: 10, fontWeight: 700, color: "#888", letterSpacing: "0.08em" },
-  myCoursesList: { display: "flex", flexDirection: "column", gap: 12 },
-  myCourseCard: { borderRadius: 14, padding: "14px 14px 12px", color: "white", cursor: "default", userSelect: "none" },
-  progressRow: { display: "flex", alignItems: "center", gap: 8 },
-  progressBar: { flex: 1, height: 4, background: "rgba(255,255,255,0.3)", borderRadius: 2, overflow: "hidden" },
-  progressFill: { height: "100%", background: "white", borderRadius: 2 },
-  progressText: { fontSize: 9, fontWeight: 700, opacity: 0.9, whiteSpace: "nowrap" },
 };

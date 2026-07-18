@@ -134,7 +134,7 @@ export function DoubtForm({ setInCall }) {
     <>
       {/* ── Doubt form ── */}
       {!showVideo && (
-        <div className="min-h-screen bg-gray-100 flex items-start justify-center px-4 py-8">
+        <div className=" flex items-center justify-center p-4">
           <div className="bg-white rounded-2xl border border-gray-200 w-full max-w-lg p-6 shadow-sm">
 
             <h2 className="text-base font-medium text-gray-800 mb-1">Ask a doubt</h2>
