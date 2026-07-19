@@ -21,7 +21,7 @@ app.use("/api/teacher-courses", require("./routes/teacherCourses"));
 app.use("/api/courses", require("./routes/courses"));
 app.use("/api/student", require("./routes/student"));
 app.use("/api/orders", require("./routes/orders"));
-// app.use("/api/doubts", require("./routes/doubts"));
+app.use("/api/doubts", require("./routes/doubts"));
 app.use("/api/support", require("./routes/support"));
 // app.use("/api/admin", require("./routes/admin"));
 // app.use("/api/tutor", require("./routes/tutor"));

@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ShareScreen } from "../components/ShareScreen"; // adjust path if your components folder is elsewhere
+import { ShareScreen } from "../components/ShareScreen"; 
 import { TutorTestCompo } from "../components/TutorTestCompo";
+ import { TutorDoubtSection } from "./TutorDoubtSection";
 
 const sidebarItems = [
     { icon: "⊞", label: "Dashboard", page: "dashboard" },
@@ -80,7 +81,20 @@ export function TeacherDashboard() {
                 alert("Another tutor accepted this request.");
             }
 
-            if (msg.type === "incoming_request") { setIncomingCall(true); }
+            if (msg.type === "incoming_request") {
+                // Capture the doubt details sent along with the request so the
+                // modal below can show title / description / subject / attachment.
+                // If your backend isn't forwarding these fields yet in the
+                // "incoming_request" broadcast, add them there (mirror what the
+                // student sends in "request_tutor": title, description, subject, image).
+                setRequest({
+                    title: msg.title || "",
+                    description: msg.description || "",
+                    subject: msg.subject || "",
+                    image: msg.image || "",
+                });
+                setIncomingCall(true);
+            }
 
             if (msg.type === "iceCandidate" && msg.candidate) {
                 if (pcRef.current && pcRef.current.remoteDescription) {
@@ -160,6 +174,12 @@ export function TeacherDashboard() {
         setIncomingCall(false);
         setRequest(null);
         setInCall(true);
+    }
+
+    function reject() {
+        socket?.send(JSON.stringify({ type: "reject" }));
+        setIncomingCall(false);
+        setRequest(null);
     }
 
     function toggleMute() {
@@ -670,6 +690,11 @@ export function TeacherDashboard() {
                     </>
                 )}
 
+                {/* DOUBTS TAB */}
+                {activeTab === "courses" && (
+                    <TutorDoubtSection />
+                )}
+
                 {/* TESTS TAB */}
                 {activeTab === "tests" && (
                     <TutorTestCompo />
@@ -822,13 +847,52 @@ export function TeacherDashboard() {
             <h2 style={{ fontSize: 18, fontWeight: 800, color: "#1A1A1A", marginBottom: 6 }}>
                 Incoming doubt session
             </h2>
-            <p style={{ fontSize: 13.5, color: "#888", marginBottom: 28, lineHeight: 1.5 }}>
+
+            {/* Doubt details — subject / title / description / attachment */}
+            {request?.subject && (
+                <span style={{
+                    display: "inline-block", fontSize: 11, fontWeight: 700,
+                    color: "#4FB88A", background: "#E3F5EC",
+                    padding: "3px 10px", borderRadius: 100, marginBottom: 10,
+                }}>
+                    {request.subject}
+                </span>
+            )}
+
+            <p style={{ fontSize: 15, fontWeight: 700, color: "#1A1A1A", marginBottom: 6, textAlign: "left" }}>
+                {request?.title || "Untitled doubt"}
+            </p>
+
+            <p style={{
+                fontSize: 13, color: "#666", marginBottom: 14, lineHeight: 1.5,
+                textAlign: "left", maxHeight: 90, overflowY: "auto",
+            }}>
+                {request?.description || "No description provided."}
+            </p>
+
+            {request?.image && (
+                <a
+                    href={request.image}
+                    target="_blank"
+                    rel="noreferrer"
+                    style={{
+                        display: "inline-flex", alignItems: "center", gap: 6,
+                        fontSize: 12, fontWeight: 600, color: "#7A73D8",
+                        background: "#EAE8FB", padding: "6px 12px", borderRadius: 8,
+                        marginBottom: 16, textDecoration: "none",
+                    }}
+                >
+                    📎 View attachment
+                </a>
+            )}
+
+            <p style={{ fontSize: 12.5, color: "#9CA3AF", marginBottom: 22 }}>
                 A student is requesting help right now
             </p>
 
             <div style={{ display: "flex", gap: 10 }}>
                 <button
-                    onClick={() => setIncomingCall(false)}
+                    onClick={reject}
                     style={{
                         flex: 1, padding: "12px 0", borderRadius: 10,
                         border: "1.5px solid #E8E2D8", background: "white",
@@ -841,7 +905,7 @@ export function TeacherDashboard() {
                     Reject
                 </button>
                 <button
-                    onClick={() => { accept(); setIncomingCall(false); }}
+                    onClick={accept}
                     style={{
                         flex: 1, padding: "12px 0", borderRadius: 10,
                         border: "none", background: "#4FB88A",
