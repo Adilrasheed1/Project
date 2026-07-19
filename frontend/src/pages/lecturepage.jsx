@@ -85,7 +85,7 @@ export default function LecturePage() {
         <p style={{ color: "#888", marginTop: 8 }}>
           Open this page from "My Courses" or "Resume" so it knows which course to load.
         </p>
-        <button style={s.greenBtn2} onClick={() => navigate("/courses")}>Go to Courses</button>
+        <button style={s.orangeBtn2} onClick={() => navigate("/courses")}>Go to Courses</button>
       </div>
     );
   }
@@ -113,7 +113,7 @@ export default function LecturePage() {
       <style>{`
         * { box-sizing: border-box; margin: 0; padding: 0; }
         html, body, #root { width: 100%; min-height: 100vh; overflow-x: hidden; }
-        body { font-family: 'Segoe UI', Arial, sans-serif; background: #F7F4EE; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: #eeeff1; }
 
         @media (max-width: 800px) {
           .lp-content { flex-direction: column !important; padding: 16px !important; gap: 20px !important; }
@@ -154,10 +154,10 @@ export default function LecturePage() {
             </div>
           )}
           <div style={s.btnRow} className="lp-btnRow">
-            <button style={s.greenBtn} onClick={handleNext} disabled={activeIdx >= lectures.length - 1}>
+            <button style={s.orangeBtn} onClick={handleNext} disabled={activeIdx >= lectures.length - 1}>
               NEXT LECTURE
             </button>
-            <button style={s.greenBtn} onClick={() => alert("Raising a doubt — tutor will join in 60 seconds!")}>
+            <button style={s.orangeBtn} onClick={() => alert("Raising a doubt — tutor will join in 60 seconds!")}>
               RAISE A DOUBT
             </button>
           </div>
@@ -182,13 +182,13 @@ export default function LecturePage() {
               <div key={idx}
                 style={{
                   ...s.lectureItem,
-                  background: activeIdx === idx ? "#D8E8FF" : "#E8E2D8",
-                  border: activeIdx === idx ? "1.5px solid #7A73D8" : "1.5px solid transparent",
+                  background: activeIdx === idx ? "#E4EEFD" : "#eeeff1",
+                  border: activeIdx === idx ? "1.5px solid #165ee7" : "1.5px solid transparent",
                 }}
                 onClick={() => setActiveIdx(idx)}
               >
                 <div style={s.lecThumb}>
-                  <div style={{ ...s.lecThumbInner, background: completedLectures.includes(idx) ? "#4FB88A" : activeIdx === idx ? "#7A73D8" : "#9BA8B8" }}>
+                  <div style={{ ...s.lecThumbInner, background: completedLectures.includes(idx) ? "#F64515" : activeIdx === idx ? "#165ee7" : "#a9afb6" }}>
                     <span style={{ color: "white", fontSize: 14 }}>
                       {completedLectures.includes(idx) ? "✓" : activeIdx === idx ? "⏸" : "▶"}
                     </span>
@@ -219,25 +219,28 @@ export default function LecturePage() {
 }
 
 const s = {
-  shell: { minHeight: "100vh", width: "100%", background: "#F7F4EE", display: "flex", flexDirection: "column" },
-  topBar: { width: "100%", background: "white", borderBottom: "1px solid #E8E2D8", padding: "0 32px", height: 60, display: "flex", alignItems: "center", justifyContent: "space-between" },
-  backBtn: { background: "none", border: "none", fontSize: 14, fontWeight: 600, color: "#4FB88A", cursor: "pointer", fontFamily: "inherit" },
-  topTitle: { fontWeight: 800, fontSize: 18, color: "#4FB88A" },
+  shell: { minHeight: "100vh", width: "100%", background: "#eeeff1", display: "flex", flexDirection: "column" },
+  topBar: { width: "100%", background: "white", borderBottom: "1px solid #eeeff1", padding: "0 32px", height: 60, display: "flex", alignItems: "center", justifyContent: "space-between" },
+  backBtn: { background: "none", border: "none", fontSize: 14, fontWeight: 600, color: "#165ee7", cursor: "pointer", fontFamily: "inherit" },
+  topTitle: { fontWeight: 800, fontSize: 18, color: "#1A1A1A" },
   content: { flex: 1, display: "flex", gap: 40, padding: "32px 40px", maxWidth: 1100, margin: "0 auto", width: "100%", alignItems: "flex-start" },
   left: { flex: 1, display: "flex", flexDirection: "column", minWidth: 0, width: "100%" },
-  videoBox: { width: "100%", aspectRatio: "16/9", background: "#1A2A3A", borderRadius: 16, overflow: "hidden", position: "relative", border: "2px solid #7A73D8" },
+  videoBox: { width: "100%", aspectRatio: "16/9", background: "#1A1A1A", borderRadius: 16, overflow: "hidden", position: "relative" },
   videoEl: { width: "100%", height: "100%", display: "block", objectFit: "contain", background: "black" },
-  lectureInfo: { display: "flex", justifyContent: "space-between", alignItems: "center", background: "#EDE6DC", padding: "12px 18px", borderRadius: 8, marginTop: 14 },
+  lectureInfo: { display: "flex", justifyContent: "space-between", alignItems: "center", background: "#eeeff1", padding: "12px 18px", borderRadius: 8, marginTop: 14 },
   lectureName: { fontSize: 13, fontWeight: 700, color: "#333" },
   btnRow: { display: "flex", gap: 16, marginTop: 16 },
-  greenBtn: { flex: 1, padding: "13px 0", background: "#4FB88A", color: "white", border: "none", borderRadius: 8, fontSize: 14, fontWeight: 800, cursor: "pointer", fontFamily: "inherit", letterSpacing: 0.5 },
-  greenBtn2: { marginTop: 16, padding: "12px 22px", background: "#4FB88A", color: "white", border: "none", borderRadius: 8, fontSize: 14, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" },
+  orangeBtn: { flex: 1, padding: "13px 0", background: "#F64515", color: "white", border: "none", borderRadius: 8, fontSize: 14, fontWeight: 800, cursor: "pointer", fontFamily: "inherit", letterSpacing: 0.5 },
+  orangeBtn2: { marginTop: 16, padding: "12px 22px", background: "#F64515", color: "white", border: "none", borderRadius: 8, fontSize: 14, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" },
   right: { width: 300, flexShrink: 0 },
   progressSection: { marginBottom: 20 },
   progressTop: { marginBottom: 6 },
-  progressPct: { background: "#4FB88A", color: "white", fontSize: 12, fontWeight: 700, padding: "3px 10px", borderRadius: 100 },
-  progressBarBg: { height: 8, background: "#DDD6CC", borderRadius: 4, overflow: "hidden" },
-  progressBarFill: { height: "100%", background: "#4FB88A", borderRadius: 4 },
+  progressPct: { background: "#F64515", color: "white", fontSize: 12, fontWeight: 700, padding: "3px 10px", borderRadius: 100 },
+  // was #eeeff1 — identical to the page background behind it, so the
+  // "pending" portion of the bar was invisible. #dfe3e6 is a step darker,
+  // so the unfilled track is now actually readable against the page.
+  progressBarBg: { height: 8, background: "#dfe3e6", borderRadius: 4, overflow: "hidden" },
+  progressBarFill: { height: "100%", background: "#165ee7", borderRadius: 4 },
   lectureList: { display: "flex", flexDirection: "column", gap: 10 },
   lectureItem: { display: "flex", alignItems: "center", gap: 14, padding: "10px 14px", borderRadius: 12, cursor: "pointer" },
   lecThumb: { flexShrink: 0 },
@@ -246,10 +249,10 @@ const s = {
   noteBtn: {
   marginTop: 8,
   padding: "6px 14px",
-  border: "1.5px solid #7A73D8",
+  border: "1.5px solid #165ee7",
   borderRadius: 20,
   background: "#fff",
-  color: "#7A73D8",
+  color: "#165ee7",
   fontSize: 11,
   fontWeight: 700,
   cursor: "pointer",

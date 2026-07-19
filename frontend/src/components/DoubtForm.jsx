@@ -13,11 +13,14 @@ export function DoubtForm({ setInCall }) {
   const [socket, setSocket] = useState(null);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [subject, setSubject] = useState("");
   const [image, setImage] = useState("");
   const [muted, setMuted] = useState(false);
   const [camOff, setCamOff] = useState(false);
   const [callDuration, setCallDuration] = useState(0);
   const [finding, setFinding] = useState(false);
+  // ── from formValidation branch ──
+  const [errors, setErrors] = useState({});
   const timerRef = useRef(null);
 
   useEffect(() => {
@@ -99,6 +102,35 @@ export function DoubtForm({ setInCall }) {
     }
   }
 
+  // ── from formValidation branch ──
+  function validateForm() {
+    const newErrors = {};
+    if (!title.trim()) newErrors.title = "Doubt title is required";
+    if (!description.trim()) newErrors.description = "Please describe your doubt";
+    if (!subject) newErrors.subject = "Please choose a subject";
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  }
+
+  // ── from formValidation branch — same fetch/socket calls that used to
+  // live inline in the button's onClick, now gated behind validateForm() ──
+  function handleSubmit() {
+    if (!validateForm()) return;
+
+    fetch(`${import.meta.env.VITE_API_URL}/doubts/DoubtSection`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ title, description, subject, image }),
+    })
+      .then(async res => {
+        const json = await res.json();
+        if (!res.ok) { alert(json.msg || "doubt failed"); return; }
+      });
+
+    socket.send(JSON.stringify({ type: "request_tutor", title, description, subject, image }));
+    setFinding(true);
+  }
+
   async function startWebRTC(socket) {
     const pc = new RTCPeerConnection({
       iceServers: [
@@ -133,8 +165,13 @@ export function DoubtForm({ setInCall }) {
   return (
     <>
       {/* ── Doubt form ── */}
+      {/* Kept our current wrapper (flex items-center justify-center p-4) —
+          NOT his "min-h-screen bg-gray-100 px-4 py-8". That wrapper is
+          leftover from before this form lived inside the shell/sidebar
+          layout; re-adding it here would nest a second full-height grey
+          box inside app-main. */}
       {!showVideo && (
-        <div className=" flex items-center justify-center p-4">
+        <div className="flex items-center justify-center p-4">
           <div className="bg-white rounded-2xl border border-gray-200 w-full max-w-lg p-6 shadow-sm">
 
             <h2 className="text-base font-medium text-gray-800 mb-1">Ask a doubt</h2>
@@ -142,37 +179,53 @@ export function DoubtForm({ setInCall }) {
 
             {/* Title */}
             <div className="mb-4">
-              <label className="block text-xs font-medium text-gray-500 mb-1.5">Doubt title</label>
+              <label className="block text-xs font-medium text-gray-500 mb-1.5">
+                Doubt title <span className="text-orange-500">*</span>
+              </label>
               <input
                 type="text"
                 placeholder="e.g. Quicksort with duplicate elements"
                 value={title}
-                onChange={e => setTitle(e.target.value)}
-                className="w-full h-10 px-3 text-sm text-gray-700 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-orange-400 focus:bg-white transition"
+                onChange={e => { setTitle(e.target.value); if (errors.title) setErrors(er => ({ ...er, title: null })); }}
+                className={`w-full h-10 px-3 text-sm text-gray-700 bg-gray-50 border rounded-xl focus:outline-none focus:bg-white transition
+                  ${errors.title ? 'border-red-400' : 'border-gray-200 focus:border-orange-400'}`}
               />
+              {errors.title && <p className="text-xs text-red-500 mt-1">{errors.title}</p>}
             </div>
 
             {/* Description */}
             <div className="mb-4">
-              <label className="block text-xs font-medium text-gray-500 mb-1.5">Detailed description</label>
+              <label className="block text-xs font-medium text-gray-500 mb-1.5">
+                Detailed description <span className="text-orange-500">*</span>
+              </label>
               <textarea
                 placeholder="Explain your doubt in detail..."
                 value={description}
-                onChange={e => setDescription(e.target.value)}
+                onChange={e => { setDescription(e.target.value); if (errors.description) setErrors(er => ({ ...er, description: null })); }}
                 rows={4}
-                className="w-full px-3 py-2.5 text-sm text-gray-700 bg-gray-50 border border-gray-200 rounded-xl resize-none focus:outline-none focus:border-orange-400 focus:bg-white transition"
+                className={`w-full px-3 py-2.5 text-sm text-gray-700 bg-gray-50 border rounded-xl resize-none focus:outline-none focus:bg-white transition
+                  ${errors.description ? 'border-red-400' : 'border-gray-200 focus:border-orange-400'}`}
               />
+              {errors.description && <p className="text-xs text-red-500 mt-1">{errors.description}</p>}
             </div>
 
             {/* Subject */}
             <div className="mb-4">
-              <label className="block text-xs font-medium text-gray-500 mb-1.5">Subject</label>
-              <select className="w-full h-10 px-3 text-sm text-gray-700 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-orange-400 appearance-none transition">
+              <label className="block text-xs font-medium text-gray-500 mb-1.5">
+                Subject <span className="text-orange-500">*</span>
+              </label>
+              <select
+                value={subject}
+                onChange={e => { setSubject(e.target.value); if (errors.subject) setErrors(er => ({ ...er, subject: null })); }}
+                className={`w-full h-10 px-3 text-sm text-gray-700 bg-gray-50 border rounded-xl focus:outline-none appearance-none transition
+                  ${errors.subject ? 'border-red-400' : 'border-gray-200 focus:border-orange-400'}`}
+              >
                 <option value="">-- Choose subject --</option>
                 <option value="Dsa">DSA</option>
                 <option value="FullStack">Fullstack</option>
                 <option value="Other">Other</option>
               </select>
+              {errors.subject && <p className="text-xs text-red-500 mt-1">{errors.subject}</p>}
             </div>
 
             {/* Attachment */}
@@ -180,7 +233,6 @@ export function DoubtForm({ setInCall }) {
               <label className="block text-xs font-medium text-gray-500 mb-1.5">Attachment (optional)</label>
               <input
                 type="file"
-                value={image}
                 onChange={e => setImage(e.target.value)}
                 className="w-full text-sm text-gray-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-medium file:bg-orange-50 file:text-orange-600 hover:file:bg-orange-100 transition"
               />
@@ -188,19 +240,7 @@ export function DoubtForm({ setInCall }) {
 
             {/* Submit */}
             <button
-              onClick={() => {
-                fetch(`${import.meta.env.VITE_API_URL}/doubts/DoubtSection`, {
-                  method: "POST",
-                  headers: { "Content-Type": "application/json" },
-                  body: JSON.stringify({ title, description, image }),
-                })
-                  .then(async res => {
-                    const json = await res.json();
-                    if (!res.ok) { alert(json.msg || "doubt failed"); return; }
-                  });
-                socket.send(JSON.stringify({ type: "request_tutor", title, description, image }));
-                setFinding(true);
-              }}
+              onClick={handleSubmit}
               className="w-full h-11 bg-orange-500 hover:bg-orange-600 text-white text-sm font-medium rounded-xl transition flex items-center justify-center gap-2"
             >
               {finding ? (

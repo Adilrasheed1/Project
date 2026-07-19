@@ -1,16 +1,30 @@
 import { useNavigate } from "react-router-dom";
+import {
+  Zap,
+  ShieldCheck,
+  BookOpen,
+  Sigma,
+  FlaskConical,
+  Brain,
+  Briefcase,
+  PenLine,
+  ScrollText,
+  Star,
+  ArrowRight,
+  CheckCircle2,
+} from "lucide-react";
 
+// Brand palette — 4 primary colors
 const C = {
-  mint: "#4FB88A",
-  mintDark: "#3A9A72",
-  coral: "#b9d83f",
-  amber: "#E89B3C",
-  lavender: "#7A73D8",
+  orange: "#f64515",
+  orangeDark: "#d83c10",   // orange, darkened for hover states
+  green: "#9fd200",
+  blue: "#165ee7",
+  dark: "#000000",         // black — text & dark surfaces
   cream: "#FAF8F4",
   white: "#FFFFFF",
   border: "#E8E2D9",
   muted: "#9B9488",
-  dark: "#161614",
   card: "#FFFFFF",
 };
 
@@ -130,12 +144,12 @@ const styles = `
     transform: translateY(-1px);
     box-shadow: 0 6px 20px rgba(0,0,0,0.18);
   }
-  .tc-btn-mint {
-    background: ${C.mint};
+  .tc-btn-orange {
+    background: ${C.orange};
     color: white;
   }
-  .tc-btn-mint:hover {
-    background: ${C.mintDark};
+  .tc-btn-orange:hover {
+    background: ${C.orangeDark};
     transform: translateY(-1px);
     box-shadow: 0 6px 20px rgba(79,184,138,0.3);
   }
@@ -177,7 +191,7 @@ const styles = `
     width: 8px;
     height: 8px;
     border-radius: 50%;
-    background: ${C.mint};
+    background: ${C.orange};
     animation: tc-pulse 1.8s ease-in-out infinite;
   }
 
@@ -195,8 +209,9 @@ const styles = `
     color: ${C.dark};
   }
 
-  .tc-hero h1 .tc-h1-green { color: ${C.mint}; }
-  .tc-hero h1 .tc-h1-coral { color: ${C.coral}; }
+  .tc-hero h1 .tc-h1-orange { color: ${C.orange}; }
+  .tc-hero h1 .tc-h1-green { color: ${C.green}; }
+  .tc-hero h1 .tc-h1-blue { color: ${C.blue}; }
 
   .tc-hero-sub {
     font-size: 17px;
@@ -252,7 +267,7 @@ const styles = `
     top: 20px;
     left: 0;
     width: 270px;
-    background: linear-gradient(135deg, ${C.mint}, ${C.mintDark});
+    background: linear-gradient(135deg, ${C.orange}, ${C.orangeDark});
     border: none;
     color: white;
     animation: tc-float 5s ease-in-out infinite;
@@ -292,7 +307,7 @@ const styles = `
   .tc-fc-timer-num {
     font-family: 'Archivo Black', sans-serif;
     font-size: 36px;
-    color: ${C.coral};
+    color: ${C.green};
     letter-spacing: -1px;
   }
 
@@ -320,7 +335,7 @@ const styles = `
     width: 38px;
     height: 38px;
     border-radius: 10px;
-    background: #EAE8FB;
+    background: #DEE9FD;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -365,7 +380,7 @@ const styles = `
   .tc-fc-course-rating {
     font-size: 12px;
     font-weight: 700;
-    color: ${C.amber};
+    color: ${C.blue};
   }
 
   .tc-fc-course h5 {
@@ -385,7 +400,7 @@ const styles = `
   .tc-fc-course-fill {
     height: 100%;
     width: 35%;
-    background: ${C.mint};
+    background: ${C.orange};
     border-radius: 2px;
   }
 
@@ -710,7 +725,7 @@ const styles = `
     width: 400px;
     height: 400px;
     border-radius: 50%;
-    background: radial-gradient(circle, ${C.mint}40, transparent 70%);
+    background: radial-gradient(circle, ${C.orange}40, transparent 70%);
     top: -180px;
     right: -100px;
     pointer-events: none;
@@ -722,7 +737,7 @@ const styles = `
     width: 300px;
     height: 300px;
     border-radius: 50%;
-    background: radial-gradient(circle, ${C.lavender}30, transparent 70%);
+    background: radial-gradient(circle, ${C.green}30, transparent 70%);
     bottom: -150px;
     left: 200px;
     pointer-events: none;
@@ -853,25 +868,25 @@ const styles = `
 
 const features = [
   {
-    color: C.mint,
-    soft: "#E3F5EC",
-    icon: "⚡",
+    color: C.orange,
+    soft: "#FDE7E0",
+    icon: Zap,
     tag: "60-second connect",
     title: "Doubt solved before you lose momentum",
     body: "Post your question and get pulled into a live video call with a matched tutor in under 60 seconds. No forms, no waiting rooms, no tickets.",
   },
   {
-    color: C.coral,
-    soft: "#FBE6E4",
-    icon: "◉",
+    color: C.green,
+    soft: "#EEF9D6",
+    icon: ShieldCheck,
     tag: "Proctored exams",
     title: "Scores that actually mean something",
     body: "Sit timed tests with live or AI proctoring, identity checks, and screen monitoring built in — so the certificate carries real weight.",
   },
   {
-    color: C.amber,
-    soft: "#FCEFDD",
-    icon: "▤",
+    color: C.blue,
+    soft: "#DEE9FD",
+    icon: BookOpen,
     tag: "Course marketplace",
     title: "Full courses built by real tutors",
     body: "Video lectures, notes, and assignments uploaded directly by tutors. Learn at your pace, then jump on a live call the moment you get stuck.",
@@ -879,19 +894,19 @@ const features = [
 ];
 
 const courses = [
-  { subj: "Math", title: "Integral Calculus Bootcamp", tutor: "Meshart Hilal", rating: "4.9", color: C.mint },
-  { subj: "Physics", title: "Mechanics & Waves Full Course", tutor: "Adil Rashid", rating: "4.8", color: C.coral },
-  { subj: "Chemistry", title: "Organic Chemistry Foundations", tutor: "Kareem Delgado", rating: "4.9", color: C.amber },
-  { subj: "Philosophy", title: "Logic & Critical Thinking", tutor: "Sana Wei", rating: "5.0", color: C.lavender },
+  { subj: "Math", title: "Integral Calculus Bootcamp", tutor: "Meshart Hilal", rating: "4.9", color: C.orange },
+  { subj: "Physics", title: "Mechanics & Waves Full Course", tutor: "Adil Rashid", rating: "4.8", color: C.green },
+  { subj: "Chemistry", title: "Organic Chemistry Foundations", tutor: "Kareem Delgado", rating: "4.9", color: C.blue },
+  { subj: "Philosophy", title: "Logic & Critical Thinking", tutor: "Sana Wei", rating: "5.0", color: C.green },
 ];
 
 const subjects = [
-  { name: "Math", icon: "∫", color: C.mint },
-  { name: "Science", icon: "⚗", color: C.lavender },
-  { name: "Philosophy", icon: "❖", color: C.coral },
-  { name: "Business", icon: "▣", color: C.amber },
-  { name: "English", icon: "✍", color: "#D8493F" },
-  { name: "History", icon: "📜", color: "#9B6E3A" },
+  { name: "Math", icon: Sigma, color: C.orange },
+  { name: "Science", icon: FlaskConical, color: C.blue },
+  { name: "Philosophy", icon: Brain, color: C.green },
+  { name: "Business", icon: Briefcase, color: C.orange },
+  { name: "English", icon: PenLine, color: C.blue },
+  { name: "History", icon: ScrollText, color: C.green },
 ];
 
 export  function LandingPage() {
@@ -906,16 +921,6 @@ export  function LandingPage() {
       {/* NAV */}
       <nav className="tc-nav">
         <div className="tc-logo">
-          <div className="tc-logo-mark"><img
-  src="images/Gemini_Generated_Image_7jvool7jvool7jvo-removebg-preview.png"
-  alt="TC"
-  style={{
-    width: "110px",        
-    height: "70px", 
-    borderRadius: "8px", 
-    cursor: "pointer",   
-  }}
-/></div>
           TutorConnect
         </div>
         <div className="tc-nav-links">
@@ -966,16 +971,16 @@ export  function LandingPage() {
             Live tutors online right now
           </div>
           <h1>
-            Learn it.<br />
-            <span className="tc-h1-green">Understand</span> it.<br />
-            <span className="tc-h1-coral">Prove</span> it.
+            <span className="tc-h1-orange">Learn</span> it.<br />
+            <span className="tc-h1-blue">Understand</span> it.<br />
+            <span className="tc-h1-green">Prove</span> it.
           </h1>
           <p className="tc-hero-sub">
             Get stuck? A real tutor joins your screen in under 60 seconds.
             Take full courses, sit proctored exams, and actually know your subject.
           </p>
           <div className="tc-hero-cta">
-            <button className="tc-btn tc-btn-mint tc-btn-lg" onClick={goAuth}>
+            <button className="tc-btn tc-btn-orange tc-btn-lg" onClick={goAuth}>
               Start as Student
             </button>
             <button className="tc-btn tc-btn-ghost tc-btn-lg" onClick={goAuth}>
@@ -1015,10 +1020,12 @@ export  function LandingPage() {
 
           <div className="tc-fc tc-fc-exam">
             <div className="tc-fc-exam-row">
-              <div className="tc-fc-exam-icon">◎</div>
+              <div className="tc-fc-exam-icon"><ShieldCheck size={18} color={C.blue} /></div>
               <div>
                 <div className="tc-fc-exam-t1">Exam proctored</div>
-                <div className="tc-fc-exam-t2">Identity verified ✓</div>
+                <div className="tc-fc-exam-t2" style={{ display: "flex", alignItems: "center", gap: 4 }}>
+                  Identity verified <CheckCircle2 size={12} color={C.green} />
+                </div>
               </div>
             </div>
           </div>
@@ -1026,7 +1033,9 @@ export  function LandingPage() {
           <div className="tc-fc tc-fc-course">
             <div className="tc-fc-course-top">
               <span className="tc-fc-course-label">In progress</span>
-              <span className="tc-fc-course-rating">★ 4.9</span>
+              <span className="tc-fc-course-rating" style={{ display: "flex", alignItems: "center", gap: 3 }}>
+                <Star size={11} fill={C.blue} color={C.blue} /> 4.9
+              </span>
             </div>
             <h5>Integral Calculus Bootcamp</h5>
             <div className="tc-fc-course-bar">
@@ -1045,7 +1054,9 @@ export  function LandingPage() {
             onMouseEnter={e => e.currentTarget.style.borderColor = s.color}
             onMouseLeave={e => e.currentTarget.style.borderColor = C.border}
           >
-            <span className="tc-subject-icon" style={{ background: s.color }}>{s.icon}</span>
+            <span className="tc-subject-icon" style={{ background: s.color }}>
+              <s.icon size={14} strokeWidth={2.5} />
+            </span>
             {s.name}
           </div>
         ))}
@@ -1060,7 +1071,7 @@ export  function LandingPage() {
             {features.map(f => (
               <div className="tc-feat-card" key={f.title} style={{ background: C.white }}>
                 <div className="tc-feat-icon" style={{ background: f.soft }}>
-                  <span style={{ fontSize: 22 }}>{f.icon}</span>
+                  <f.icon size={24} color={f.color} strokeWidth={2} />
                 </div>
                 <span className="tc-feat-tag" style={{ background: f.soft, color: f.color }}>{f.tag}</span>
                 <h3>{f.title}</h3>
@@ -1078,7 +1089,9 @@ export  function LandingPage() {
             <div className="tc-section-eyebrow">Marketplace</div>
             <h2 className="tc-section-title" style={{ marginBottom: 0, fontSize: 28 }}>Trending courses</h2>
           </div>
-          <button className="tc-view-all" onClick={goAuth}>View all courses →</button>
+          <button className="tc-view-all" onClick={goAuth} style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
+            View all courses <ArrowRight size={14} />
+          </button>
         </div>
         <div className="tc-courses-grid">
           {courses.map((c, i) => (
@@ -1088,7 +1101,9 @@ export  function LandingPage() {
                   <span style={{ fontSize: 12, fontStyle: "italic" }}>ƒ(x)</span>
                   {c.subj}
                 </span>
-                <span className="tc-course-rating">★ {c.rating}</span>
+                <span className="tc-course-rating" style={{ display: "flex", alignItems: "center", gap: 3 }}>
+                  <Star size={11} fill={C.dark} color={C.dark} /> {c.rating}
+                </span>
               </div>
               <div>
                 <h4>{c.title}</h4>

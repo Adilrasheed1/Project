@@ -117,9 +117,11 @@ export function CoursesPage() {
         }
 
         @media (max-width: 900px) {
-          .app-shell { flex-direction: column !important; }
-          .app-main { padding: 16px 14px 84px !important; width: 100% !important; order: 2 !important; }
-          .app-rightPanel { width: 100% !important; min-height: auto !important; height: auto !important; border-left: none !important; border-bottom: 1px solid #e3e6e9; order: 1 !important; }
+          /* right panel removed on small screens (team decision pending) —
+             .app-main is flex:1 already, so once the panel is gone it
+             just stretches to fill the freed-up width on its own */
+          .app-rightPanel { display: none !important; }
+          .app-main { padding: 16px 14px 100px !important; width: 100% !important; }
           .app-heroTitle { font-size: 22px !important; }
           .app-grid { grid-template-columns: 1fr !important; }
           .app-pillRow { overflow-x: auto !important; flex-wrap: nowrap !important; padding-bottom: 6px; }

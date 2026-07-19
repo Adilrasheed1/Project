@@ -7,14 +7,14 @@ const inputStyle = {
   width: "100%",
   padding: "13px 16px",
   borderRadius: 10,
-  border: "1.5px solid #E0E4EA",
+  border: "1.5px solid #eeeff1",
   background: "#FAFBFC",
   fontSize: 14,
   outline: "none",
   marginBottom: 18,
   transition: "0.2s",
   boxSizing: "border-box",
-   color: "#111827",
+  color: "#1A1A1A",
 };
 
 export default function ForgotPassword() {
@@ -97,42 +97,60 @@ export default function ForgotPassword() {
 };
 
   return (
-    
-<div
-  style={{
-    minHeight: "100vh",
-    width: "100vw",            
-    position: "absolute",          
-    top: 0,
-    left: 0,
-    background: "#F7F8FA",      
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "flex-start",
-    padding: "30px 20px 60px",
-    overflowY: "auto",         
-    boxSizing: "border-box",
-    fontFamily: "'Segoe UI', Arial, sans-serif",
-  }}
->
+    <div
+      className="fp-shell"
+      style={{
+        minHeight: "100vh",
+        width: "100vw",
+        position: "absolute",
+        top: 0,
+        left: 0,
+        background: "#eeeff1",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "flex-start",
+        padding: "30px 20px 60px",
+        overflowY: "auto",
+        boxSizing: "border-box",
+        fontFamily: "'Segoe UI', Arial, sans-serif",
+      }}
+    >
+      {/*
+        This page had zero responsive rules before — the card's padding
+        was a fixed "44px 48px" regardless of screen size, which eats a
+        huge chunk of a phone's width. The media query below only touches
+        padding/font-size (never layout structure), since this is already
+        just a single centered card — nothing needs to reflow, it just
+        needs to breathe less aggressively on small screens.
+      */}
+      <style>{`
+        @media (max-width: 600px) {
+          .fp-shell { padding: 16px 12px 40px !important; }
+          .fp-card { padding: 26px 20px !important; }
+          .fp-heading { font-size: 24px !important; }
+        }
+      `}</style>
+
       <div
-  style={{
-    width: "100%",
-    maxWidth: "1000px",
-    background: "white",
-    borderRadius: 12,
-    border: "1px solid #E8ECF0",
-    boxShadow: "0 4px 24px rgba(0,0,0,0.06)",
-    padding: "44px 48px",
-  }}
->
+        className="fp-card"
+        style={{
+          width: "100%",
+          maxWidth: "1000px",
+          background: "white",
+          borderRadius: 12,
+          border: "1px solid #eeeff1",
+          boxShadow: "0 4px 24px rgba(0,0,0,0.06)",
+          padding: "44px 48px",
+        }}
+      >
         <h1
+          className="fp-heading"
           style={{
             textAlign: "center",
             fontSize: 32,
             fontWeight: 800,
             marginBottom: 8,
-            color: "#111827",
+            color: "#1A1A1A",
           }}
         >
           Support System
@@ -141,7 +159,7 @@ export default function ForgotPassword() {
         <p
           style={{
             textAlign: "center",
-            color: "#111827",
+            color: "#1A1A1A",
             fontSize: 15,
             marginBottom: 30,
             lineHeight: 1.7,
@@ -153,8 +171,8 @@ export default function ForgotPassword() {
 
         <div
           style={{
-            background: "#F0FBF6",
-            border: "1px solid #D6F2E2",
+            background: "#E4EEFD",
+            border: "1px solid #cfe0fb",
             borderRadius: 10,
             padding: 18,
             marginBottom: 28,
@@ -239,9 +257,9 @@ export default function ForgotPassword() {
         {success && (
           <div
             style={{
-              background: "#E6F7EE",
-              border: "1px solid #4FB88A",
-              color: "#2F855A",
+              background: "#E4EEFD",
+              border: "1px solid #165ee7",
+              color: "#165ee7",
               padding: 12,
               borderRadius: 8,
               marginBottom: 18,
@@ -259,7 +277,7 @@ export default function ForgotPassword() {
           style={{
             width: "100%",
             padding: "15px",
-            background: loading ? "#9CA3AF" : "#4FB88A",
+            background: loading ? "#9CA3AF" : "#F64515",
             color: "#fff",
             border: "none",
             borderRadius: 10,
@@ -279,8 +297,8 @@ export default function ForgotPassword() {
             marginTop: 15,
             padding: "15px",
             background: "#fff",
-            color: "#4FB88A",
-            border: "2px solid #4FB88A",
+            color: "#165ee7",
+            border: "2px solid #165ee7",
             borderRadius: 10,
             fontSize: 15,
             fontWeight: 700,
@@ -294,14 +312,14 @@ export default function ForgotPassword() {
           style={{
             marginTop: 35,
             paddingTop: 25,
-            borderTop: "1px solid #E5E7EB",
+            borderTop: "1px solid #eeeff1",
             textAlign: "center",
             color: "#6B7280",
             fontSize: 13,
             lineHeight: 1.8,
           }}
         >
-          <strong style={{ color: "#111827" }}>TutorConnect Support</strong>
+          <strong style={{ color: "#1A1A1A" }}>TutorConnect Support</strong>
           <br />
           We usually respond within <strong>24 hours</strong>.
           <br />

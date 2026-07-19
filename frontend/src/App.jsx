@@ -37,6 +37,19 @@ function DoubtSectionPage() {
             scrollbar-width: none;
             -ms-overflow-style: none;
           }
+
+          @media (max-width: 900px) {
+            /* same pattern as CoursesPage/OrdersPage/StudentDashboard/TestsPage:
+               right panel removed on small screens (team decision pending),
+               and bottom padding reserved so the floating nav pill doesn't
+               sit on top of the "How it works" box at the end of the page.
+               Only paddingBottom is forced here (not left/right) because
+               DoubtSection.jsx already manages its own horizontal spacing
+               with mx-4/sm:mx-6 Tailwind classes - adding page-level
+               horizontal padding too would double it up. */
+            .app-rightPanel { display: none !important; }
+            .app-main { padding-bottom: 100px !important; }
+          }
         `}</style>
 
       <SharedSidebar activePage="doubts" />

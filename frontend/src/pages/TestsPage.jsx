@@ -50,6 +50,15 @@ export default function TestsPage() {
           scrollbar-width: none;
           -ms-overflow-style: none;
         }
+
+        @media (max-width: 900px) {
+          /* this page had no responsive rules at all before — right panel
+             removed on small screens (team decision pending), and bottom
+             padding added so the floating nav pill doesn't sit on top of
+             the last test card */
+          .app-rightPanel { display: none !important; }
+          .app-main { padding: 16px 14px 100px !important; width: 100% !important; }
+        }
       `}</style>
 
       {/* ── SIDEBAR ── */}

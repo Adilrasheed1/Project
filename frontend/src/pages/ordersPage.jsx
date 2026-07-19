@@ -48,9 +48,11 @@ export default function OrdersPage() {
         }
 
         @media (max-width: 900px) {
-          .app-shell { flex-direction: column !important; }
-          .app-main { padding: 16px 14px 84px !important; width: 100% !important; }
-          .app-rightPanel { width: 100% !important; min-height: auto !important; height: auto !important; border-left: none !important; border-top: 1px solid #e3e6e9; order: 3 !important; }
+          /* right panel removed on small screens (team decision pending) —
+             .app-main is flex:1 already, so once the panel is gone it
+             just stretches to fill the freed-up width on its own */
+          .app-rightPanel { display: none !important; }
+          .app-main { padding: 16px 14px 100px !important; width: 100% !important; }
           .app-orderCard { flex-direction: column !important; }
           .app-orderLeft { width: 100% !important; }
           .app-orderMid { border-right: none !important; border-bottom: 1px solid #eeeff1; }

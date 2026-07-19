@@ -2,9 +2,9 @@ import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ShareScreen } from "../components/ShareScreen"; // adjust path if your components folder is elsewhere
 import { TutorTestCompo } from "../components/TutorTestCompo";
+import { TutorSidebar } from "../components/TutorSidebar";
+import { TutorRightPanel } from "../components/TutorRightPanel";
 import {
-    LayoutGrid,
-    HelpCircle,
     Users,
     Wallet,
     FileText,
@@ -13,14 +13,6 @@ import {
     Star,
     Upload,
 } from "lucide-react";
-
-const sidebarItems = [
-    { icon: LayoutGrid, label: "Dashboard", page: "dashboard" },
-    { icon: HelpCircle, label: "Doubts", page: "courses" },
-    { icon: Users, label: "Students", page: "students" },
-    { icon: Wallet, label: "Earnings", page: "earnings" },
-    { icon: FileText, label: "Tests", page: "tests" },
-];
 
 const subjectOptions = ["Mathematics", "Physics", "Chemistry", "Biology", "English", "Computer Science"];
 const colorSwatches = ["#F64515", "#165ee7", "#9fd200", "#000000"];
@@ -474,19 +466,17 @@ export function TeacherDashboard() {
               body { font-family: ui-sans-serif, system-ui, Arial, sans-serif; background:#ffffff; }
 
               @media (max-width: 900px) {
-                .app-shell { flex-direction: column !important; }
-                .app-sidebar {
-                  position: fixed !important; bottom: 0 !important; left: 0 !important; right: 0 !important; top: auto !important;
-                  width: 100% !important; height: 64px !important; min-height: 64px !important;
-                  flex-direction: row !important; padding: 0 !important; border-right: none !important;
-                  border-top: 1px solid #dfe3e6; z-index: 200 !important;
-                }
-                .app-logoBox { display: none !important; }
-                .app-sideNav { flex-direction: row !important; width: 100% !important; height: 100% !important; justify-content: space-around !important; }
-                .app-sideItem { padding: 6px 4px !important; border-radius: 0 !important; flex: 1 !important; }
-                .app-sideBottom { display: none !important; }
-                .app-main { padding: 16px 14px 84px !important; width: 100% !important; order: 2 !important; }
-                .app-rightPanel { width: 100% !important; min-height: auto !important; border-left: none !important; border-bottom: 1px solid #dfe3e6; order: 1 !important; }
+                /* TutorSidebar now hides/shows itself internally (rail vs
+                   floating pill), so none of the old .app-sidebar /
+                   .app-sideNav / .app-sideItem repositioning rules are
+                   needed here anymore — that's now dead CSS fighting
+                   against a component that already handles it.
+                   .app-shell no longer needs flex-direction:column either:
+                   once .app-rightPanel is display:none, .app-main (flex:1)
+                   is the only visible child left in the row, so it just
+                   fills the width on its own. */
+                .app-rightPanel { display: none !important; }
+                .app-main { padding: 16px 14px 100px !important; width: 100% !important; }
                 .app-statsGrid { grid-template-columns: repeat(2, 1fr) !important; }
                 .app-topRow { flex-direction: column !important; align-items: flex-start !important; gap: 12px !important; }
                 .app-courseRow { flex-wrap: wrap !important; }
@@ -494,42 +484,11 @@ export function TeacherDashboard() {
             `}</style>
 
             {/* SIDEBAR */}
-            <div style={s.sidebar} className="app-sidebar">
-                <div style={s.sidebarInner}>
-                    <div style={s.sideNav} className="app-sideNav">
-                        {sidebarItems.map(item => {
-                            const Icon = item.icon;
-                            const active = activeTab === item.page;
-                            return (
-                                <div key={item.page}
-                                    style={s.sideItem}
-                                    className="app-sideItem"
-                                    onClick={() => setActiveTab(item.page)}
-                                >
-                                    <div style={{
-                                        ...s.sideIconCircle,
-                                        background: active ? "#F64515" : "white",
-                                        color: active ? "white" : "#1A1A1A",
-                                    }}>
-                                        <Icon size={20} />
-                                    </div>
-                                    <span style={{ ...s.sideLabel, color: active ? "#F64515" : "#666" }}>{item.label}</span>
-                                </div>
-                            );
-                        })}
-                    </div>
-                    <div
-                        style={{ ...s.sideItem, cursor: "pointer" }}
-                        className="app-sideBottom"
-                        onClick={() => navigate("/forgot-password")}
-                    >
-                        <div style={s.sideIconCircle}>
-                            <User size={20} />
-                        </div>
-                        <span style={s.sideLabel}>Support</span>
-                    </div>
-                </div>
-            </div>
+            <TutorSidebar
+                activeTab={activeTab}
+                setActiveTab={setActiveTab}
+                onSupportClick={() => navigate("/forgot-password")}
+            />
 
             {/* MAIN */}
             <div style={s.main} className="app-main">
@@ -701,21 +660,11 @@ export function TeacherDashboard() {
             </div>
 
             {/* RIGHT PANEL */}
-            <div style={s.rightPanel} className="app-rightPanel">
-                <div style={s.profileCard}>
-                    <div style={s.profileAvatar}><User size={28} /></div>
-                    <p style={s.profileName}>{teacher.firstName} {teacher.lastName}</p>
-                    <p style={s.profileEmail}>{teacher.email}</p>
-                    <div style={{ ...s.profileBadge, background: "#E4EEFD", color: "#165ee7" }}>Verified Tutor</div>
-                </div>
-                <h3 style={s.panelTitle}>Quick Actions</h3>
-                <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-                    <button style={s.quickBtn} onClick={openCreateModal}><Upload size={16} /> Upload New Course</button>
-                    <button style={s.quickBtn} onClick={() => setActiveTab("students")}><Users size={16} /> View Students</button>
-                    <button style={s.quickBtn} onClick={() => setActiveTab("earnings")}><Wallet size={16} /> View Earnings</button>
-                    <button style={s.quickBtn} onClick={() => setActiveTab("tests")}><FileText size={16} /> Manage Tests</button>
-                </div>
-            </div>
+            <TutorRightPanel
+                teacher={teacher}
+                onUploadClick={openCreateModal}
+                setActiveTab={setActiveTab}
+            />
 
             {/* UPLOAD / EDIT MODAL */}
             {showUpload && (
@@ -1090,13 +1039,8 @@ function LectureCard({ index, lecture, onTitleChange, onVideoChange, onRemove, o
 }
 
 const s = {
+    // sidebar + rightPanel styles now live in TutorSidebar.jsx / TutorRightPanel.jsx
     shell: { display: "flex", minHeight: "100vh", width: "100%", background: "#ffffff" },
-    sidebar: { width: 110, minHeight: "100vh", background: "transparent", display: "flex", alignItems: "center", justifyContent: "center", padding: "24px 0", flexShrink: 0 },
-    sidebarInner: { background: "#eeeff1", height: "100%", width: "100%", marginLeft: 12, borderRadius: 16, boxShadow: "0 8px 24px rgba(0,0,0,0.08)", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "space-evenly", padding: 16 },
-    sideNav: { display: "flex", flexDirection: "column", alignItems: "center", gap: 6, width: "100%", flex: 1, justifyContent: "center" },
-    sideItem: { width: "100%", display: "flex", flexDirection: "column", alignItems: "center", padding: "10px 4px", cursor: "pointer" },
-    sideIconCircle: { width: 48, height: 48, borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", background: "white", boxShadow: "0 2px 6px rgba(0,0,0,0.12)", marginBottom: 4 },
-    sideLabel: { fontSize: 12, color: "#666", textAlign: "center", fontWeight: 600 },
     main: { flex: 1, padding: "36px 32px", minWidth: 0 },
     topRow: { display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 28 },
     pageTitle: { fontSize: 26, fontWeight: 800, color: "#1A1A1A", letterSpacing: -0.5, marginBottom: 4 },
@@ -1125,14 +1069,6 @@ const s = {
     progressBg: { height: 5, background: "#eeeff1", borderRadius: 3, overflow: "hidden", marginBottom: 3 },
     progressFill: { height: "100%", background: "#9fd200", borderRadius: 3 },
     progressPct: { fontSize: 11, color: "#888" },
-    rightPanel: { width: 260, background: "#eeeff1", padding: "24px 16px", flexShrink: 0 },
-    profileCard: { background: "white", borderRadius: 14, padding: "20px", textAlign: "center", marginBottom: 20, border: "1px solid #e3e6e9" },
-    profileAvatar: { width: 60, height: 60, borderRadius: "50%", background: "#eeeff1", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 10px", color: "#1A1A1A" },
-    profileName: { fontSize: 15, fontWeight: 700, color: "#1A1A1A", marginBottom: 2 },
-    profileEmail: { fontSize: 12, color: "#888", marginBottom: 10 },
-    profileBadge: { display: "inline-block", fontSize: 11, fontWeight: 700, padding: "4px 12px", borderRadius: 100 },
-    panelTitle: { fontSize: 13, fontWeight: 700, color: "#444", marginBottom: 10 },
-    quickBtn: { width: "100%", padding: "11px", background: "white", color: "#1A1A1A", border: "1px solid #e3e6e9", borderRadius: 8, fontSize: 13, fontWeight: 600, cursor: "pointer", fontFamily: "inherit", textAlign: "left", display: "flex", alignItems: "center", gap: 8 },
     modalOverlay: { position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000, padding: 20 },
     modal: { background: "white", borderRadius: 20, width: "100%", maxWidth: 540, maxHeight: "90vh", overflow: "hidden", display: "flex", flexDirection: "column" },
     modalHeader: { display: "flex", justifyContent: "space-between", alignItems: "center", padding: "20px 24px", borderBottom: "1px solid #eeeff1" },
