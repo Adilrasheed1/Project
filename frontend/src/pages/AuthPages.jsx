@@ -494,12 +494,14 @@ function TeacherRegister({ setPage }) {
         return;
       }
 
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("user", JSON.stringify(data.user));
+      // No token is issued at registration anymore — teacher accounts start
+      // as "Pending" and must be approved by an admin before they can log in.
+      setSuccess(
+        data.message ||
+          "Application submitted! Your account is under review. You'll be able to log in once an admin approves it."
+      );
 
-      setSuccess("Application submitted! Redirecting...");
-
-      setTimeout(() => navigate("/teacher"), 1500);
+      setTimeout(() => setPage("login"), 2500);
     } catch (err) {
       setError("Cannot connect to server. Make sure backend is running.");
       setLoading(false);

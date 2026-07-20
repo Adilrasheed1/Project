@@ -22,7 +22,11 @@ const teacherSchema = new mongoose.Schema({
   marksheetUrl:   { type: String },
   password:       { type: String, required: true },
   role:           { type: String, default: "teacher" },
+  status:          { type: String, enum: ["Pending", "Approved", "Rejected"], default: "Pending" },
+  rejectionReason: { type: String, default: "" },
+  reviewedAt:      { type: Date },
   isVerified:     { type: Boolean, default: false },
+
   createdAt:      { type: Date, default: Date.now },
 });
 
