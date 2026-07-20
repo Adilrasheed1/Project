@@ -6,7 +6,7 @@ export function VideoComponent() {
   async function startVideo() {
     const stream = await navigator.mediaDevices.getUserMedia({
       video: true,
-      audio: false
+      audio: true,
     });
 
     if (videoRef.current) {

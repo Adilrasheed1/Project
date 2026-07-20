@@ -145,7 +145,7 @@ export function DoubtForm({ setInCall }) {
       }
     };
     setInCall(true);
-    const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+    const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
     console.log("got local stream", stream);
     setLocalStream(stream);
     stream.getTracks().forEach(track => pc.addTrack(track, stream));
