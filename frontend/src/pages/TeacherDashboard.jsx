@@ -4,6 +4,7 @@ import { ShareScreen } from "../components/ShareScreen"; // adjust path if your 
 import { TutorTestCompo } from "../components/TutorTestCompo";
 import { TutorSidebar } from "../components/TutorSidebar";
 import { TutorRightPanel } from "../components/TutorRightPanel";
+import { TutorDoubtSection } from "./TutorDoubtSection";
 import {
     Users,
     Wallet,
@@ -657,7 +658,14 @@ export function TeacherDashboard() {
                 {activeTab === "tests" && (
                     <TutorTestCompo />
                 )}
+
+                {/* DOUBTS TAB */}
+                {activeTab === "courses" && (
+                    <TutorDoubtSection />
+                )}
             </div>
+
+            
 
             {/* RIGHT PANEL */}
             <TutorRightPanel

@@ -29,6 +29,7 @@ app.use("/api/admin-panel", require("./routes/adminPanel"));
 // app.use("/api/user", require("./routes/user"));
 app.use("/api/exam", require("./routes/exam"));
 app.use("/api/result", require("./routes/result"));
+app.use("/api/doubts", require("./routes/doubts"));
 
 require('./server')(server);
 
