@@ -130,24 +130,17 @@ router.post(
         aadharUrl: req.files?.aadhar?.[0]?.path || "",
         marksheetUrl: req.files?.marksheet?.[0]?.path || "",
         password: hashedPassword,
+        // status defaults to "Pending" via schema
       });
 
       await teacher.save();
 
-      const token = jwt.sign(
-        {
-          id: teacher._id,
-          role: "teacher",
-        },
-        process.env.JWT_SECRET,
-        {
-          expiresIn: "7d",
-        }
-      );
-
+      // NOTE: No token issued here anymore for teachers — they must wait for
+      // admin approval before they can log in. See /login below.
       res.status(201).json({
-        message: "Teacher registered successfully",
-        token,
+        message:
+          "Registration submitted successfully. Your account is under review — you'll be able to log in once an admin approves it.",
+        status: "Pending",
         user: {
           id: teacher._id,
           firstName: teacher.firstName,
@@ -186,6 +179,26 @@ router.post("/login", async (req, res) => {
       return res.status(400).json({
         message: "Invalid email or password",
       });
+
+    // Block teacher login until admin approval
+    if (role === "teacher") {
+      if (user.status === "Pending") {
+        return res.status(403).json({
+          message:
+            "Your account is under review. You'll be able to log in once an admin approves your registration.",
+          status: "Pending",
+        });
+      }
+
+      if (user.status === "Rejected") {
+        return res.status(403).json({
+          message: user.rejectionReason
+            ? `Your teacher account was not approved. Reason: ${user.rejectionReason}`
+            : "Your teacher account was not approved.",
+          status: "Rejected",
+        });
+      }
+    }
 
     const token = jwt.sign(
       {

@@ -23,6 +23,7 @@ app.use("/api/student", require("./routes/student"));
 app.use("/api/orders", require("./routes/orders"));
 // app.use("/api/doubts", require("./routes/doubts"));
 app.use("/api/support", require("./routes/support"));
+app.use("/api/admin-panel", require("./routes/adminPanel"));
 // app.use("/api/admin", require("./routes/admin"));
 // app.use("/api/tutor", require("./routes/tutor"));
 // app.use("/api/user", require("./routes/user"));
