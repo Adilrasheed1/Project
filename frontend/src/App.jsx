@@ -22,6 +22,7 @@ import TestsPage from "./pages/TestsPage";
 
 import SharedSidebar from "./components/SharedSidebar";
 import StudentRightPanel from "./components/StudentRightPanel";
+import Administration from "./pages/Administration";
 
 function DoubtSectionPage() {
   const [inCall, setInCall] = useState(false);
@@ -92,6 +93,7 @@ function App() {
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/student-profile" element={<StudentProfile />} />
         <Route path="/testdashboard" element={<TestsPage />} />
+        <Route path="/adminstration" element={<Administration />} />
     </Routes>
     </BrowserRouter>
     </>

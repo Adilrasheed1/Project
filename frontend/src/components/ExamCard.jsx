@@ -34,7 +34,7 @@ function ExamCard({ title, color, subject = "General", onClick }) {
       onClick={onClick}
       className="bg-white rounded-xl shadow-md overflow-hidden cursor-pointer
                  hover:shadow-lg hover:scale-105 transition duration-200
-                 w-full max-w-[400px]"
+                 w-full max-w-100"
     >
 
       {/* TOP BAR */}

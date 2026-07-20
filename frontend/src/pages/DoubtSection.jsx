@@ -6,7 +6,7 @@ export function DoubtSection({ setInCall }) {
     <div>
       {/* ── Heading ── */}
       <div className="mt-8 ml-6 mr-6 flex items-start gap-3">
-        <div className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0" style={{ background: "#F64515" }}>
+        <div className="w-10 h-10 rounded-full flex items-center justify-center shrink-0" style={{ background: "#F64515" }}>
           <MessageCircleQuestion size={20} color="white" />
         </div>
         <div>
@@ -62,7 +62,7 @@ function Step({ icon, iconBg, title, text }) {
   return (
     <div className="flex gap-3">
       <div
-        className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0"
+        className="w-9 h-9 rounded-full flex items-center justify-center shrink-0"
         style={{ background: iconBg }}
       >
         {icon}

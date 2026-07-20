@@ -1,25 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  GraduationCap,
-  BookOpen,
-  CheckCircle2,
-  Paperclip,
-  ChevronRight,
-} from "lucide-react";
 
-const API = `${import.meta.env.VITE_API_URL}/api`;
+const API =  `${import.meta.env.VITE_API_URL}/api`;
 
-// Brand palette — 4 primary colors
-const C = {
-  orange: "#f64515",
-  orangeDark: "#d83c10",   // orange, darkened for hover states
-  green: "#9fd200",
-  blue: "#165ee7",
-  dark: "#000000",
-};
-
-export function AuthPages() {
+export  function AuthPages() {
   const [page, setPage] = useState("login");
   if (page === "login") return <Login setPage={setPage} />;
   if (page === "register") return <Register setPage={setPage} />;
@@ -37,49 +21,24 @@ function PageLayout({ children, wide }) {
         * { box-sizing: border-box; margin: 0; padding: 0; }
         html, body, #root { width: 100%; min-height: 100vh; overflow-x: hidden; }
         input, select, textarea, button { font-family: 'Segoe UI', Arial, sans-serif; }
-
-        .tc-header {
-          width: 100%; background: white; border-bottom: 1px solid #E8ECF0;
-          padding: 0 40px; height: 64px; display: flex; align-items: center; flex-shrink: 0;
-        }
-        .tc-logo { font-weight: 800; font-size: 22px; color: ${C.orange}; }
-
-        .tc-page-wrap {
-          flex: 1; display: flex; justify-content: center;
-          align-items: flex-start; padding: 48px 24px 80px; width: 100%;
-        }
-        .tc-card {
-          background: white; border-radius: 16px; border: 1px solid #E8ECF0;
-          box-shadow: 0 4px 24px rgba(0,0,0,0.06); padding: 44px 48px;
-          width: 100%; max-width: ${wide ? 560 : 460}px;
-        }
-        .tc-h2 { font-size: 26px; font-weight: 800; color: #111; margin-bottom: 6px; }
-        .tc-p-sub { font-size: 14px; color: #6B7280; }
-
-        .tc-row2 { display: flex; gap: 16px; }
-
-        @media (max-width: 768px) {
-          .tc-header { padding: 0 20px; height: 56px; }
-          .tc-logo { font-size: 19px; }
-          .tc-page-wrap { padding: 32px 16px 56px; }
-          .tc-card { padding: 32px 28px; border-radius: 14px; }
-          .tc-h2 { font-size: 23px; }
-        }
-
-        @media (max-width: 480px) {
-          .tc-header { padding: 0 16px; height: 52px; }
-          .tc-logo { font-size: 17px; }
-          .tc-page-wrap { padding: 20px 10px 40px; }
-          .tc-card { padding: 22px 16px; border-radius: 12px; }
-          .tc-h2 { font-size: 20px; }
-          .tc-row2 { flex-direction: column; gap: 0; }
-        }
       `}</style>
-      <div className="tc-header">
-        <span className="tc-logo">TutorConnect</span>
+      <div style={{
+        width: "100%", background: "white", borderBottom: "1px solid #E8ECF0",
+        padding: "0 40px", height: 64, display: "flex", alignItems: "center", flexShrink: 0,
+      }}>
+        <span style={{ fontWeight: 800, fontSize: 22, color: "#4FB88A" }}>
+         TutorConnect
+       </span>
       </div>
-      <div className="tc-page-wrap">
-        <div className="tc-card">
+      <div style={{
+        flex: 1, display: "flex", justifyContent: "center",
+        alignItems: "flex-start", padding: "48px 24px 80px", width: "100%",
+      }}>
+        <div style={{
+          background: "white", borderRadius: 16, border: "1px solid #E8ECF0",
+          boxShadow: "0 4px 24px rgba(0,0,0,0.06)", padding: "44px 48px",
+          width: "100%", maxWidth: wide ? 560 : 460,
+        }}>
           {children}
         </div>
       </div>
@@ -91,7 +50,7 @@ function SectionTitle({ children }) {
   return (
     <p style={{
       fontSize: 11, fontWeight: 700, letterSpacing: "0.09em", textTransform: "uppercase",
-      color: C.orange, borderBottom: "1px solid #F0F2F5", paddingBottom: 8,
+      color: "#4FB88A", borderBottom: "1px solid #F0F2F5", paddingBottom: 8,
       marginBottom: 18, marginTop: 32,
     }}>{children}</p>
   );
@@ -117,7 +76,7 @@ const inputStyle = {
 function Input(props) {
   return (
     <input {...props} style={inputStyle}
-      onFocus={e => e.target.style.borderColor = C.orange}
+      onFocus={e => e.target.style.borderColor = "#4FB88A"}
       onBlur={e => e.target.style.borderColor = "#E0E4EA"}
     />
   );
@@ -126,7 +85,7 @@ function Input(props) {
 function SelectInput({ children, ...props }) {
   return (
     <select {...props} style={{ ...inputStyle, cursor: "pointer" }}
-      onFocus={e => e.target.style.borderColor = C.orange}
+      onFocus={e => e.target.style.borderColor = "#4FB88A"}
       onBlur={e => e.target.style.borderColor = "#E0E4EA"}
     >{children}</select>
   );
@@ -135,7 +94,7 @@ function SelectInput({ children, ...props }) {
 function TextareaInput(props) {
   return (
     <textarea {...props} style={{ ...inputStyle, height: 100, resize: "vertical", lineHeight: 1.6 }}
-      onFocus={e => e.target.style.borderColor = C.orange}
+      onFocus={e => e.target.style.borderColor = "#4FB88A"}
       onBlur={e => e.target.style.borderColor = "#E0E4EA"}
     />
   );
@@ -144,7 +103,7 @@ function TextareaInput(props) {
 function PrimaryBtn({ children, onClick, loading }) {
   return (
     <button onClick={onClick} disabled={loading} style={{
-      width: "100%", padding: "13px", background: loading ? "#9CA3AF" : C.orange,
+      width: "100%", padding: "13px", background: loading ? "#9CA3AF" : "#4FB88A",
       color: "white", border: "none", borderRadius: 8, fontSize: 15, fontWeight: 700,
       cursor: loading ? "not-allowed" : "pointer", marginTop: 8, letterSpacing: 0.2,
     }}>
@@ -167,14 +126,14 @@ function SuccessMsg({ msg }) {
   if (!msg) return null;
   return (
     <div style={{
-      background: "#EEF9D6", border: `1px solid ${C.green}`, borderRadius: 8,
-      padding: "10px 14px", marginBottom: 14, fontSize: 13, color: "#5C7A00", fontWeight: 600,
+      background: "#E3F5EC", border: "1px solid #4FB88A", borderRadius: 8,
+      padding: "10px 14px", marginBottom: 14, fontSize: 13, color: "#4FB88A", fontWeight: 600,
     }}>{msg}</div>
   );
 }
 
 function Row2({ children }) {
-  return <div className="tc-row2">{children}</div>;
+  return <div style={{ display: "flex", gap: 16 }}>{children}</div>;
 }
 
 function BottomNote({ children }) {
@@ -183,7 +142,7 @@ function BottomNote({ children }) {
 
 function Link({ children, onClick }) {
   return (
-    <span onClick={onClick} style={{ color: C.orange, fontWeight: 700, cursor: "pointer" }}>
+    <span onClick={onClick} style={{ color: "#4FB88A", fontWeight: 700, cursor: "pointer" }}>
       {children}
     </span>
   );
@@ -195,15 +154,11 @@ function FileField({ label, hint, onChange, file }) {
       <div style={{
         border: "1.5px dashed #D1D5DB", borderRadius: 8, padding: "14px 18px",
         display: "flex", alignItems: "center", gap: 14,
-        background: file ? "#EEF9D6" : "#FAFBFC", cursor: "pointer", position: "relative",
+        background: file ? "#F0FBF6" : "#FAFBFC", cursor: "pointer", position: "relative",
       }}>
-        <span style={{ flexShrink: 0, display: "flex" }}>
-          {file
-            ? <CheckCircle2 size={22} color={C.green} />
-            : <Paperclip size={22} color="#9CA3AF" />}
-        </span>
+        <span style={{ fontSize: 22, flexShrink: 0 }}>{file ? "✅" : "📎"}</span>
         <div>
-          <p style={{ fontSize: 13, fontWeight: 600, color: file ? "#5C7A00" : "#374151", marginBottom: 2 }}>
+          <p style={{ fontSize: 13, fontWeight: 600, color: file ? "#4FB88A" : "#374151", marginBottom: 2 }}>
             {file ? file.name : "Click to upload"}
           </p>
           <p style={{ fontSize: 11, color: "#9CA3AF" }}>{hint}</p>
@@ -266,8 +221,8 @@ function Login({ setPage }) {
 
   return (
     <PageLayout>
-      <h2 className="tc-h2">Welcome back</h2>
-      <p className="tc-p-sub" style={{ marginBottom: 30 }}>Log in to your TutorConnect account</p>
+      <h2 style={{ fontSize: 26, fontWeight: 800, color: "#111", marginBottom: 6 }}>Welcome back</h2>
+      <p style={{ fontSize: 14, color: "#6B7280", marginBottom: 30 }}>Log in to your TutorConnect account</p>
 
       <div style={{ display: "flex", background: "#F3F4F6", borderRadius: 8, padding: 4, marginBottom: 26 }}>
         {["student", "teacher"].map(r => (
@@ -278,11 +233,7 @@ function Login({ setPage }) {
             color: role === r ? "#111" : "#9CA3AF",
             boxShadow: role === r ? "0 1px 4px rgba(0,0,0,0.08)" : "none",
             transition: "all 0.2s",
-            display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
-          }}>
-            {r === "student" ? <GraduationCap size={16} /> : <BookOpen size={16} />}
-            {r === "student" ? "Student" : "Teacher"}
-          </button>
+          }}>{r === "student" ? "🎓  Student" : "📚  Teacher"}</button>
         ))}
       </div>
 
@@ -300,7 +251,7 @@ function Login({ setPage }) {
           onClick={() => navigate("/forgot-password")}
           style={{
             fontSize: 13,
-            color: C.orange,
+            color: "#4FB88A",
             fontWeight: 600,
             cursor: "pointer",
           }}
@@ -319,12 +270,12 @@ function Login({ setPage }) {
 function Register({ setPage }) {
   return (
     <PageLayout>
-      <h2 className="tc-h2">Create an account</h2>
-      <p className="tc-p-sub" style={{ marginBottom: 28 }}>Choose how you want to use TutorConnect</p>
+      <h2 style={{ fontSize: 26, fontWeight: 800, color: "#111", marginBottom: 6 }}>Create an account</h2>
+      <p style={{ fontSize: 14, color: "#6B7280", marginBottom: 28 }}>Choose how you want to use TutorConnect</p>
 
       {[
-        { key: "student", Icon: GraduationCap, color: C.orange, soft: "#FDE7E0", title: "Student", sub: "Learn, solve doubts, and take proctored exams" },
-        { key: "teacher", Icon: BookOpen, color: C.blue, soft: "#DEE9FD", title: "Teacher", sub: "Upload courses and teach students live" },
+        { key: "student", icon: "🎓", title: "Student", sub: "Learn, solve doubts, and take proctored exams" },
+        { key: "teacher", icon: "📚", title: "Teacher", sub: "Upload courses and teach students live" },
       ].map(c => (
         <div key={c.key} onClick={() => setPage(c.key)}
           style={{
@@ -332,20 +283,18 @@ function Register({ setPage }) {
             padding: "20px 22px", border: "1.5px solid #E0E4EA",
             borderRadius: 12, cursor: "pointer", marginBottom: 14, transition: "all 0.2s",
           }}
-          onMouseEnter={e => { e.currentTarget.style.borderColor = c.color; e.currentTarget.style.background = c.soft; }}
+          onMouseEnter={e => { e.currentTarget.style.borderColor = "#4FB88A"; e.currentTarget.style.background = "#F0FBF6"; }}
           onMouseLeave={e => { e.currentTarget.style.borderColor = "#E0E4EA"; e.currentTarget.style.background = "white"; }}
         >
           <div style={{
-            width: 52, height: 52, borderRadius: 12, background: c.soft,
-            display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
-          }}>
-            <c.Icon size={24} color={c.color} />
-          </div>
+            width: 52, height: 52, borderRadius: 12, background: "#F0FBF6",
+            display: "flex", alignItems: "center", justifyContent: "center", fontSize: 26, flexShrink: 0,
+          }}>{c.icon}</div>
           <div style={{ flex: 1 }}>
             <p style={{ fontWeight: 700, fontSize: 15, marginBottom: 4, color: "#111" }}>I am a {c.title}</p>
             <p style={{ fontSize: 13, color: "#6B7280" }}>{c.sub}</p>
           </div>
-          <ChevronRight size={20} color="#CBD5E0" style={{ flexShrink: 0 }} />
+          <span style={{ color: "#CBD5E0", fontSize: 20, flexShrink: 0 }}>›</span>
         </div>
       ))}
 
@@ -406,8 +355,8 @@ function StudentRegister({ setPage }) {
 
   return (
     <PageLayout wide>
-      <h2 className="tc-h2">Student Registration</h2>
-      <p className="tc-p-sub">Fill in your details to get started</p>
+      <h2 style={{ fontSize: 26, fontWeight: 800, color: "#111", marginBottom: 6 }}>Student Registration</h2>
+      <p style={{ fontSize: 14, color: "#6B7280" }}>Fill in your details to get started</p>
 
       <ErrorMsg msg={error} />
       <SuccessMsg msg={success} />
@@ -467,8 +416,8 @@ function StudentRegister({ setPage }) {
       <Field label="Confirm Password *"><Input type="password" placeholder="Repeat your password" value={f.confirm} onChange={s("confirm")} /></Field>
 
       <label style={{ display: "flex", gap: 10, alignItems: "center", fontSize: 13, color: "#6B7280", marginTop: 8, marginBottom: 20, cursor: "pointer" }}>
-        <input type="checkbox" style={{ accentColor: C.orange, width: 15, height: 15 }} />
-        I agree to the <span style={{ color: C.orange, fontWeight: 600 }}>Terms and Conditions</span>
+        <input type="checkbox" style={{ accentColor: "#4FB88A", width: 15, height: 15 }} />
+        I agree to the <span style={{ color: "#4FB88A", fontWeight: 600 }}>Terms and Conditions</span>
       </label>
 
       <PrimaryBtn onClick={handleRegister} loading={loading}>Create Account</PrimaryBtn>
@@ -545,12 +494,14 @@ function TeacherRegister({ setPage }) {
         return;
       }
 
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("user", JSON.stringify(data.user));
+      // No token is issued at registration anymore — teacher accounts start
+      // as "Pending" and must be approved by an admin before they can log in.
+      setSuccess(
+        data.message ||
+          "Application submitted! Your account is under review. You'll be able to log in once an admin approves it."
+      );
 
-      setSuccess("Application submitted! Redirecting...");
-
-      setTimeout(() => navigate("/teacher"), 1500);
+      setTimeout(() => setPage("login"), 2500);
     } catch (err) {
       setError("Cannot connect to server. Make sure backend is running.");
       setLoading(false);
@@ -559,8 +510,8 @@ function TeacherRegister({ setPage }) {
 
   return (
     <PageLayout wide>
-      <h2 className="tc-h2">Teacher Registration</h2>
-      <p className="tc-p-sub">Apply to become a verified tutor on TutorConnect</p>
+      <h2 style={{ fontSize: 26, fontWeight: 800, color: "#111", marginBottom: 6 }}>Teacher Registration</h2>
+      <p style={{ fontSize: 14, color: "#6B7280" }}>Apply to become a verified tutor on TutorConnect</p>
 
       <ErrorMsg msg={error} />
       <SuccessMsg msg={success} />
@@ -646,8 +597,8 @@ function TeacherRegister({ setPage }) {
       <Field label="Confirm Password *"><Input type="password" placeholder="Repeat your password" value={f.confirm} onChange={s("confirm")} /></Field>
 
       <label style={{ display: "flex", gap: 10, alignItems: "center", fontSize: 13, color: "#6B7280", marginTop: 8, marginBottom: 20, cursor: "pointer" }}>
-        <input type="checkbox" style={{ accentColor: C.orange, width: 15, height: 15 }} />
-        I agree to the <span style={{ color: C.orange, fontWeight: 600 }}>Terms and Conditions</span>
+        <input type="checkbox" style={{ accentColor: "#4FB88A", width: 15, height: 15 }} />
+        I agree to the <span style={{ color: "#4FB88A", fontWeight: 600 }}>Terms and Conditions</span>
       </label>
 
       <PrimaryBtn onClick={handleRegister} loading={loading}>Submit Application</PrimaryBtn>
