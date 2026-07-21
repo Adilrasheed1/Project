@@ -38,6 +38,12 @@ router.get("/profile", authMiddleware, async (req, res) => {
       });
     }
 
+    if (student.isBlocked) {
+      return res.status(403).json({
+        message: "Your account has been blocked. Contact support.",
+      });
+    }
+
     const hasOrphans = student.enrolledCourses.some((c) => !c.course);
     if (hasOrphans) {
       student.enrolledCourses = student.enrolledCourses.filter((c) => c.course);
@@ -67,6 +73,12 @@ router.get("/dashboard", authMiddleware, async (req, res) => {
     if (!student) {
       return res.status(404).json({
         message: "Student not found",
+      });
+    }
+
+    if (student.isBlocked) {
+      return res.status(403).json({
+        message: "Your account has been blocked. Contact support.",
       });
     }
 
@@ -125,7 +137,6 @@ router.put("/profile", authMiddleware, async (req, res) => {
     student.city = req.body.city;
     student.state = req.body.state;
 
-    // Change password only if requested
     if (
       req.body.currentPassword &&
       req.body.newPassword &&

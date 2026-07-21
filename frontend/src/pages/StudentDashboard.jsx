@@ -6,6 +6,7 @@ import {
   User,
   Trophy,
   ClipboardList,
+  LogOut,
 } from "lucide-react";
 
 export default function StudentDashboard() {
@@ -45,6 +46,12 @@ export default function StudentDashboard() {
       // Fallback state to prevent loading forever if API fails
       setDashboard({ stats: { courses: 0, completedCourses: 0 }, myCourses: [] });
     }
+  }
+
+  function handleLogout() {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    navigate("/auth");
   }
 
   if (!dashboard)
@@ -94,7 +101,13 @@ export default function StudentDashboard() {
             <h1 style={s.pageTitle} className="app-pageTitle">Student Dashboard</h1>
             <p style={s.pageSub}>Welcome back, {user?.firstName || "Student"}</p>
           </div>
-          <button style={s.exploreBtn} onClick={() => navigate("/courses")}>Explore Courses</button>
+          <div style={{ display: "flex", gap: 10 }}>
+            <button style={s.exploreBtn} onClick={() => navigate("/courses")}>Explore Courses</button>
+            <button style={s.logoutBtn} onClick={handleLogout}>
+              <LogOut size={15} />
+              Log Out
+            </button>
+          </div>
         </div>
 
         {/* stats */}
@@ -249,6 +262,20 @@ const s = {
   pageTitle: { fontSize: 26, fontWeight: 800, color: "#1A1A1A", letterSpacing: -0.5 },
   pageSub: { fontSize: 14, color: "#888", marginTop: 4 },
   exploreBtn: { background: "#F64515", color: "white", border: "none", borderRadius: 8, padding: "10px 20px", fontSize: 14, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" },
+  logoutBtn: {
+    background: "#F5F5F5",
+    color: "#444",
+    border: "1px solid #E3E6E9",
+    borderRadius: 8,
+    padding: "10px 18px",
+    fontSize: 14,
+    fontWeight: 700,
+    cursor: "pointer",
+    fontFamily: "inherit",
+    display: "flex",
+    alignItems: "center",
+    gap: 6,
+  },
   statsGrid: { display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 16, marginBottom: 32 },
   statCard: { background: "white", borderRadius: 14, padding: "20px 18px", display: "flex", alignItems: "center", gap: 14, boxShadow: "0 2px 10px rgba(0,0,0,0.05)" },
   statIcon: { width: 46, height: 46, borderRadius: 12, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 },

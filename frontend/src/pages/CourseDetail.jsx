@@ -18,10 +18,13 @@ import {
 export default function CourseDetail() {
   const navigate = useNavigate();
   const { id } = useParams();
+  const token = localStorage.getItem("token");
 
   const [course, setCourse] = useState(null);
   const [alreadyPurchased, setAlreadyPurchased] = useState(false);
   const [error, setError] = useState(false);
+  const [enrolling, setEnrolling] = useState(false);
+  const [enrollError, setEnrollError] = useState("");
 
   useEffect(() => {
     setCourse(null);
@@ -55,8 +58,6 @@ export default function CourseDetail() {
 
   async function checkPurchased() {
     try {
-      const token = localStorage.getItem("token");
-
       if (!token) return;
 
       const res = await fetch(`${import.meta.env.VITE_API_URL}/api/courses/my`, {
@@ -74,6 +75,38 @@ export default function CourseDetail() {
       setAlreadyPurchased(purchased);
     } catch (err) {
       console.log(err);
+    }
+  }
+
+  async function enrollFree() {
+    setEnrollError("");
+    setEnrolling(true);
+    try {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/courses/${id}/enroll`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        if (data.message === "Already enrolled") {
+          setAlreadyPurchased(true);
+        } else {
+          setEnrollError(data.message || "Could not enroll. Please try again.");
+        }
+        return;
+      }
+
+      setAlreadyPurchased(true);
+      navigate("/dashboard");
+    } catch (err) {
+      console.log(err);
+      setEnrollError("Server error. Please try again.");
+    } finally {
+      setEnrolling(false);
     }
   }
 
@@ -109,6 +142,7 @@ export default function CourseDetail() {
   // card color. Every branded/interactive element (logo, links, checkmarks,
   // Buy Now) uses this, so nothing clashes with the hero banner above it.
   const accent = course.color || "#165ee7";
+  const isFree = !course.price || course.price <= 0;
 
   return (
     <div style={s.shell}>
@@ -227,12 +261,22 @@ export default function CourseDetail() {
             <p><b>Students:</b> {course.students || 0}</p>
 
             <div style={{ ...s.priceRow, marginTop: "14px" }}>
-              <span style={s.priceVal}>₹{course.price}</span>
+              <span style={s.priceVal}>{isFree ? "Free" : `₹${course.price}`}</span>
             </div>
+
+            {enrollError && <div style={s.errorBox}>{enrollError}</div>}
 
             {alreadyPurchased ? (
               <button style={{ ...s.buyBtn, background: accent, opacity: 0.8, cursor: "default" }} disabled>
                 Already Purchased
+              </button>
+            ) : isFree ? (
+              <button
+                style={{ ...s.buyBtn, background: accent, opacity: enrolling ? 0.75 : 1, cursor: enrolling ? "default" : "pointer" }}
+                disabled={enrolling}
+                onClick={enrollFree}
+              >
+                {enrolling ? "Enrolling..." : "Enroll for Free"}
               </button>
             ) : (
               <button style={{ ...s.buyBtn, background: accent }} onClick={() => navigate(`/payment/${course._id}`)}>
@@ -400,6 +444,16 @@ const s = {
     cursor: "pointer",
     marginBottom: 14,
     fontFamily: "inherit",
+  },
+  errorBox: {
+    background: "#FBE6E4",
+    border: "1px solid #E8A69E",
+    color: "#B23B2E",
+    borderRadius: 8,
+    padding: "10px 12px",
+    fontSize: 12,
+    fontWeight: 600,
+    marginBottom: 12,
   },
   guarantee: { textAlign: "center", fontSize: 12, color: "#888", marginBottom: 16 },
   includes: { borderTop: "1px solid #eeeff1", paddingTop: 14 },

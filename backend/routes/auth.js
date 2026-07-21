@@ -180,6 +180,18 @@ router.post("/login", async (req, res) => {
         message: "Invalid email or password",
       });
 
+    // Block login for accounts an admin has blocked — checked for both
+    // students and teachers, before any approval-status checks or token
+    // issuance, so a blocked user never gets a valid token.
+    if (user.isBlocked) {
+      return res.status(403).json({
+        message: user.blockReason
+          ? `Your account has been blocked. Reason: ${user.blockReason}`
+          : "Your account has been blocked. Contact support.",
+        status: "Blocked",
+      });
+    }
+
     // Block teacher login until admin approval
     if (role === "teacher") {
       if (user.status === "Pending") {

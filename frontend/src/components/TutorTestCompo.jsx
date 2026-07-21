@@ -405,7 +405,7 @@ export function TutorTestCompo() {
                       setSelectedExamId(null);
                       setResults([]);
                     } else {
-                      fetchResults(exam._id);
+                      fetchResults(exam._id)
                     }
                   }}
                   style={s.secondaryBtn}
