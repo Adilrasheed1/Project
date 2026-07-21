@@ -7,7 +7,8 @@ import {
   BookOpen,
   Briefcase,
   Palette,
-  FileText
+  FileText,
+  Trophy,
 } from "lucide-react";
 
 // ── SUBJECT → ICON MAP ────────────────────────────
@@ -23,19 +24,40 @@ const subjectMap = {
   "General":      FileText,
 };
 
-function ExamCard({ title, color, subject = "General", onClick }) {
+// bestScore: number (e.g. 85) if the student has attempted this exam before,
+// or null/undefined if they haven't. Parent component (TestDashboard) is
+// responsible for figuring this out and passing it in — ExamCard just displays it.
+function ExamCard({ title, color, subject = "General", bestScore = null, onClick }) {
 
   // get icon component for this subject
   // if subject not in map → fallback to FileText
   const IconComponent = subjectMap[subject] ?? FileText;
+
+  // has the student attempted this exam at least once?
+  const hasAttempted = bestScore !== null && bestScore !== undefined;
 
   return (
     <div
       onClick={onClick}
       className="bg-white rounded-xl shadow-md overflow-hidden cursor-pointer
                  hover:shadow-lg hover:scale-105 transition duration-200
-                 w-full max-w-100"
+                 w-full max-w-[400px] relative"
     >
+
+      {/* BEST SCORE BADGE — only renders if the exam has been attempted.
+          Positioned absolute so it floats over the top-right corner
+          without disturbing the existing layout below it. */}
+      {hasAttempted && (
+        <div
+          className="absolute top-3 right-3 z-10 flex items-center gap-1
+                     bg-white/95 px-2.5 py-1 rounded-full shadow-md"
+        >
+          <Trophy size={14} color="#9fd200" />
+          <span className="text-xs font-bold text-gray-700">
+            Best: {bestScore}%
+          </span>
+        </div>
+      )}
 
       {/* TOP BAR */}
       <div
@@ -59,7 +81,7 @@ function ExamCard({ title, color, subject = "General", onClick }) {
           {title}
         </h3>
         <p className="text-sm text-gray-500">
-          Click to start this exam
+          {hasAttempted ? "Click to retry this exam" : "Click to start this exam"}
         </p>
       </div>
 
