@@ -5,10 +5,10 @@ const Exam = require("../models/Exam");
 // ─── CREATE EXAM ───────────────────────────────────
 router.post("/", async (req, res) => {
   try {
-    const { name, subject, type, duration, color, questions } = req.body;
+    const { name, subject, type, duration, color, questions, createdBy } = req.body;
 
     const exam = await Exam.create({
-      name, subject, type, duration, color, questions
+      name, subject, type, duration, color, questions, createdBy
     });
 
     res.json({
@@ -25,6 +25,20 @@ router.post("/", async (req, res) => {
 router.get("/", async (req, res) => {
   try {
     const exams = await Exam.find();
+    res.json(exams);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// ─── GET EXAMS CREATED BY ONE TEACHER ──────────────
+// Used by the tutor dashboard's "My Exams" list, so each tutor only
+// sees exams they personally created. The student-facing dashboard
+// keeps using GET "/" above, unfiltered, since students should see
+// every tutor's exams.
+router.get("/teacher/:teacherId", async (req, res) => {
+  try {
+    const exams = await Exam.find({ createdBy: req.params.teacherId });
     res.json(exams);
   } catch (err) {
     res.status(500).json({ error: err.message });

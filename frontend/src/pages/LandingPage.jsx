@@ -993,11 +993,11 @@ export  function LandingPage() {
               <div className="tc-stat-lbl">avg. connect time</div>
             </div>
             <div>
-              <div className="tc-stat-val">1,200+</div>
+              <div className="tc-stat-val">32+</div>
               <div className="tc-stat-lbl">verified tutors</div>
             </div>
             <div>
-              <div className="tc-stat-val">40k+</div>
+              <div className="tc-stat-val">600+</div>
               <div className="tc-stat-lbl">doubts solved monthly</div>
             </div>
           </div>
@@ -1141,7 +1141,7 @@ export  function LandingPage() {
         <div className="tc-cta">
           <div>
             <h2>Ready to stop being stuck?</h2>
-            <p>Join thousands of students and tutors already on TutorConnect. Takes 2 minutes to sign up.</p>
+            <p>Join students and tutors already on TutorConnect. Takes 2 minutes to sign up.</p>
           </div>
           <div className="tc-cta-btns">
             <button className="tc-btn-white" onClick={goAuth}>Log in as Student</button>

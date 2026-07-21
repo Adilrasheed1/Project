@@ -34,8 +34,17 @@ function TestDashboard({ setSelectedExam }) {
   // making a separate API call per exam card (that would be N extra
   // requests just to render the dashboard).
   const fetchResults = async () => {
-    const username = localStorage.getItem("username");
-    if (!username) return; // not logged in / no username saved — skip silently
+    let username = null;
+    try {
+      const storedUser = JSON.parse(localStorage.getItem("user"));
+      if (storedUser?.firstName) {
+        username = `${storedUser.firstName} ${storedUser.lastName || ""}`.trim();
+      }
+    } catch (err) {
+      console.error("Could not read logged-in user:", err);
+    }
+
+    if (!username) return; // not logged in — skip silently
 
     try {
       const response = await fetch(`${RESULT_API_URL}/student/${username}`);

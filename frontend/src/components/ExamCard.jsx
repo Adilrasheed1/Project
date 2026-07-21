@@ -41,7 +41,7 @@ function ExamCard({ title, color, subject = "General", bestScore = null, onClick
       onClick={onClick}
       className="bg-white rounded-xl shadow-md overflow-hidden cursor-pointer
                  hover:shadow-lg hover:scale-105 transition duration-200
-                 w-full max-w-[400px] relative"
+                 w-full max-w-[400px] relative self-start h-fit"
     >
 
       {/* BEST SCORE BADGE — only renders if the exam has been attempted.

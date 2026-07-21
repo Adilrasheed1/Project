@@ -77,6 +77,22 @@ function Exam({ exam, onBack }) {
     ? examScore - deductionAmount
     : examScore;
 
+  // ─── GET LOGGED-IN STUDENT'S NAME ──────────────────
+  // Login (AuthPages.jsx) saves the whole user object as one JSON string
+  // under the "user" key — there is no separate "username" key anywhere
+  // in the app. We parse it here and build a display name from firstName
+  // + lastName. Wrapped in try/catch because JSON.parse throws on bad/
+  // missing data (e.g. user never logged in) rather than returning null.
+  let studentUsername = "Guest";
+  try {
+    const storedUser = JSON.parse(localStorage.getItem("user"));
+    if (storedUser?.firstName) {
+      studentUsername = `${storedUser.firstName} ${storedUser.lastName || ""}`.trim();
+    }
+  } catch (err) {
+    console.error("Could not read logged-in user:", err);
+  }
+
   // ─── SAVE RESULT TO BACKEND ────────────────────────
   try {
     await fetch(`${import.meta.env.VITE_API_URL}/api/result`, {
@@ -85,7 +101,7 @@ function Exam({ exam, onBack }) {
       body: JSON.stringify({
         examId: exam._id,
         examName: exam.name,
-        studentUsername: localStorage.getItem("username") || "Guest",
+        studentUsername,
         examScore,
         integrityScore: currentIntegrity,
         finalScore,

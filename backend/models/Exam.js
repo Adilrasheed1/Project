@@ -13,7 +13,8 @@ const examSchema = new mongoose.Schema({
   duration:  { type: Number },
   color:     { type: String },
   questions: [questionSchema],
-  createdAt: { type: Date, default: Date.now }
+  createdAt: { type: Date, default: Date.now },
+  createdBy: { type: String }
 });
 
 module.exports = mongoose.model("Exam", examSchema);

@@ -12,6 +12,7 @@ import {
 export default function StudentDashboard() {
   const navigate = useNavigate();
   const [dashboard, setDashboard] = useState(null);
+  const [exams, setExams] = useState([]);
 
   // Crash protection: Handle missing or invalid localStorage data gracefully
   const token = localStorage.getItem("token") || "";
@@ -25,7 +26,21 @@ export default function StudentDashboard() {
 
   useEffect(() => {
     loadDashboard();
+    loadExams();
   }, []);
+
+  // fetches real exams to show a small preview in the right panel
+  // (replaces the old hardcoded "Upcoming Tests" list)
+  async function loadExams() {
+    try {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/exam`);
+      const data = await res.json();
+      setExams(Array.isArray(data) ? data : []);
+    } catch (err) {
+      console.error("Exams load error:", err);
+      setExams([]);
+    }
+  }
 
   async function loadDashboard() {
     try {
@@ -228,28 +243,46 @@ export default function StudentDashboard() {
           <div style={s.profileBadge}>Student</div>
         </div>
 
-        <h3 style={s.panelTitle}>Weekly Goal</h3>
+        <h3 style={s.panelTitle}>Course Progress</h3>
         <div style={s.goalCard}>
-          <p style={s.goalText}>Study 10 hours this week</p>
-          <div style={s.goalBarBg}>
-            <div style={{ ...s.goalBarFill, width: "60%" }} />
-          </div>
-          <p style={s.goalSub}>{dashboard?.stats?.completedCourses ?? 0} course(s) completed</p>
+          {(() => {
+            const total = dashboard?.stats?.courses ?? 0;
+            const done = dashboard?.stats?.completedCourses ?? 0;
+            const pct = total > 0 ? Math.round((done / total) * 100) : 0;
+            return (
+              <>
+                <p style={s.goalText}>
+                  {done} of {total} course{total === 1 ? "" : "s"} completed
+                </p>
+                <div style={s.goalBarBg}>
+                  <div style={{ ...s.goalBarFill, width: `${pct}%` }} />
+                </div>
+                <p style={s.goalSub}>{pct}% complete</p>
+              </>
+            );
+          })()}
         </div>
 
-        <h3 style={s.panelTitle}>Upcoming Tests</h3>
-        {[
-          { name: "Calculus Mid-term", date: "Jan 15, 2026" },
-          { name: "Chemistry Quiz", date: "Jan 18, 2026" },
-        ].map((t, i) => (
-          <div key={i} style={s.testItem}>
-            <span style={s.testIcon}><ClipboardList size={18} /></span>
-            <div>
-              <p style={s.testName}>{t.name}</p>
-              <p style={s.testDate}>{t.date}</p>
+        <h3 style={s.panelTitle}>Available Exams</h3>
+        {exams.length === 0 ? (
+          <p style={{ fontSize: 12, color: "#888" }}>No exams available yet.</p>
+        ) : (
+          exams.slice(0, 3).map((exam) => (
+            <div
+              key={exam._id}
+              style={{ ...s.testItem, cursor: "pointer" }}
+              onClick={() => navigate("/testdashboard")}
+            >
+              <span style={s.testIcon}><ClipboardList size={18} /></span>
+              <div>
+                <p style={s.testName}>{exam.name}</p>
+                <p style={s.testDate}>
+                  {exam.type === "proctored" ? "Proctored" : "Normal"} · {exam.subject || "General"}
+                </p>
+              </div>
             </div>
-          </div>
-        ))}
+          ))
+        )}
       </div>
     </div>
   );

@@ -86,6 +86,19 @@ const s = {
   tableRow: { display: "flex", padding: "12px", borderBottom: "1px solid #eeeff1", fontSize: 13 },
 };
 
+// Reads the logged-in teacher's id out of the "user" object login saves
+// in localStorage (see AuthPages.jsx). Same object shape used for the
+// student-side fix — { id, firstName, lastName, email, role }.
+const getTeacherId = () => {
+  try {
+    const storedUser = JSON.parse(localStorage.getItem("user"));
+    return storedUser?.id || null;
+  } catch (err) {
+    console.error("Could not read logged-in teacher:", err);
+    return null;
+  }
+};
+
 // ── COMPONENT ──────────────────────────────────────
 export function TutorTestCompo() {
 
@@ -114,8 +127,16 @@ export function TutorTestCompo() {
 
   const fetchExams = async () => {
     setLoading(true);
+
+    const teacherId = getTeacherId();
+    if (!teacherId) {
+      console.error("No logged-in teacher found — cannot load exams");
+      setLoading(false);
+      return;
+    }
+
     try {
-      const response = await fetch(API_URL);
+      const response = await fetch(`${API_URL}/teacher/${teacherId}`);
       const data = await response.json();
       setExams(data);
     } catch (err) {
@@ -206,10 +227,17 @@ export function TutorTestCompo() {
       const url = editingId ? `${API_URL}/${editingId}` : API_URL;
       const method = editingId ? "PUT" : "POST";
 
+      // Only stamp createdBy on brand-new exams. Editing an existing exam
+      // should never change who owns it — so we leave formData untouched
+      // for PUT requests.
+      const body = editingId
+        ? formData
+        : { ...formData, createdBy: getTeacherId() };
+
       await fetch(url, {
         method,
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData)
+        body: JSON.stringify(body)
       });
 
       await fetchExams();
