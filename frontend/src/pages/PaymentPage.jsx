@@ -1,28 +1,43 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
+// Test key only — no key_secret here. Real signature verification needs a
+// backend route that creates the order (and verifies payment.success)
+// using the key_secret, which should never live in frontend code.
+const RAZORPAY_KEY = "rzp_test_TG6BLiHbIXiQV3";
+
+function loadRazorpayScript() {
+  return new Promise((resolve) => {
+    if (window.Razorpay) {
+      resolve(true);
+      return;
+    }
+    const script = document.createElement("script");
+    script.src = "https://checkout.razorpay.com/v1/checkout.js";
+    script.onload = () => resolve(true);
+    script.onerror = () => resolve(false);
+    document.body.appendChild(script);
+  });
+}
+
 export default function PaymentPage() {
   const navigate = useNavigate();
   const { id } = useParams();
 
   const token = localStorage.getItem("token");
+  const user = (() => {
+    try {
+      return JSON.parse(localStorage.getItem("user")) || {};
+    } catch (e) {
+      return {};
+    }
+  })();
 
   const [course, setCourse] = useState(null);
-  const [method, setMethod] = useState("card");
   const [done, setDone] = useState(false);
   const [alreadyPurchased, setAlreadyPurchased] = useState(false);
   const [paying, setPaying] = useState(false);
-  const [form, setForm] = useState({
-    name: "",
-    card: "",
-    expiry: "",
-    cvv: "",
-    upi: "",
-  });
-
-  const set = (key) => (e) => {
-    setForm({ ...form, [key]: e.target.value });
-  };
+  const [payError, setPayError] = useState("");
 
   useEffect(() => {
     loadCourse();
@@ -57,15 +72,7 @@ export default function PaymentPage() {
     }
   }
 
-  async function completePayment() {
-    if (alreadyPurchased) {
-      alert("You already purchased this course.");
-      navigate("/courses");
-      return;
-    }
-
-    setPaying(true);
-
+  async function enrollAfterPayment(paymentId) {
     try {
       const res = await fetch(`${import.meta.env.VITE_API_URL}/api/courses/${id}/enroll`, {
         method: "POST",
@@ -77,23 +84,76 @@ export default function PaymentPage() {
       const data = await res.json();
 
       if (!res.ok) {
-        alert(data.message || "Payment failed");
-
         if (data.message === "Already enrolled") {
           setAlreadyPurchased(true);
-          navigate("/courses");
+          setDone(true);
+          return;
         }
-
+        setPayError(
+          data.message ||
+            "Payment succeeded but enrollment failed. Please contact support with payment ID " +
+              paymentId +
+              "."
+        );
         return;
       }
 
       setDone(true);
     } catch (err) {
       console.log(err);
-      alert("Server Error");
+      setPayError(
+        "Payment succeeded but we couldn't confirm enrollment. Please contact support with payment ID " +
+          paymentId +
+          "."
+      );
     } finally {
       setPaying(false);
     }
+  }
+
+  async function handlePayment() {
+    if (alreadyPurchased) {
+      navigate("/courses");
+      return;
+    }
+
+    setPayError("");
+    setPaying(true);
+
+    const loaded = await loadRazorpayScript();
+    if (!loaded) {
+      setPayError("Couldn't load the payment gateway. Check your connection and try again.");
+      setPaying(false);
+      return;
+    }
+
+    const options = {
+      key: RAZORPAY_KEY,
+      amount: Math.round((course.price || 0) * 100), // amount in paise
+      currency: "INR",
+      name: "TutorConnect",
+      description: course.title,
+      handler: function (response) {
+        enrollAfterPayment(response.razorpay_payment_id);
+      },
+      prefill: {
+        name: [user?.firstName, user?.lastName].filter(Boolean).join(" "),
+        email: user?.email || "",
+      },
+      theme: { color: course.color || "#165ee7" },
+      modal: {
+        ondismiss: function () {
+          setPaying(false);
+        },
+      },
+    };
+
+    const rzp = new window.Razorpay(options);
+    rzp.on("payment.failed", function () {
+      setPayError("Payment failed. Please try again.");
+      setPaying(false);
+    });
+    rzp.open();
   }
 
   if (!course) {
@@ -109,8 +169,8 @@ export default function PaymentPage() {
           <p style={s.successText}>
             You have successfully enrolled in <b>{course.title}</b>.
           </p>
-          <button style={s.payBtn} onClick={() => navigate("/courses")}>
-            Back to Courses
+          <button style={s.payBtn} onClick={() => navigate("/dashboard")}>
+            Go to Dashboard
           </button>
         </div>
       </div>
@@ -131,8 +191,8 @@ export default function PaymentPage() {
       </div>
 
       <div style={s.body}>
-        <div style={s.left}>
-          <h2 style={s.pageTitle}>Checkout</h2>
+        <div style={s.summaryCard}>
+          <h2 style={s.pageTitle}>Order Summary</h2>
 
           {alreadyPurchased && (
             <div style={s.notice}>
@@ -140,214 +200,64 @@ export default function PaymentPage() {
             </div>
           )}
 
-          <div style={s.card}>
-            <h3 style={s.cardTitle}>Payment Method</h3>
-
-            <div style={s.methodRow}>
-              {[
-                { key: "card", label: "💳 Credit / Debit Card" },
-                { key: "upi", label: "📱 UPI" },
-                { key: "netbanking", label: "🏦 Net Banking" },
-              ].map((m) => (
-                <div
-                  key={m.key}
-                  onClick={() => setMethod(m.key)}
-                  style={{
-                    ...s.methodBtn,
-                    border:
-                      method === m.key
-                        ? "2px solid #165ee7"
-                        : "1.5px solid #dfe3e6",
-                    background: method === m.key ? "#E4EEFD" : "white",
-                    color: method === m.key ? "#165ee7" : "#444",
-                  }}
-                >
-                  {m.label}
-                </div>
-              ))}
+          <div style={s.courseRow}>
+            <div style={{ ...s.courseThumb, background: course.color || "#165ee7" }}>
+              <span style={s.thumbText}>{course.subject?.charAt(0) || "C"}</span>
             </div>
 
-            {method === "card" && (
-              <div style={{ marginTop: 20 }}>
-                <Field label="Cardholder Name">
-                  <Input placeholder="Name on card" value={form.name} onChange={set("name")} />
-                </Field>
-
-                <Field label="Card Number">
-                  <Input
-                    placeholder="1234 5678 9012 3456"
-                    value={form.card}
-                    onChange={set("card")}
-                    maxLength={19}
-                  />
-                </Field>
-
-                <div style={{ display: "flex", gap: 16 }}>
-                  <div style={{ flex: 1 }}>
-                    <Field label="Expiry Date">
-                      <Input placeholder="MM / YY" value={form.expiry} onChange={set("expiry")} />
-                    </Field>
-                  </div>
-
-                  <div style={{ flex: 1 }}>
-                    <Field label="CVV">
-                      <Input
-                        placeholder="•••"
-                        value={form.cvv}
-                        onChange={set("cvv")}
-                        maxLength={3}
-                        type="password"
-                      />
-                    </Field>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {method === "upi" && (
-              <div style={{ marginTop: 20 }}>
-                <Field label="UPI ID">
-                  <Input placeholder="yourname@upi" value={form.upi} onChange={set("upi")} />
-                </Field>
-                <p style={s.smallText}>
-                  You will receive a payment request on your UPI app.
-                </p>
-              </div>
-            )}
-
-            {method === "netbanking" && (
-              <div style={{ marginTop: 20 }}>
-                <Field label="Select Bank">
-                  <select style={inputStyle}>
-                    <option>State Bank of India</option>
-                    <option>HDFC Bank</option>
-                    <option>ICICI Bank</option>
-                    <option>Axis Bank</option>
-                    <option>Punjab National Bank</option>
-                    <option>Other</option>
-                  </select>
-                </Field>
-              </div>
-            )}
-          </div>
-
-          <div style={s.card}>
-            <h3 style={s.cardTitle}>Billing Details</h3>
-
-            <div style={{ display: "flex", gap: 16 }}>
-              <div style={{ flex: 1 }}>
-                <Field label="First Name">
-                  <Input placeholder="First name" />
-                </Field>
-              </div>
-
-              <div style={{ flex: 1 }}>
-                <Field label="Last Name">
-                  <Input placeholder="Last name" />
-                </Field>
-              </div>
+            <div style={{ flex: 1 }}>
+              <p style={s.courseTitle}>{course.title}</p>
+              <p style={s.courseTutor}>{course.tutor}</p>
+              <p style={s.courseSubject}>{course.subject}</p>
             </div>
-
-            <Field label="Email Address">
-              <Input placeholder="you@email.com" type="email" />
-            </Field>
-
-            <Field label="Phone Number">
-              <Input placeholder="+91 XXXXX XXXXX" type="tel" />
-            </Field>
           </div>
-        </div>
 
-        <div style={s.right}>
-          <div style={s.summaryCard}>
-            <h3 style={s.cardTitle}>Order Summary</h3>
+          <div style={s.divider} />
 
-            <div style={s.courseRow}>
-              <div style={{ ...s.courseThumb, background: course.color || "#165ee7" }}>
-                <span style={s.thumbText}>{course.subject?.charAt(0) || "C"}</span>
-              </div>
-
-              <div style={{ flex: 1 }}>
-                <p style={s.courseTitle}>{course.title}</p>
-                <p style={s.courseTutor}>{course.tutor}</p>
-              </div>
+          <div style={s.priceLines}>
+            <div style={s.priceLine}>
+              <span>Course Price</span>
+              <span>₹{course.price}</span>
             </div>
 
             <div style={s.divider} />
 
-            <div style={s.priceLines}>
-              <div style={s.priceLine}>
-                <span>Course Price</span>
-                <span>₹{course.price}</span>
-              </div>
-
-              <div style={s.divider} />
-
-              <div style={{ ...s.priceLine, fontWeight: 800, fontSize: 16 }}>
-                <span>Total</span>
-                <span>₹{course.price}</span>
-              </div>
+            <div style={{ ...s.priceLine, fontWeight: 800, fontSize: 17 }}>
+              <span>Total</span>
+              <span>₹{course.price}</span>
             </div>
+          </div>
 
-            <button
-              style={{
-                ...s.payBtn,
-                opacity: alreadyPurchased || paying ? 0.75 : 1,
-                cursor: alreadyPurchased || paying ? "default" : "pointer",
-              }}
-              disabled={alreadyPurchased || paying}
-              onClick={completePayment}
-            >
-              {alreadyPurchased
-                ? "Already Purchased"
-                : paying
-                ? "Processing..."
-                : `Pay ₹${course.price} Securely`}
-            </button>
+          {payError && <div style={s.errorBox}>{payError}</div>}
 
-            <div style={s.trustRow}>
-              <span style={s.trustItem}>🔒 SSL Secured</span>
-              <span style={s.trustItem}>↩ 30-day refund</span>
-              <span style={s.trustItem}>✓ Instant access</span>
-            </div>
+          <button
+            style={{
+              ...s.payBtn,
+              opacity: alreadyPurchased || paying ? 0.75 : 1,
+              cursor: alreadyPurchased || paying ? "default" : "pointer",
+            }}
+            disabled={alreadyPurchased || paying}
+            onClick={handlePayment}
+          >
+            {alreadyPurchased
+              ? "Already Purchased"
+              : paying
+              ? "Processing..."
+              : `Confirm & Pay ₹${course.price}`}
+          </button>
+
+          <p style={s.smallPrint}>You'll be redirected to Razorpay to complete payment securely.</p>
+
+          <div style={s.trustRow}>
+            <span style={s.trustItem}>🔒 SSL Secured</span>
+            <span style={s.trustItem}>↩ 30-day refund</span>
+            <span style={s.trustItem}>✓ Instant access</span>
           </div>
         </div>
       </div>
     </div>
   );
 }
-
-function Field({ label, children }) {
-  return (
-    <div style={{ marginBottom: 16 }}>
-      <label style={s.fieldLabel}>{label}</label>
-      {children}
-    </div>
-  );
-}
-
-function Input(props) {
-  return (
-    <input
-      {...props}
-      style={inputStyle}
-      onFocus={(e) => (e.target.style.borderColor = "#165ee7")}
-      onBlur={(e) => (e.target.style.borderColor = "#dfe3e6")}
-    />
-  );
-}
-
-const inputStyle = {
-  width: "100%",
-  padding: "11px 14px",
-  borderRadius: 8,
-  border: "1.5px solid #dfe3e6",
-  fontSize: 14,
-  color: "#111",
-  background: "#FAFBFC",
-  outline: "none",
-  fontFamily: "inherit",
-};
 
 const s = {
   shell: { minHeight: "100vh", width: "100%", background: "#eeeff1" },
@@ -374,16 +284,13 @@ const s = {
   navSafe: { fontSize: 13, fontWeight: 600, color: "#888" },
   body: {
     display: "flex",
-    gap: 28,
-    padding: "36px 40px",
+    justifyContent: "center",
+    padding: "48px 20px",
     maxWidth: 1100,
     margin: "0 auto",
-    alignItems: "flex-start",
   },
-  left: { flex: 1, display: "flex", flexDirection: "column", gap: 20 },
-  right: { width: 320, flexShrink: 0 },
   pageTitle: {
-    fontSize: 26,
+    fontSize: 20,
     fontWeight: 800,
     color: "#1A1A1A",
     marginBottom: 20,
@@ -396,49 +303,16 @@ const s = {
     padding: 14,
     fontSize: 14,
     fontWeight: 600,
-  },
-  card: {
-    background: "white",
-    borderRadius: 16,
-    padding: "24px",
-    border: "1px solid #eeeff1",
-  },
-  cardTitle: {
-    fontSize: 17,
-    fontWeight: 700,
-    color: "#1A1A1A",
-    marginBottom: 16,
-  },
-  methodRow: { display: "flex", gap: 10, flexWrap: "wrap" },
-  methodBtn: {
-    flex: 1,
-    minWidth: 140,
-    padding: "11px 8px",
-    borderRadius: 8,
-    fontSize: 13,
-    fontWeight: 600,
-    cursor: "pointer",
-    textAlign: "center",
-  },
-  fieldLabel: {
-    display: "block",
-    fontSize: 13,
-    fontWeight: 600,
-    color: "#374151",
-    marginBottom: 6,
-  },
-  smallText: {
-    fontSize: 12,
-    color: "#888",
-    marginTop: -8,
+    marginBottom: 18,
   },
   summaryCard: {
     background: "white",
     borderRadius: 16,
-    padding: "24px",
+    padding: "28px",
     border: "1px solid #eeeff1",
-    position: "sticky",
-    top: 24,
+    width: "100%",
+    maxWidth: 420,
+    boxShadow: "0 8px 30px rgba(0,0,0,0.06)",
   },
   courseRow: {
     display: "flex",
@@ -461,13 +335,14 @@ const s = {
     fontSize: 20,
   },
   courseTitle: {
-    fontSize: 13,
+    fontSize: 14,
     fontWeight: 700,
     color: "#1A1A1A",
     marginBottom: 4,
     lineHeight: 1.4,
   },
-  courseTutor: { fontSize: 12, color: "#888" },
+  courseTutor: { fontSize: 12, color: "#888", marginBottom: 2 },
+  courseSubject: { fontSize: 11, color: "#AAA" },
   divider: {
     height: 1,
     background: "#eeeff1",
@@ -477,13 +352,23 @@ const s = {
     display: "flex",
     flexDirection: "column",
     gap: 10,
-    marginBottom: 20,
+    marginBottom: 8,
   },
   priceLine: {
     display: "flex",
     justifyContent: "space-between",
     fontSize: 14,
     color: "#444",
+  },
+  errorBox: {
+    background: "#FBE6E4",
+    border: "1px solid #E8A69E",
+    color: "#B23B2E",
+    borderRadius: 8,
+    padding: "10px 12px",
+    fontSize: 12,
+    fontWeight: 600,
+    marginTop: 16,
   },
   payBtn: {
     width: "100%",
@@ -496,7 +381,14 @@ const s = {
     fontWeight: 700,
     cursor: "pointer",
     fontFamily: "inherit",
-    marginBottom: 14,
+    marginTop: 20,
+    marginBottom: 10,
+  },
+  smallPrint: {
+    textAlign: "center",
+    fontSize: 11,
+    color: "#999",
+    marginBottom: 16,
   },
   trustRow: {
     display: "flex",

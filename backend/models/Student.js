@@ -38,6 +38,10 @@ const studentSchema = new mongoose.Schema({
   password: { type: String, required: true },
   role: { type: String, default: "student" },
 
+  isBlocked: { type: Boolean, default: false },
+  blockedAt: { type: Date },
+  blockReason: { type: String, default: "" },
+
   enrolledCourses: [enrolledCourseSchema],
 
   createdAt: { type: Date, default: Date.now },

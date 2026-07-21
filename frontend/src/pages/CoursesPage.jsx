@@ -65,6 +65,7 @@ export function CoursesPage() {
   function CourseCard({ course }) {
     if (!course || !course._id) return null;
     const purchased = purchasedIds.has(course._id);
+    const isFree = !course.price || course.price <= 0;
 
     return (
       <div
@@ -93,7 +94,7 @@ export function CoursesPage() {
             if (!purchased) navigate(`/course/${course._id}`);
           }}
         >
-          {purchased ? "Purchased" : "Buy Now"}
+          {purchased ? "Purchased" : isFree ? "Enroll for Free" : "Buy Now"}
         </button>
       </div>
     );

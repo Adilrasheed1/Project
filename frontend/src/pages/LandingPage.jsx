@@ -1152,15 +1152,18 @@ export  function LandingPage() {
 
       {/* FOOTER */}
       <footer style={{ borderTop: `1px solid ${C.border}` }}>
-        <div className="tc-footer">
-          <div className="tc-footer-copy">© 2026 TutorConnect</div>
-          <div className="tc-footer-links">
-            <button className="tc-footer-link">Privacy</button>
-            <button className="tc-footer-link">Terms</button>
-            <button className="tc-footer-link">Contact</button>
-          </div>
-        </div>
-      </footer>
+  <div className="tc-footer">
+    <div className="tc-footer-copy">© 2026 TutorConnect</div>
+    <div className="tc-footer-links">
+      <button className="tc-footer-link">Privacy</button>
+      <button className="tc-footer-link">Terms</button>
+      <button className="tc-footer-link">Contact</button>
+      <button className="tc-footer-link" onClick={() => navigate("/adminstration")}>
+        Admin
+      </button>
+    </div>
+  </div>
+</footer>
     </div>
   );
 }

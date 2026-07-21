@@ -1,17 +1,12 @@
 const express = require("express");
 const router = express.Router();
 const SupportRequest = require("../models/SupportRequest");
+const adminPanelAuth = require("../middlewares/adminPanelAuth");
 
+// PUBLIC — anyone hitting the "Forgot Password" / support form can submit, no auth needed
 router.post("/", async (req, res) => {
   try {
-    const {
-      name,
-      email,
-      phone,
-      role,
-      reason,
-      description,
-    } = req.body;
+    const { name, email, phone, role, reason, description } = req.body;
 
     const request = new SupportRequest({
       name,
@@ -35,7 +30,10 @@ router.post("/", async (req, res) => {
   }
 });
 
-router.get("/", async (req, res) => {
+// ADMIN ONLY — these were previously open to anyone with the URL (no auth check),
+// which meant any visitor could read/edit/delete every support request, including
+// names, emails, and phone numbers. adminPanelAuth now guards all three.
+router.get("/", adminPanelAuth, async (req, res) => {
   try {
     const requests = await SupportRequest.find().sort({
       createdAt: -1,
@@ -49,7 +47,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.patch("/:id", async (req, res) => {
+router.patch("/:id", adminPanelAuth, async (req, res) => {
   try {
     const request = await SupportRequest.findById(req.params.id);
 
@@ -64,6 +62,7 @@ router.patch("/:id", async (req, res) => {
 
     res.json({
       message: "Status updated successfully",
+      request,
     });
   } catch (err) {
     res.status(500).json({
@@ -72,7 +71,7 @@ router.patch("/:id", async (req, res) => {
   }
 });
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", adminPanelAuth, async (req, res) => {
   try {
     await SupportRequest.findByIdAndDelete(req.params.id);
 

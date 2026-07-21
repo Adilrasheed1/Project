@@ -26,6 +26,9 @@ const teacherSchema = new mongoose.Schema({
   rejectionReason: { type: String, default: "" },
   reviewedAt:      { type: Date },
   isVerified:     { type: Boolean, default: false },
+  isBlocked: { type: Boolean, default: false },
+blockedAt: { type: Date },
+blockReason: { type: String, default: "" },
 
  createdAt:      { type: Date, default: Date.now },
 });
