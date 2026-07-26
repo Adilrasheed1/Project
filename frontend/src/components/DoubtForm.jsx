@@ -117,7 +117,7 @@ export function DoubtForm({ setInCall }) {
   function handleSubmit() {
     if (!validateForm()) return;
 
-    fetch(`${import.meta.env.VITE_API_URL}/doubts/DoubtSection`, {
+    fetch(`${import.meta.env.VITE_API_URL}/api/doubts/DoubtSection`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ title, description, subject, image }),
