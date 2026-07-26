@@ -997,7 +997,7 @@ export  function LandingPage() {
               <div className="tc-stat-lbl">verified tutors</div>
             </div>
             <div>
-              <div className="tc-stat-val">600+</div>
+              <div className="tc-stat-val">100+</div>
               <div className="tc-stat-lbl">doubts solved monthly</div>
             </div>
           </div>
