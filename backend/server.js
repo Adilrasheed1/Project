@@ -44,6 +44,7 @@ module.exports = function (server) {
       if (msg.type === "tutor") {
         tutors.add(ws);
         ws.role = "tutor";
+        ws.subject = msg.subject;
         console.log("Tutor connected");
     console.log("Total tutors:", tutors.size);
         return;
@@ -62,6 +63,7 @@ module.exports = function (server) {
         };
 
         tutors.forEach((tutorSocket) => {
+           if (tutorSocket.subject !== msg.subject) return; 
            console.log("Sending request to tutor");
 
           if (tutorSocket.readyState === WebSocket.OPEN) {

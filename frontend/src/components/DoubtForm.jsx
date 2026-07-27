@@ -117,7 +117,7 @@ export function DoubtForm({ setInCall }) {
   function handleSubmit() {
     if (!validateForm()) return;
 
-    fetch(`${import.meta.env.VITE_API_URL}/doubts/DoubtSection`, {
+    fetch(`${import.meta.env.VITE_API_URL}/api/doubts/DoubtSection`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ title, description, subject, image }),
@@ -149,7 +149,7 @@ export function DoubtForm({ setInCall }) {
       }
     };
     setInCall(true);
-    const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+    const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
     console.log("got local stream", stream);
     setLocalStream(stream);
     stream.getTracks().forEach(track => pc.addTrack(track, stream));
@@ -222,6 +222,10 @@ export function DoubtForm({ setInCall }) {
               >
                 <option value="">-- Choose subject --</option>
                 <option value="Dsa">DSA</option>
+                <option value="Physics">Physics</option>
+                <option value="Mathematics">Mathematics</option>
+                <option value="History">History</option>
+                <option value="Computer Science">Computer Science</option>
                 <option value="FullStack">Fullstack</option>
                 <option value="Other">Other</option>
               </select>

@@ -70,7 +70,8 @@ export function TeacherDashboard() {
 
         ws.onopen = () => {
             console.log("Tutor WebSocket Connected");
-            ws.send(JSON.stringify({ type: 'tutor' }));
+            console.log("teacher subject:",teacher.subject);
+            ws.send(JSON.stringify({ type: 'tutor',subject: teacher.subject }));
         };
 
         ws.onmessage = async (event) => {

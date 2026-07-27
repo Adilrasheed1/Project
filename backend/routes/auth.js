@@ -232,6 +232,7 @@ router.post("/login", async (req, res) => {
         lastName: user.lastName,
         email: user.email,
         role,
+        ...(role === "teacher" && { subject: user.subject }),
       },
     });
   } catch (err) {
